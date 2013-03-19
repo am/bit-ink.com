@@ -13,23 +13,23 @@
     %meta{:content => 'yes', :name => 'apple-mobile-web-app-capable'}
     %meta{:content => 'width=device-width, initial-scale=1, maximum-scale=1.0', :name => 'viewport'}
 
-    %link{:rel => "stylesheet", :href  => "css/normalize.css"}
-    %link{:rel => "stylesheet", :href  => "css/about.css"}
+    = include_css('css/normalize.css')
+    = include_css('css/about.css')
 
 
 %body= yield
 
 -# jQuery
-%script{:src => "//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"}
+= include_js('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js')
 :javascript
     window.jQuery || document.write('<script src="/js/vendor/jquery-1.9.1.min.js"><\/script>')
 
 -# libs
-%script{:type => "text/javascript", :src  => "js/vendor/jquery.touchSwipe.min.js"}
-%script{:type => "text/javascript", :src  => "js/vendor/jquery.transit.min.js"}
+= include_js('js/vendor/jquery.touchSwipe.min.js')
+= include_js('js/vendor/jquery.transit.min.js')
 
 -# app
-%script{:type => "text/javascript", :src  => "js/about.js"}
+= include_js('js/about.js')
 
 :javascript
     $(function(){
