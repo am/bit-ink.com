@@ -1,7 +1,7 @@
 ignore /layout.html.haml/
 ignore /\.git/
-ignore /\.gitignore/
 ignore /\.openshift/
+ignore /\.sh/
 ignore /README/
 
 require 'sass'
