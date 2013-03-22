@@ -4,9 +4,9 @@
 
 @mixin box-shadow($top, $left, $blur, $color, $inset: false)
   @if $inset
-    -webkit-box-shadow:inset $left $top $blur $color
-    -moz-box-shadow:inset $left $top $blur $color
-    box-shadow:inset $left $top $blur $color
+    -webkit-box-shadow: inset $left $top $blur $color
+    -moz-box-shadow: inset $left $top $blur $color
+    box-shadow: inset $left $top $blur $color
   @else
     -webkit-box-shadow: $left $top $blur $color
     -moz-box-shadow: $left $top $blur $color
@@ -73,6 +73,7 @@ header
   overflow: hidden
   width: 100%
   height: 400px
+  cursor: -webkit-grab
 
   .container
     pointer-events: none
@@ -93,11 +94,15 @@ header
         @include box-shadow(-2px,0px,16px, black, false)
 
         img
+          cursor: pointer
           margin: 0 auto
           display: block
 
       .solid
         background: whitesmoke url('/img/grip.png') no-repeat center 6px
+
+.slider:active
+  cursor: -webkit-grabbing
 
 .touch
   .slider
