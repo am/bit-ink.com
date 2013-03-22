@@ -1,3 +1,3 @@
 # bit-ink
 
-Home page for my personal site. Using [stasis](http://stasis.me/) to generate static files.
+Home page for [bit-ink](http://www.bit-ink.com). Using [stasis](http://stasis.me/) to generate static files.
