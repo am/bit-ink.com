@@ -1,4 +1,5 @@
 ignore /layout.html.haml/
+ignore /\.git/
 ignore /\.gitignore/
 ignore /README/
 
