@@ -3,6 +3,11 @@ ignore /\.git/
 ignore /\.gitignore/
 ignore /README/
 
+require 'sass'
+require 'haml'
+require 'coffee_script'
+
+
 layout 'layout.html.haml'
 
 before 'index.html.haml' do
