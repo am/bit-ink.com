@@ -1,0 +1,109 @@
+// Place all the styles related to the home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+@mixin box-shadow($top, $left, $blur, $color, $inset: false)
+  @if $inset
+    -webkit-box-shadow:inset $left $top $blur $color
+    -moz-box-shadow:inset $left $top $blur $color
+    box-shadow:inset $left $top $blur $color
+  @else
+    -webkit-box-shadow: $left $top $blur $color
+    -moz-box-shadow: $left $top $blur $color
+    box-shadow: $left $top $blur $color
+
+body
+  background-color: whitesmoke
+
+header
+  position: absolute
+  padding-top: 20px
+  width: 100%
+  top: 5px
+  height: 200px
+  background: url('/img/darkdenim3/darkdenim3.png')
+
+  .headerContents
+    padding-left: 40px
+
+    a
+      font-family: "nimbus-sans-condensed"
+      font-size: 16px
+      color: darkgray
+      text-decoration: underline
+
+    a:hover
+      color: whitesmoke
+      background-color: transparent
+
+    ul
+      margin: 0
+      padding: 0
+      list-style-type: none
+
+      li
+        display: inline-block
+        margin-right: 40px
+
+    h1, h2
+      margin: 0
+      font-family: "nimbus-sans-condensed"
+      font-weight: 400
+
+      color: darkgray
+      font-size: 16px
+      line-height: 1.5em
+
+    h1
+      color: whitesmoke
+
+    .shadowText
+      text-shadow: 0px 1px 4px black
+
+.border
+  width: 100%
+  height: 5px
+  background-color: #d2ffed
+
+.slider
+  pointer-events: none
+  position: relative
+  top: 0
+  left: 0
+  overflow: hidden
+  width: 100%
+  height: 400px
+
+  .container
+    pointer-events: none
+    width: 100%
+    height: 100%
+
+    .pane
+      pointer-events: visible
+      float: left
+
+      width: 100%
+      height: 100%
+
+      .inner
+        width: 100%
+        height: 400px
+        padding-top: 4em
+        @include box-shadow(-2px,0px,16px, black, false)
+
+        img
+          margin: 0 auto
+          display: block
+
+      .solid
+        background: whitesmoke url('/img/grip.png') no-repeat center 6px
+
+.touch
+  .slider
+    .inner
+      img
+        width: 75%
+
+  header
+    background-size: 50%
