@@ -1,3 +1,5 @@
+ignore /\/_.*/
+ignore /\.sass-cache/
 ignore /layout.html.haml/
 ignore /\.git/
 ignore /\.openshift/
