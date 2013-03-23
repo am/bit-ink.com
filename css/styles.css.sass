@@ -1,3 +1,7 @@
+@import "normalize"
+@import "defaults"
+
+// bit-ink custom styles
 
 @mixin box-shadow($top, $left, $blur, $color, $inset: false)
   @if $inset
@@ -9,6 +13,14 @@
     -moz-box-shadow: $left $top $blur $color
     box-shadow: $left $top $blur $color
 
+// http://37signals.com/svn/posts/3271-easy-retina-ready-images-using-scss
+// added optional parameter for image height
+@mixin image-2x($image, $width, $height: "")
+  @media (min--moz-device-pixel-ratio: 1.3),(-o-min-device-pixel-ratio: 2.6/2),(-webkit-min-device-pixel-ratio: 1.3),(min-device-pixel-ratio: 1.3),(min-resolution: 1.3dppx)
+    /* on retina, use image that's scaled by 2 */
+    background-image: url($image)
+    background-size: $width #{$height}
+
 body
   background-color: whitesmoke
 
@@ -19,6 +31,7 @@ header
   top: 5px
   height: 200px
   background: url('/img/darkdenim3/darkdenim3.png')
+  +image-2x("/img/darkdenim3/darkdenim3_@2x.png", 210px, 163px)
 
   .headerContents
     padding-left: 40px
@@ -87,10 +100,14 @@ header
       .inner
         width: 100%
         height: 400px
-        padding-top: 4em
-        @include box-shadow(-2px,0px,16px, black, false)
+        padding-top: 2em
+        +box-shadow(-2px,0px,16px, black, false)
 
-        img
+        .amlogo
+          width: 100%
+          height: 187px
+          background: url("/img/am.png") no-repeat center
+          +image-2x("/img/am_@2x.png", 280px)
           cursor: pointer
           margin: 0 auto
           display: block
@@ -109,3 +126,19 @@ header
 
   header
     background-size: 50%
+
+
+@import "helpers"
+
+/* ==========================================================================
+   Media Queries for Responsive Design.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em)
+  .slider .container .pane .inner
+    padding-top: 4em
+
+
+@media print, (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi)
+
+// @import "print"
