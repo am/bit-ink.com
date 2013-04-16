@@ -30,18 +30,22 @@ class BitInkApp
               # brain melter
               isOpen = true
             else
-              lastp = 120
+              lastp = $('header').outerHeight()
               # brain melter again
               isOpen = false
             null
           else
 
   constructor: ->
+    # set listeners
     $('.pane').swipe config
     $('.pane').click onClickPane
 
+    # open panel
+    $('.pane').delay(500).click();
+
   onClickPane = (e) ->
-    to_y = (if isOpen then 0 else 120)
+    to_y = (if isOpen then 0 else $('header').outerHeight())
     animation =
       translate: [0, to_y]
     $('.pane').transition animation, 500, 'snap'
