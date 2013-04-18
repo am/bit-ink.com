@@ -7,21 +7,21 @@ Vagrant.configure("2") do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "squeeze-x64"
+  config.vm.box = "precise64"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "http://files.crohr.me/vagrant/debian-squeeze-x64-puppet-v4.1.12.box"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network :forwarded_port, guest: 3306, host: 13306
-  config.vm.network :forwarded_port, guest: 6379, host: 16379
+  config.vm.network :forwarded_port, guest: 4000, host: 4000
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.network :private_network, ip: "33.33.33.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -33,6 +33,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
+  # config.vm.synced_folder "v-root", "/vagrant", ".", :create=> true, :nfs => true
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -71,6 +72,12 @@ Vagrant.configure("2") do |config|
   #   puppet.manifests_path = "manifests"
   #   puppet.manifest_file  = "base.pp"
   # end
+  config.vm.provision :puppet, :options => "--verbose --debug" do |puppet|
+    puppet.manifests_path = "manifests"
+    puppet.module_path    = "modules"
+    puppet.pp_path        = "/tmp/vagrant-puppet"
+    puppet.manifest_file  = "site.pp"
+  end
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
