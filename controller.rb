@@ -4,6 +4,7 @@ ignore /layout.html.haml/
 ignore /\.git/
 ignore /\.openshift/
 ignore /\.sh/
+ignore /puppet/
 ignore /README/
 
 require 'sass'
