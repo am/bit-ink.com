@@ -85,3 +85,7 @@ exec { "${as_vagrant} 'gem install sass'":
   require => Exec['install_ruby']
 }
 
+exec { "${as_vagrant} 'gem install rhc'":
+  require => Exec['install_ruby']
+}
+
