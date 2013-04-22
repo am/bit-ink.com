@@ -21,77 +21,6 @@ class { 'apt_get_update':
   stage => preinstall
 }
 
-# --- SQLite -------------------------------------------------------------------
-
-package { ['sqlite3', 'libsqlite3-dev']:
-  ensure => installed;
-}
-
-# --- MySQL --------------------------------------------------------------------
-
-class install_mysql {
-  class { 'mysql': }
-
-  class { 'mysql::server':
-    config_hash => { 'root_password' => '' }
-  }
-
-  database { $ar_databases:
-    ensure  => present,
-    charset => 'utf8',
-    require => Class['mysql::server']
-  }
-
-  database_user { 'rails@localhost':
-    ensure  => present,
-    require => Class['mysql::server']
-  }
-
-  database_grant { ['rails@localhost/activerecord_unittest', 'rails@localhost/activerecord_unittest2']:
-    privileges => ['all'],
-    require    => Database_user['rails@localhost']
-  }
-
-  package { 'libmysqlclient15-dev':
-    ensure => installed
-  }
-}
-class { 'install_mysql': }
-
-# --- PostgreSQL ---------------------------------------------------------------
-
-class install_postgres {
-  class { 'postgresql': }
-
-  class { 'postgresql::server': }
-
-  pg_database { $ar_databases:
-    ensure   => present,
-    encoding => 'UTF8',
-    require  => Class['postgresql::server']
-  }
-
-  pg_user { 'rails':
-    ensure  => present,
-    require => Class['postgresql::server']
-  }
-
-  pg_user { 'vagrant':
-    ensure    => present,
-    superuser => true,
-    require   => Class['postgresql::server']
-  }
-
-  package { 'libpq-dev':
-    ensure => installed
-  }
-}
-class { 'install_postgres': }
-
-# --- Memcached ----------------------------------------------------------------
-
-class { 'memcached': }
-
 # --- Packages -----------------------------------------------------------------
 
 package { 'curl':
@@ -130,7 +59,7 @@ exec { 'install_ruby':
   # The rvm executable is more suitable for automated installs.
   #
   # Thanks to @mpapis for this tip.
-  command => "${as_vagrant} '${home}/.rvm/bin/rvm install 1.9.3 --autolibs=enabled && rvm --fuzzy alias create default 1.9.3'",
+  command => "${as_vagrant} '${home}/.rvm/bin/rvm install 2.0.0 --latest-binary --autolibs=enabled && rvm --fuzzy alias create default 2.0.0'",
   creates => "${home}/.rvm/bin/ruby",
   require => Exec['install_rvm']
 }
@@ -140,28 +69,19 @@ exec { "${as_vagrant} 'gem install bundler --no-rdoc --no-ri'":
   require => Exec['install_ruby']
 }
 
-exec { "${as_vagrant} 'gem install rails --no-rdoc --no-ri'":
-  creates => "${home}/.rvm/bin/rails",
+exec { "${as_vagrant} 'gem install stasis'":
   require => Exec['install_ruby']
 }
 
-file {
-  "/home/vagrant/.bash_profile":
-  source => "/vagrant/puppet/files/bash_profile",
-  owner => "vagrant", group => "vagrant", mode => 0664;
+exec { "${as_vagrant} 'gem install haml'":
+  require => Exec['install_ruby']
 }
 
-# --- Gems ---
-package { 'stasis':
-  ensure   => 'installed',
-  provider => 'gem',
+exec { "${as_vagrant} 'gem install coffee-script'":
+  require => Exec['install_ruby']
 }
-package { 'sass':
-  ensure   => 'installed',
-  provider => 'gem',
-}
-package { 'haml':
-  ensure   => 'installed',
-  provider => 'gem',
+
+exec { "${as_vagrant} 'gem install sass'":
+  require => Exec['install_ruby']
 }
 
