@@ -1,0 +1,26 @@
+{
+  "name": "www.bit-ink.com",
+  "version": "0.0.0",
+  "description": "Home page for bit-ink.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/am/www.bit-ink.com.git"
+  },
+  "keywords": [
+    "bit-ink",
+    "homepage"
+  ],
+  "author": "antsmiranda@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/am/www.bit-ink.com/issues"
+  },
+  "homepage": "https://github.com/am/www.bit-ink.com",
+  "devDependencies": {
+    "gulp": "3.8.10"
+  }
+}

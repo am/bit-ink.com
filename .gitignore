@@ -1,6 +1,3 @@
 # ignore generated files
-public/*
-
-# scss cache
-css/.sass-cache
-public/css/.sass-cache
+node_modules
+dist
