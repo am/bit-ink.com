@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/am/www.bit-ink.com",
   "devDependencies": {
-    "gulp": "3.8.10"
+    "browser-sync": "^2.0.0-rc10",
+    "gulp": "3.8.10",
+    "gulp-jade": "^0.11.0"
   }
 }
