@@ -1,5 +1,5 @@
-@import "normalize"
-@import "defaults"
+@import normalize
+@import defaults
 
 // bit-ink custom styles
 
@@ -72,7 +72,7 @@ header
 
 .amlogo
   width: 300px
-  
+
 .border
   width: 100%
   height: 5px
@@ -130,8 +130,7 @@ header
   header
     background-size: 50%
 
-
-@import "helpers"
+@import helpers
 
 /* ==========================================================================
    grids
@@ -157,11 +156,11 @@ header
 @media screen and (max-width: 640px)
   .grid3 .col
     width: 48.4%
-  
+
   .grid3 .col:nth-of-type(3n+1)
     margin-left: 3.2%
     clear: none
-  
+
   .grid3 .col:nth-of-type(2n+1)
     margin-left: 0
     clear: left
@@ -170,8 +169,7 @@ header
   .col
     width: 100% !important
     margin-left: 0 !important
-    clear: none !important 
-
+    clear: none !important
 
 /* ==========================================================================
    Media Queries for Responsive Design.
@@ -181,7 +179,4 @@ header
   .slider .container .pane .inner
     padding-top: 4em
 
-
-@media print, (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi)
-
-// @import "print"
+// @media print, (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi)
