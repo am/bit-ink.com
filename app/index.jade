@@ -2,33 +2,22 @@ extends layout
 
 block content
   header
-    .headerContents
-      h1.shadowText antonio miranda
-      .row.grid3
-        ul.col
-          li
-            h2.shadowText interactive designer | developer
-          li
-            h2.shadowText.col barcelona
-        ul.col
-          li
-            h2
-              a.shadowText(href='http://am.github.com/cv') resume
-          li
-            h2
-              a.shadowText(href='https://github.com/am') github
-        ul.col
-          li
-            h2
-              a.shadowText(href='http://www.flickr.com/photos/95126201@N06') flickr
-          li
-            h2
-              a.shadowText(href='mailto:antsmiranda@gmail.com') email
-
-    .border
-    .slider
-      .container
-        .pane
-          .inner.solid
-            .amlogo
-
+    img(src='/img/am-icon-darkblue.png', alt='am')
+    h1 antonio miranda
+    br
+    h2 front end developer
+    p(style='font-thin') barcelona
+  nav
+    ul
+      li
+        a(href='/cv.html') cv
+      li
+        a(href='/tech-cv.html') tech cv
+      li
+        a(href='https://github.com/am') github
+      li
+        a(href='https://www.twitter.com/ammutable') twitter
+      li
+        a(href='https://www.flickr.com/photos/95126201@N06/') flickr
+      li
+        a(href='mailto:antsmiranda@gmail.com') contact
