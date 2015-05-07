@@ -1,7 +1,7 @@
 var gulp = require('gulp'),
     jade = require('gulp-jade'),
     browserSync = require('browser-sync'),
-    sass = require('gulp-sass'),
+    stylus = require('gulp-stylus'),
     coffee = require('gulp-coffee'),
     concat = require('gulp-concat'),
     util = require('gulp-util');
@@ -24,9 +24,9 @@ gulp.task( 'copy_assets', function() {
     .pipe( gulp.dest( paths.dist ));
 });
 
-gulp.task( 'sass', function () {
-  gulp.src( paths.app + 'sass/styles.sass' )
-    .pipe( sass({
+gulp.task( 'stylus', function () {
+  gulp.src( paths.app + 'stylus/styles.styl' )
+    .pipe( stylus({
       indentedSyntax: true
     }))
     .pipe( gulp.dest( paths.dist + 'css' ));
@@ -47,4 +47,4 @@ gulp.task( 'browser-sync', function() {
   });
 });
 
-gulp.task( 'default', [ 'copy_assets', 'sass', 'jade', 'coffee', 'browser-sync' ]);
+gulp.task( 'default', [ 'copy_assets', 'stylus', 'jade', 'coffee', 'browser-sync' ]);
