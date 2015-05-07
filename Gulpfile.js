@@ -1,11 +1,14 @@
-var gulp = require('gulp');
-var jade = require('gulp-jade');
-var browserSync = require('browser-sync');
-var sass = require('gulp-sass');
+var gulp = require('gulp'),
+    jade = require('gulp-jade'),
+    browserSync = require('browser-sync'),
+    sass = require('gulp-sass'),
+    coffee = require('gulp-coffee'),
+    concat = require('gulp-concat'),
+    util = require('gulp-util');
 
 var paths = {
-    dist: './dist/',
-    app: './app/'
+  dist: './dist/',
+  app: './app/'
 };
 
 gulp.task( 'jade', function() {
@@ -29,6 +32,13 @@ gulp.task( 'sass', function () {
     .pipe( gulp.dest( paths.dist + 'css' ));
 });
 
+gulp.task( 'coffee', function () {
+  gulp.src( paths.app + 'scripts/about.coffee' )
+    .pipe( coffee({ bare: true }))
+    .pipe( gulp.dest( paths.dist + 'scripts' ))
+    .on( 'error', util.log );
+});
+
 gulp.task( 'browser-sync', function() {
   browserSync({
     server: {
@@ -37,4 +47,4 @@ gulp.task( 'browser-sync', function() {
   });
 });
 
-gulp.task( 'default', [ 'copy_assets', 'sass', 'jade', 'browser-sync' ]);
+gulp.task( 'default', [ 'copy_assets', 'sass', 'jade', 'coffee', 'browser-sync' ]);
