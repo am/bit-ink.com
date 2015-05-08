@@ -27,7 +27,7 @@ gulp.task( 'copy_assets', function() {
 gulp.task( 'stylus', function () {
   gulp.src( paths.app + 'stylus/styles.styl' )
     .pipe( stylus({
-      indentedSyntax: true
+      'include css': true
     }))
     .pipe( gulp.dest( paths.dist + 'css' ));
 });
