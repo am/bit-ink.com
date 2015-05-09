@@ -2,7 +2,7 @@
   "name": "www.bit-ink.com",
   "version": "0.0.0",
   "description": "Home page for bit-ink.com",
-  "main": "index.js",
+  "main": "app.coffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,10 +21,6 @@
   },
   "homepage": "https://github.com/am/www.bit-ink.com",
   "devDependencies": {
-    "browser-sync": "^2.0.0-rc10",
-    "gulp": "3.8.10",
-    "gulp-jade": "^0.11.0",
-    "gulp-stylus": "^2.0.1"
   },
   "dependencies": {
     "express": "^4.12.3",
@@ -32,6 +28,7 @@
     "gulp-concat": "^2.5.2",
     "gulp-util": "^3.0.4",
     "jade": "^1.9.2",
-    "morgan": "^1.5.2"
+    "morgan": "^1.5.2",
+    "stylus": "^0.51.1"
   }
 }
