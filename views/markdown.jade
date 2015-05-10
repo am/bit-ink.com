@@ -1,6 +1,9 @@
 extends layout
- 
+
+block head
+  link(href='css/markdown.css', rel='stylesheet') 
+
 block content
-    h1= markdownFile.meta.title
-    #content
-        != markdownFile.parseContent()
+  h1= markdownFile.meta.title
+  #content
+    != markdownFile.parseContent()

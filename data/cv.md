@@ -5,8 +5,8 @@ layout: default
 
 Personal information
 ----------------
-antónio césar soeiro miranda    
-[antsmiranda@gmail.com](mailto:antsmiranda@gmail.com "contact me")  
+antónio césar soeiro miranda
+[antsmiranda@gmail.com](mailto:antsmiranda@gmail.com "contact me")
 +34 664 187 182
 
 [@github](http://github.com/am "am @ github")
@@ -26,62 +26,62 @@ Although my technologic interests are vast I'm specialized in frontend interacti
 
 Lately I've been focusing in responsive / mobile web development, object-oriented javascript / coffeescript, ajax applications, html / css / js pre-processors, try to follow a path through the new features applying strategies like progressive enhancement and graceful degradation. I've particular interest with rails applications (code should be a pleasant task), and some experience with symfony2. I use git and svn on a daily base.
 
-I leverage my work based on open-source libraries like backbone, underscore, ember, jquery, requirejs, modernizr, css grids for naming a few, but most of the Open source libraries that I work with can be found on my 
+I leverage my work based on open-source libraries like backbone, underscore, ember, jquery, requirejs, modernizr, css grids for naming a few, but most of the Open source libraries that I work with can be found on my
  [Github profile](https://github.com/am/following "starred").
 
-- **actionscript**
-- **bash**
-- c#
-- **css • sass • less • stylus**
-- **dom**
-- **git • svn**
-- **html • haml • slim • jade**
-- java
-- **javascript • coffeescript**
-- lingo
-- make • rake • ant
-- **markdown**
-- php
-- processing
-- regexp
-- ruby
-- sql
+`actionscript`
+`bash`
+`c#`
+`css • sass • less • stylus`
+`dom`
+`git • svn`
+`html • haml • slim • jade`
+`java`
+`javascript • coffeescript`
+`lingo`
+`make • rake • ant`
+`markdown`
+`php`
+`processing`
+`regexp`
+`ruby`
+`sql`
 
 Software:
 
-- osx • linux • unix
-- adobe CS
-- cinema4D
-- eclipse
-- ftp clients
-- intelliJ • rubymine
-- sh (shell) • zsh
-- sublime text
-- unity3D
-- VM clients
+`osx • linux • unix`
+`adobe CS`
+`cinema4D`
+`eclipse`
+`ftp clients`
+`intelliJ • rubymine`
+`sh (shell) • zsh`
+`sublime text`
+`unity3D`
+`VM clients`
 
 Others:
 
-- Cloud servers (Amazon, Heroku, Openshift, Cloud9, Appfog)
-- Github • Bitbucket
+`Cloud servers (Amazon, Heroku, Openshift, Cloud9, Appfog)`
+`Github • Bitbucket`
 
 Theoretical knowledge:
 
-- semiotics
-- usability
-- typography
-- interactive scripting
-- team management
-- agile methodology
-- cyberculture
-- aesthetic experience & visual composition
-- information design
-- marketing and advertising
-- perceptual psychology
-- light and color
-- analog image processing
-- network architecture
-- information systems and knowledge cultures
+`semiotics`
+`usability`
+`typography`
+`interactive scripting`
+`team management`
+`agile methodology`
+`cyberculture`
+`aesthetic experience & visual composition`
+`information design`
+`marketing and advertising`
+`perceptual psychology`
+`light and color`
+`analog image processing`
+`network architecture`
+`information systems and knowledge cultures`
 
 
 Professional experience
@@ -91,16 +91,16 @@ _2013 ¬ ∞_
 ### Web Development Tech Lead
 #### [Wuaki.tv](http://www.wuaki.tv/ "Wuaki.tv")
 
-Barcelona, Spain   
-Web Development Tech Lead   
+Barcelona, Spain
+Web Development Tech Lead
 
 
 _2010 ¬ 2013_
 ### Frontend Developer
 #### [DoubleYou](http://www.doubleyou.com/ "Doubleyou")
 
-Barcelona, Spain   
-Creative front-end developer   
+Barcelona, Spain
+Creative front-end developer
 
 - Arbora (eusonia, evax)
 - Atrapalo
@@ -123,8 +123,8 @@ _2008 ¬ 2010_
 ### Interactive Developer
 #### [Igriega](http://www.igriega-comunicacion.com/ "Igriega")
 
-Barcelona, Spain   
-art direction, communications media management, web design, multimedia applications, video, 3d animation   
+Barcelona, Spain
+art direction, communications media management, web design, multimedia applications, video, 3d animation
 
 - Bugaboo
 - Esad Business School
@@ -137,7 +137,7 @@ _2008 ¬ 2008_
 ### Interactive Developer
 #### [Via71](http://www.via71.com/ "Via71")
 
-Barcelona, Spain   
+Barcelona, Spain
 art direction, web design, multimedia applications, video, 3d animation
 
 - AAA la salle trives
@@ -149,7 +149,7 @@ _2006 ¬ 2008_
 ### Design studio partner
 #### Complexresponse
 
-Portugal   
+Portugal
 art direction, communications media management, graphic design, photography, illustration, web design, multimedia applications, video, 3d animation — in collaboration with marta pinto
 
 - Centro de Estudo de Esposende
@@ -164,7 +164,7 @@ _2004 ¬ 2006_
 ### Designer / Developer
 #### omf - arquitectura e design, lda
 
-Portugal   
+Portugal
 art direction, graphic design, photography, illustration, window dressing, web design, multimedia applications, video, 3d animation, promotion of cultural events, environmental design
 
 - Alfapar (real estate)
@@ -193,7 +193,7 @@ _2003 ¬ 2004_
 ### Developer
 #### Contacto Visual - Serviços de Informática Unip Lda
 
-Portugal   
+Portugal
 web applications and multimedia development, 3d animation
 
 - Tintas Lacca
@@ -205,7 +205,7 @@ _2003 ¬ 2003_
 ### Freelance / Designer
 #### Freelance
 
-Estonia   
+Estonia
 graphic design projects with kristjan mändmaa y vitor aguiar
 
 - Krediidipank
@@ -214,7 +214,7 @@ _2000 ¬ 2003_
 ### Freelance / Designer
 #### Freelance
 
-Portugal   
+Portugal
 graphic design projects in collaboration with joão sousa lopes
 
 - Neopul
