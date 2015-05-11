@@ -20,6 +20,10 @@
     "url": "https://github.com/am/www.bit-ink.com/issues"
   },
   "homepage": "https://github.com/am/www.bit-ink.com",
+  "engines": {
+    "node": ">= 0.12.2",
+    "npm": ">= 2.7.4"
+  },
   "devDependencies": {},
   "dependencies": {
     "express": "^4.12.3",
