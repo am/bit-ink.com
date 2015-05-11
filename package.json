@@ -2,7 +2,7 @@
   "name": "www.bit-ink.com",
   "version": "0.0.0",
   "description": "Home page for bit-ink.com",
-  "main": "app.coffee",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,6 +26,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "coffee-script": "^1.9.2",
     "express": "^4.12.3",
     "gulp-coffee": "^2.3.1",
     "gulp-concat": "^2.5.2",
