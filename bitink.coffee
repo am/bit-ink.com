@@ -19,7 +19,6 @@ class BitInkApp
   config: ->
     @ipaddress = process.env.OPENSHIFT_NODEJS_IP
     @port = process.env.OPENSHIFT_NODEJS_PORT || 9000
-
     @ipaddress = '127.0.0.1' if @ipaddress is undefined
 
   terminator: (sig) ->
@@ -71,6 +70,3 @@ class BitInkApp
     Date Date.now()
 
 module.exports = BitInkApp
-
-# bitInkApp = new BitInkApp
-# bitInkApp.start()
