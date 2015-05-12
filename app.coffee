@@ -70,5 +70,7 @@ class BitInkApp
   dateNow: ->
     Date Date.now()
 
-bitInkApp = new BitInkApp
-bitInkApp.start()
+module.exports = BitInkApp
+
+# bitInkApp = new BitInkApp
+# bitInkApp.start()
