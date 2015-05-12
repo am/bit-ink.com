@@ -6,39 +6,69 @@ mds = require 'markdown-serve'
 path = require 'path'
 logger = require 'morgan'
 
-compileStylus = (str, path) ->
-  stylus(str)
-    .set('filename', path)
-    .set('compress', true)
-    .set('include css', true)
-    .use(nib())
-    .import('nib')
+class BitInkApp
 
-app.set 'views', __dirname + '/views'
-app.set 'view engine', 'jade'
-app.use mds.middleware(
-  rootDirectory: path.resolve __dirname, 'data'
-  view: 'markdown'
-)
+  ipaddress: null
+  port: null
 
-app.use stylus.middleware(
-  src: __dirname + '/stylus'
-  dest: __dirname + '/public/css'
-  compile: compileStylus
-)
-app.use express.static __dirname + '/public'
-app.use logger 'dev'
+  constructor: ->
+    @config()
+    @setupTerminationHandlers()
+    @initializeServer()
 
-# routes
-app.get '/', (req, res) ->
-  res.render 'index'
+  config: ->
+    @ipaddress = process.env.OPENSHIFT_NODEJS_IP
+    @port = process.env.OPENSHIFT_NODEJS_PORT || 9000
 
-app.get '/cv', (req, res) ->
-  res.render 'cv'
+    @ipaddress = '127.0.0.1' if @ipaddress is undefined
 
-# server
-server = app.listen 3000, ->
-  host = server.address().address
-  port = server.address().port
+  terminator: (sig) ->
+    if typeof sig is 'string'
+      console.log "#{@dateNow()}: Received #{sig} - terminating app..."
+      process.exit 1
+    console.log "#{@dateNow()}: Node server stopped."
 
-  console.log "Started server on http://#{host}:#{port}"
+  setupTerminationHandlers: ->
+    process.on 'exit', => @terminator()
+
+    signals = ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT',
+      'SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGTERM'
+      ]
+    for signal in signals
+      process.on signal, => @terminator signal
+
+  compileStylus: (str, path) ->
+    stylus(str)
+      .set('filename', path)
+      .set('compress', true)
+      .set('include css', true)
+      .use(nib())
+      .import('nib')
+
+  initializeServer: ->
+    app.set 'views', __dirname + '/views'
+    app.set 'view engine', 'jade'
+    app.use mds.middleware(
+      rootDirectory: path.resolve __dirname, 'data'
+      view: 'markdown'
+    )
+    app.use stylus.middleware(
+      src: __dirname + '/stylus'
+      dest: __dirname + '/public/css'
+      compile: @compileStylus
+    )
+    app.use express.static __dirname + '/public'
+    app.use logger 'dev'
+
+    app.get '/', (req, res) ->
+      res.render 'index'
+
+  start: ->
+    app.listen @port, @ipaddress, =>
+      console.log "#{@dateNow()}: Node server started on #{@ipaddress}:#{@port}..."
+
+  dateNow: ->
+    Date Date.now()
+
+bitInkApp = new BitInkApp
+bitInkApp.start()
