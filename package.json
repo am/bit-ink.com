@@ -1,0 +1,45 @@
+{
+  "name": "www.bit-ink.com",
+  "version": "0.0.1",
+  "description": "Home page for bit-ink.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/test.coffee --require should --compilers coffee:coffee-script/register",
+    "devserver": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/am/www.bit-ink.com.git"
+  },
+  "keywords": [
+    "bit-ink",
+    "homepage"
+  ],
+  "author": "antsmiranda@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/am/www.bit-ink.com/issues"
+  },
+  "homepage": "https://github.com/am/www.bit-ink.com",
+  "engines": {
+    "node": ">= 0.12.2",
+    "npm": ">= 2.7.4"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.4",
+    "nodemon": "^1.3.7",
+    "should": "^6.0.1"
+  },
+  "dependencies": {
+    "coffee-script": "^1.9.2",
+    "express": "^4.12.3",
+    "gulp-coffee": "^2.3.1",
+    "gulp-concat": "^2.5.2",
+    "gulp-util": "^3.0.4",
+    "jade": "^1.9.2",
+    "markdown-serve": "^0.3.2",
+    "morgan": "^1.5.2",
+    "nib": "^1.1.0",
+    "stylus": "^0.51.1"
+  }
+}

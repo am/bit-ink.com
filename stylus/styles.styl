@@ -1,0 +1,66 @@
+@require 'reset.css'
+
+html,
+body
+  height 100%
+  width 100%
+  font-size 14px
+  line-height 17px
+  font-family 'Martel Sans', sans-serif
+
+header
+  display inline-block
+  vertical-align top
+  padding 70px 0
+  width 34%
+  text-align right
+  img
+    margin-bottom 20px
+    height 40px
+  h1
+    font-weight 800
+
+nav
+  margin-left 37%
+  ul
+    list-style none
+  li
+    overflow hidden
+    a
+      &:before
+        content '—'
+        position relative
+        font-size 32px
+        margin-right 10px
+  a
+    margin-left -40px
+    line-height 40px
+    font-size 32px
+    text-decoration none
+    -webkit-transition all 150ms ease-in-out
+    -moz-transition all 150ms ease-in-out
+    -o-transition all 150ms ease-in-out
+    transition all 150ms ease-in-out
+
+nav li a:hover,
+nav li a:focus
+  margin-left -5px
+
+/* CS04 */
+swatch-a = #F6F792
+swatch-b = #333745
+swatch-c = #77C4D3
+swatch-d = #DAEDE2
+swatch-e = #EA2E49
+
+body
+  background-color swatch-d
+  header
+    color swatch-text_b
+  nav
+    a
+      color swatch-c
+
+nav li a:hover,
+nav li a:focus
+  color swatch-e
