@@ -4,6 +4,6 @@ require('coffee-script/register');
 var BitInk = require('./bitink');
 
 (function () {
-  bitInk = new BitInk;
+  var bitInk = new BitInk;
   bitInk.start()
 })()
