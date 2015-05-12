@@ -1,6 +1,6 @@
 {
   "name": "www.bit-ink.com",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Home page for bit-ink.com",
   "main": "index.js",
   "scripts": {
