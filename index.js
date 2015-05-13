@@ -1,9 +1,8 @@
 #!/bin/env node
 
-require('coffee-script/register');
-var BitInk = require('./bitink');
+var App, app;
 
-(function () {
-  var bitInk = new BitInk;
-  bitInk.start()
-})()
+require('coffee-script/register');
+App = require('./app');
+app = new App;
+app.start();

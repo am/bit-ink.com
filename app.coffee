@@ -6,7 +6,7 @@ mds = require 'markdown-serve'
 path = require 'path'
 logger = require 'morgan'
 
-class BitInkApp
+class App
 
   ipaddress: null
   port: null
@@ -69,4 +69,4 @@ class BitInkApp
   dateNow: ->
     Date Date.now()
 
-module.exports = BitInkApp
+module.exports = App
