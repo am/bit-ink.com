@@ -1,5 +1,4 @@
 express = require 'express'
-app = express()
 stylus = require 'stylus'
 nib = require 'nib'
 mds = require 'markdown-serve'
@@ -7,7 +6,7 @@ path = require 'path'
 logger = require 'morgan'
 
 class App
-
+  server: null
   ipaddress: null
   port: null
 
@@ -19,7 +18,6 @@ class App
   config: ->
     @ipaddress = process.env.OPENSHIFT_NODEJS_IP
     @port = process.env.OPENSHIFT_NODEJS_PORT || 9000
-    @ipaddress = '127.0.0.1' if @ipaddress is undefined
 
   terminator: (sig) ->
     if typeof sig is 'string'
@@ -45,25 +43,26 @@ class App
       .import('nib')
 
   initializeServer: ->
-    app.set 'views', __dirname + '/views'
-    app.set 'view engine', 'jade'
-    app.use mds.middleware(
+    @server = express()
+    @server.set 'views', __dirname + '/views'
+    @server.set 'view engine', 'jade'
+    @server.use mds.middleware(
       rootDirectory: path.resolve __dirname, 'data'
       view: 'markdown'
     )
-    app.use stylus.middleware(
+    @server.use stylus.middleware(
       src: __dirname + '/stylus'
       dest: __dirname + '/public/css'
       compile: @compileStylus
     )
-    app.use express.static __dirname + '/public'
-    app.use logger 'dev'
+    @server.use express.static __dirname + '/public'
+    @server.use logger 'dev'
 
-    app.get '/', (req, res) ->
+    @server.get '/', (req, res) ->
       res.render 'index'
 
   start: ->
-    app.listen @port, @ipaddress, =>
+    @server.listen @port, @ipaddress, =>
       console.log "#{@dateNow()}: Node server started on #{@ipaddress}:#{@port}..."
 
   dateNow: ->
