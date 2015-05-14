@@ -1,5 +1,6 @@
 express = require 'express'
 stylus = require 'stylus'
+rupture = require 'rupture'
 nib = require 'nib'
 mds = require 'markdown-serve'
 path = require 'path'
@@ -7,17 +8,12 @@ logger = require 'morgan'
 
 class App
   server: null
-  ipaddress: null
-  port: null
+  ipaddress: process.env.OPENSHIFT_NODEJS_IP
+  port: process.env.OPENSHIFT_NODEJS_PORT || 9000
 
   constructor: ->
-    @config()
     @setupTerminationHandlers()
     @initializeServer()
-
-  config: ->
-    @ipaddress = process.env.OPENSHIFT_NODEJS_IP
-    @port = process.env.OPENSHIFT_NODEJS_PORT || 9000
 
   terminator: (sig) ->
     if typeof sig is 'string'
@@ -39,6 +35,7 @@ class App
       .set('filename', path)
       .set('compress', true)
       .set('include css', true)
+      .use(rupture())
       .use(nib())
       .import('nib')
 

@@ -1,5 +1,14 @@
 @require 'reset.css'
 
+/* CS04 */
+swatch-a = #F6F792
+swatch-b = #333745
+swatch-c = #77C4D3
+swatch-d = #DAEDE2
+swatch-e = #EA2E49
+
+margin_axis = 34%
+
 html,
 body
   height 100%
@@ -12,7 +21,7 @@ header
   display inline-block
   vertical-align top
   padding 70px 0
-  width 34%
+  width margin_axis
   text-align right
   img
     margin-bottom 20px
@@ -21,17 +30,16 @@ header
     font-weight 800
 
 nav
-  margin-left 37%
+  margin-left margin_axis
   ul
     list-style none
   li
     overflow hidden
-    a
-      &:before
-        content '—'
-        position relative
-        font-size 32px
-        margin-right 10px
+  a:before
+    content '—'
+    position relative
+    font-size 32px
+    margin-right 10px
   a
     margin-left -40px
     line-height 40px
@@ -46,17 +54,10 @@ nav li a:hover,
 nav li a:focus
   margin-left -5px
 
-/* CS04 */
-swatch-a = #F6F792
-swatch-b = #333745
-swatch-c = #77C4D3
-swatch-d = #DAEDE2
-swatch-e = #EA2E49
-
 body
   background-color swatch-d
   header
-    color swatch-text_b
+    color swatch-b
   nav
     a
       color swatch-c
@@ -64,3 +65,9 @@ body
 nav li a:hover,
 nav li a:focus
   color swatch-e
+
++mobile()
+  header
+    text-align left
+    margin-left: margin_axis
+    width: inherit
