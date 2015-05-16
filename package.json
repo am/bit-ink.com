@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test/test.coffee --require should --compilers coffee:coffee-script/register",
-    "devserver": "nodemon app/app.coffee"
+    "devserver": "nodemon -e coffee"
   },
   "repository": {
     "type": "git",
@@ -32,13 +32,14 @@
     "source-map-support": "^0.2.10"
   },
   "dependencies": {
+    "bluebird": "^2.9.25",
     "coffee-script": "^1.9.2",
     "express": "^4.12.3",
     "gulp-coffee": "^2.3.1",
     "gulp-concat": "^2.5.2",
     "gulp-util": "^3.0.4",
     "jade": "^1.9.2",
-    "markdown-serve": "^0.3.2",
+    "marked": "^0.3.3",
     "morgan": "^1.5.2",
     "nib": "^1.1.0",
     "rupture": "^0.6.1",

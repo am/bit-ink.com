@@ -1,26 +1,21 @@
----
-title: cv - antonio miranda
-layout: default
----
+## Personal information
 
-Personal information
-----------------
-antónio césar soeiro miranda
+### antónio césar soeiro miranda
+
 [antsmiranda@gmail.com](mailto:antsmiranda@gmail.com "contact me")
-+34 664 187 182
+
+(+34) **664 187 182**
 
 [@github](http://github.com/am "am @ github")
 [@stackoverflow](http://stackoverflow.com/users/220272 "am @ stackoverflow")
 
-Background
-----------
+## Background
 
 **Interaction Design, Front-end development, 3D, Photography.** While I was studying communication design I found difficult to understand the boundary between create and develop, a clever idea would worth nothing if I couldn’t express it. On the other end exploring, building, making code would lead me to results that I couldn’t imagine before. After all code is just a tool for creative minds.
 
 I’ve spent 12 years making the compilers scream, overflowing the console; although I consider myself a quick learner, my code skills are self-taught. Besides working for reaching a specific goal (make a user smile, to give an example), for the last few years I’ve increased my interest on improve teamwork; software architecture, design patterns, automated workflows are some of the areas that helped managing larger projects.
 
-Proficiency
------------
+## Proficiency
 
 Although my technologic interests are vast I'm specialized in frontend interactive development. In the past I've done: static html / css websites, crafted cd-rom executable application with lingo, had fun creating games with unity3D and C#, learn how to structure a mvc application in actionscript with robotlegs, coded simple apps for android with java and saved data to server with php.
 
@@ -83,19 +78,18 @@ Theoretical knowledge:
 `network architecture`
 `information systems and knowledge cultures`
 
+## Professional experience
 
-Professional experience
------------------------
+> 2013 ¬ present
 
-_2013 ¬ ∞_
 ### Web Development Tech Lead
 #### [Wuaki.tv](http://www.wuaki.tv/ "Wuaki.tv")
 
 Barcelona, Spain
 Web Development Tech Lead
 
+> 2010 ¬ 2013
 
-_2010 ¬ 2013_
 ### Frontend Developer
 #### [DoubleYou](http://www.doubleyou.com/ "Doubleyou")
 
@@ -118,8 +112,8 @@ Creative front-end developer
 - Televisa (mx)
 - Wuaki
 
+> 2008 ¬ 2010
 
-_2008 ¬ 2010_
 ### Interactive Developer
 #### [Igriega](http://www.igriega-comunicacion.com/ "Igriega")
 
@@ -133,7 +127,8 @@ art direction, communications media management, web design, multimedia applicati
 - La Vanguardia
 - Puig (Agatha Ruiz de la Prada, Shakira)
 
-_2008 ¬ 2008_
+> 2008 ¬ 2008
+
 ### Interactive Developer
 #### [Via71](http://www.via71.com/ "Via71")
 
@@ -145,7 +140,8 @@ art direction, web design, multimedia applications, video, 3d animation
 - Grupo Festina
 - Magnolia jeans
 
-_2006 ¬ 2008_
+> 2006 ¬ 2008
+
 ### Design studio partner
 #### Complexresponse
 
@@ -160,7 +156,8 @@ art direction, communications media management, graphic design, photography, ill
 - Plantas da Fonte
 - Sino design
 
-_2004 ¬ 2006_
+> 2004 ¬ 2006
+
 ### Designer / Developer
 #### omf - arquitectura e design, lda
 
@@ -189,7 +186,8 @@ art direction, graphic design, photography, illustration, window dressing, web d
 - Tioccha Kids Wear
 - Zoom - associação cultural
 
-_2003 ¬ 2004_
+> 2003 ¬ 2004
+
 ### Developer
 #### Contacto Visual - Serviços de Informática Unip Lda
 
@@ -201,7 +199,8 @@ web applications and multimedia development, 3d animation
 - Piscinas Variante, lda.
 - Autowelt
 
-_2003 ¬ 2003_
+> 2003 ¬ 2003
+
 ### Freelance / Designer
 #### Freelance
 
@@ -210,7 +209,8 @@ graphic design projects with kristjan mändmaa y vitor aguiar
 
 - Krediidipank
 
-_2000 ¬ 2003_
+> 2000 ¬ 2003
+
 ### Freelance / Designer
 #### Freelance
 
@@ -223,75 +223,74 @@ graphic design projects in collaboration with joão sousa lopes
 - Etfor
 
 
-Academic education
-------------------
+## Academic education
 
-_2003 ¬ 2004_
+> 2003 ¬ 2004
 ### MA in communication design
 #### [Escola Superior de Artes e Design](http://esad.pt/ "esad")
 
 **Master** validates 240 credits ects. 15 points, equals to degree B in the ects classification
 
-_1999 ¬ 2002_
+> 1999 ¬ 2002
+
 ### Bachelor's degree, Design and Applied Arts
 #### [Escola Superior de Artes e Design](http://esad.pt/ "esad")
 
 **Bachelor**
 
-_1996 ¬ 1999_
+> 1996 ¬ 1999
+
 ### Secondary education, visual arts
 #### Escola Soares dos Reis, Porto
 
-Professional education
-----------------------
+## Professional education
 
-_2005_
+> 2005
+
 ### professional Trainer Certificate (105 hrs.)
 #### [ANE](http://www.ane.pt/ "Ane")
 classification B
 
-_2004_
+> 2004
+
 ### business English (100 hrs.)
 #### [GTI](http://www.gti.pt/ "Gti")
 classification A
 
-Natural languages
------------------
+## Natural languages
 
 1. **Portuguese** (mother tongue)
 2. **English** (full professional proficiency)
 3. **Spanish** (full professional proficiency)
 4. **Catalan and French** (elementary proficiency)
 
-Awards & honors
----------------
+## Awards & honors
 
-_2012_
+> 2012
+
 ### Laus de Plata
 #### web & digital media
 "Revívelo" a advertising campaign for the brand "Atrápalo"
 
+> 2012
 
-_2012_
 ### Sol de Oro
 #### social media marketing
 "Makeitcount: Propósitos En Gigafoto"
 
-
-_2003_
+> 2003
 ### ISTD
 #### [ESAD](http://esad.pt/ "esad")
 
 Print, electronic media, alternative media project - merit — http://www.istd.org.uk/
 
-_2002_
+> 2002
 ### porto na rota dos vinhos
 #### [ESAD](http://esad.pt/ "esad") / porto na rota dos vinhos
 
 Selected project
 
-Workshops
----------
+## Workshops
 
 ### conversing work
 by **tomato design** - OFFF 2005
