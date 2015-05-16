@@ -1,7 +1,7 @@
 should = require 'should'
-BitInkApp = require '../app.coffee'
+App = require '../app/'
 
 describe 'BitInkApp class', ->
     it 'should be a instance of the class', ->
-      app = new BitInkApp
-      app.should.be.an.instanceOf BitInkApp
+      app = App()
+      app.should.exist()
