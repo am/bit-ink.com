@@ -1,8 +1,3 @@
----
-title: technical cv - antonio miranda
-layout: default
----
-
 # Personal information
 antónio césar soeiro miranda
 [antsmiranda@gmail.com](mailto:antsmiranda@gmail.com "contact me")
