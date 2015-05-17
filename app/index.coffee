@@ -3,8 +3,6 @@ express = require 'express'
 util = require './util'
 config = require './config'
 
-require('./terminator')()
-
 module.exports = ->
   @serverConfig =
     ipaddress: process.env.OPENSHIFT_NODEJS_IP
