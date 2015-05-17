@@ -8,15 +8,15 @@ module.exports = ->
   @set 'views', "#{__dirname}/views"
   @set 'view engine', 'jade'
 
-  # static assets
-  @use express.static "#{__dirname}/../public"
-
   # stylus
   @use stylus.middleware(
     src: "#{__dirname}/../stylus"
     dest: "#{__dirname}/../public/css"
     compile: util.compileStylus
   )
+
+  # static assets
+  @use express.static "#{__dirname}/../public"
 
   # logs
   @use logger 'dev'

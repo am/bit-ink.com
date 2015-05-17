@@ -50,10 +50,12 @@ nav
     -o-transition all 150ms ease-in-out
     transition all 150ms ease-in-out
 
+// hide list dash
 nav li a:hover,
 nav li a:focus
   margin-left -5px
 
+// color scheme
 body
   background-color swatch-d
   header
@@ -66,8 +68,38 @@ nav li a:hover,
 nav li a:focus
   color swatch-e
 
+// 404
+.error404
+  margin-left: 120px
+
+  h1
+    font-size: 50px
+    line-height: 60px
+    padding: 20px 0
+
+// responsive using https://github.com/jenius/rupture
 +mobile()
   header
     text-align left
-    margin-left: margin_axis
-    width: inherit
+    margin-left: 5em
+  nav
+    margin-left: 5em
+
++tablet()
+  header
+    width: 300px
+  nav
+    margin-left 300px
+
++desktop()
+  header
+    width: 400px
+  nav
+    margin-left 400px
+
++hd()
+  header
+    width: 30%
+  nav
+    margin-left 30%
+    
