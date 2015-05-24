@@ -9,17 +9,22 @@ controllers = require './controllers'
 class App
   express: null
 
-  constructor: () ->
+  constructor: ->
     @express = express()
-      .set('views', "#{__dirname}/views")
-      .set('view engine', 'jade')
-      .use(new stylusMiddleware)
-      .use(express.static "#{__dirname}/../public")
-      .use(logger 'dev')
-      .use(controllers)
+    @setup.apply @express
+    @server.apply @express
 
+  setup: ->
+    @set 'views', "#{__dirname}/views"
+    @set 'view engine', 'jade'
+    @use new stylusMiddleware
+    @use express.static "#{__dirname}/../public"
+    @use logger(if @settings.env is 'development' then 'dev' else 'short')
+    @use controllers
+
+  server: ->
     # start server
-    @express.listen config.port, config.ipaddress, =>
+    @listen config.port, config.ipaddress, =>
       console.log "
         #{ util.dateNow() }: Node server started on #{ config.ipaddress }:#{ config.port }...
       "
