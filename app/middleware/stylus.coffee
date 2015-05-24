@@ -13,7 +13,7 @@ module.exports = ->
       .import('nib')
 
   stylus.middleware(
-    src: "#{__dirname}/../stylus"
-    dest: "#{__dirname}/../public/css"
+    src: "#{__dirname}/../../stylus"
+    dest: "#{__dirname}/../../public/css"
     compile: @compileStylus
   )
