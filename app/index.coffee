@@ -1,23 +1,27 @@
 express = require 'express'
+logger = require 'morgan'
 
 util = require './util'
 config = require './config'
+stylusMiddleware = require './middleware/stylus'
+controllers = require './controllers'
 
-module.exports = ->
-  @serverConfig =
-    ipaddress: process.env.OPENSHIFT_NODEJS_IP
-    port: process.env.OPENSHIFT_NODEJS_PORT or 9000
+class App
+  express: null
 
-  @express = express()
+  constructor: () ->
+    @express = express()
+      .set('views', "#{__dirname}/views")
+      .set('view engine', 'jade')
+      .use(new stylusMiddleware)
+      .use(express.static "#{__dirname}/../public")
+      .use(logger 'dev')
+      .use(controllers)
 
-  # configure app
-  config.apply @express
+    # start server
+    @express.listen config.port, config.ipaddress, =>
+      console.log "
+        #{ util.dateNow() }: Node server started on #{ config.ipaddress }:#{ config.port }...
+      "
 
-  # controllers
-  @express.use require './controllers'
-
-  # start server
-  @express.listen @serverConfig.port, @serverConfig.ipaddress, =>
-    console.log "
-      #{ util.dateNow() }: Node server started on #{ @serverConfig.ipaddress }:#{ @serverConfig.port }...
-    "
+module.exports = App

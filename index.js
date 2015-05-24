@@ -1,5 +1,8 @@
 #!/bin/env node
 
-var App, app;
+// require coffee-script to parse source in .coffee
 require('coffee-script/register');
-require('./app/')();
+
+// initialize application
+var App = require('./app/index');
+new App;

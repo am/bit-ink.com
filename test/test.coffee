@@ -1,7 +1,16 @@
 should = require 'should'
-App = require '../app/'
+App = require('../app/')
+express = require 'express'
 
-describe 'BitInkApp class', ->
-    it 'should be a instance of the class', ->
-      app = App()
-      app.should.exist()
+describe 'application', ->
+  app = new App
+
+  it 'should be a class', ->
+    App.should.be.Class
+
+  it 'should return an Object', ->
+    app.should.be.Object
+
+  it 'should have an Express instance', ->
+    should.exist(app.express)
+    app.express.should.be.Function
