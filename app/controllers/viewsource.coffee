@@ -12,9 +12,12 @@ github = new Github(
   timeout: 5000
 )
 
-modelPromise = (href = '') ->
+getModelPromise = (href = '') ->
+  href = href.replace /\/$/, ''
+
   new Promise (resolve, reject) ->
-    cached = cache.get  "cache#{ href }"
+    cachekey = "cache#{ href }"
+    cached = cache.get  cachekey
 
     if cached then resolve cached
     else
@@ -22,15 +25,26 @@ modelPromise = (href = '') ->
         user: 'am'
         repo: 'www.bit-ink.com'
         path: href
-        , (err, gh_res, next) ->
-          content = JSON.stringify(gh_res)
-          cache.set 'source', content
-          resolve content
+        , (err, res, next) ->
+          content = JSON.stringify res
+          cache.set cachekey, res
+          resolve res
       )
 
+addSlash = (path) ->
+  endSlash = /\/$/
+  hasSlash = endSlash.test path
+  if hasSlash then path else "#{ path }/"
+
 router.get '/:href(*)', (req, res, next) ->
-  modelPromise = modelPromise req.params.href
+  modelPromise = getModelPromise req.params.href
   modelPromise.then (model) ->
-    res.render 'viewsource', github: JSON.parse model
+    if model.length then collection = model
+    else file = model
+
+    res.render 'viewsource',
+      collection: collection,
+      file: file
+      root: "/viewsource#{ addSlash req.path }"
 
 module.exports = router
