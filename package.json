@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test/test.coffee --require should --compilers coffee:coffee-script/register",
-    "devserver": "nodemon -e coffee"
+    "devserver": "nodemon -e coffee,js,jade"
   },
   "repository": {
     "type": "git",

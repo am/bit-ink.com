@@ -2,6 +2,14 @@ extends layout
 
 block content
   h1 view source
+  h2= modulePath
+ 
   ul
-    for file in github
-      li!= file.name
+    li
+      a(href=root + '..') ..
+    if collection
+      for file in collection
+        li
+          a(href= root + file.name )!= file.name
+    else
+      p!= file.content
