@@ -18,6 +18,7 @@ class App
     @set 'views', "#{__dirname}/views"
     @set 'view engine', 'jade'
     @use new stylusMiddleware
+    @use '/css/vendor/prismjs', express.static "#{__dirname}/../node_modules/prismjs/themes"
     @use express.static "#{__dirname}/../public"
     @use logger(if @settings.env is 'development' then 'dev' else 'short')
     @use controllers
