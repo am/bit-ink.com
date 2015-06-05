@@ -36,6 +36,7 @@
     "coffee-script": "^1.9.2",
     "express": "^4.12.3",
     "github": "^0.2.4",
+    "highlight.js": "^8.6.0",
     "jade": "^1.9.2",
     "marked": "^0.3.3",
     "morgan": "^1.5.2",
