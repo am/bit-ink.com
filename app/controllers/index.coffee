@@ -5,6 +5,6 @@ router = express.Router()
 router.use '/cv', require './cv'
 router.use '/viewsource', require './viewsource'
 router.get '/', (req, res, next) -> res.render 'index'
-router.use (req, res, next) -> res.render '404'
+router.use (req, res, next) -> res.status(404).render '404'
 
 module.exports = router
