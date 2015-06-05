@@ -40,7 +40,7 @@ router.get '/:href(*)', (req, res, next) ->
   modelPromise = getModelPromise req.params.href
   modelPromise.then (model) ->
     if model.length then collection = model
-    else file = model
+    else file = new Buffer model.content, 'base64'
 
     res.render 'viewsource',
       collection: collection,
