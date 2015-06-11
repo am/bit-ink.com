@@ -5,14 +5,13 @@ block head
 
 block content
   h1 view source
-  h2= modulePath
  
   ul
     li
-      a(href=root + '..') ..
+      a(href= dir + '..') ..
     if collection
       for file in collection
         li
-          a(href= root + file.name )!= file.name
+          a(href= dir + file.name )!= file.name
     else
       pre!= file
