@@ -39,18 +39,33 @@ addSlash = (path) ->
   hasSlash = endSlash.test path
   if hasSlash then path else "#{ path }/"
 
+getDirContent = (data) ->
+  data if data.length
+
+getSyntaxLanguage = (type) ->
+  switch type
+    when 'md' then 'markdown'
+    when 'js' then 'javascript'
+    when 'coffee' then 'coffeescrip'
+    when 'styl' then 'stylus'
+    else 'none'
+
+getFileContent = (data) ->
+  return null if data.length
+  syntax = getSyntaxLanguage 'js'
+  buf = new Buffer data.content, 'base64'
+  Prism.highlight buf.toString(), Prism.languages[syntax]
+
 router.get '/:href(*)', (req, res, next) ->
   modelPromise = getModelPromise req.params.href
-  modelPromise.then (model) ->
-    if model.length then collection = model
-    else
-      buf = new Buffer model.content, 'base64'
-      file = Prism.highlight buf.toString(), Prism.languages.javascript
+  modelPromise.then (data) ->
+    rootPath = "/viewsource#{ addSlash req.path }"
+    model =
+      collection: getDirContent data
+      file: getFileContent data
+      dir: "/viewsource#{ addSlash req.path }"
 
-    res.render 'viewsource',
-      collection: collection,
-      file: file
-      root: "/viewsource#{ addSlash req.path }"
+    res.render 'viewsource', model
 
   modelPromise.catch (error) ->
     console.log error.code
