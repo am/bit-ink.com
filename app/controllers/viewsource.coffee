@@ -34,6 +34,11 @@ getCache = (href) ->
 setCache = (href, content) ->
   cache.set cacheKey(href), content
 
+githubSettings = (href) ->
+  user: GH_USER
+  repo: GH_REPO
+  path: href
+
 getModelPromise = (href = '') ->
   href = href.replace /\/$/, ''
 
@@ -43,10 +48,8 @@ getModelPromise = (href = '') ->
     if cached then resolve cached
     else
       github.repos.getContent(
-        user: GH_USER
-        repo: GH_REPO
-        path: href
-        , githubResolve resolve, reject, href
+        githubSettings href
+        githubResolve resolve, reject, href
       )
 
 addSlash = (path) ->
