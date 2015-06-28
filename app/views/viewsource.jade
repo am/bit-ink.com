@@ -1,7 +1,7 @@
 extends layout
 
 block head
-  link(rel='stylesheet', href='/css/vendor/prismjs/prism.css')
+  link(rel='stylesheet', href='/components/prism/themes/prism.css')
 
 block content
   h1 view source
@@ -14,4 +14,10 @@ block content
         li
           a(href= dir + file.name )!= file.name
     else
-      pre!= file
+      pre
+        code.language-javascript!= file
+
+block scripts
+  script(src='/components/prism/prism.js')
+  script(src='/components/prism/components/prism-javascript.min.js')
+  script(src='/scripts/viewsource.js')

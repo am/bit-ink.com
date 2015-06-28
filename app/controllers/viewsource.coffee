@@ -4,7 +4,6 @@ Github = require 'github'
 NodeCache =  require 'node-cache'
 path = require 'path'
 jade = require 'jade'
-Prism = require 'prismjs'
 
 cache = new NodeCache stdTTl: 100, checkperiod: 120
 github = new Github(
@@ -42,24 +41,13 @@ addSlash = (path) ->
 getDirContent = (data) ->
   data if data.length
 
-getSyntaxLanguage = (type) ->
-  switch type
-    when 'md' then 'markdown'
-    when 'js' then 'javascript'
-    when 'coffee' then 'coffeescrip'
-    when 'styl' then 'stylus'
-    else 'none'
-
 getFileContent = (data) ->
   return null if data.length
-  syntax = getSyntaxLanguage 'js'
-  buf = new Buffer data.content, 'base64'
-  Prism.highlight buf.toString(), Prism.languages[syntax]
+  new Buffer data.content, 'base64'
 
 router.get '/:href(*)', (req, res, next) ->
   modelPromise = getModelPromise req.params.href
   modelPromise.then (data) ->
-    rootPath = "/viewsource#{ addSlash req.path }"
     model =
       collection: getDirContent data
       file: getFileContent data
