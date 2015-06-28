@@ -5,32 +5,48 @@ NodeCache =  require 'node-cache'
 path = require 'path'
 jade = require 'jade'
 
+GH_VERSION = "3.0.0"
+GH_DEBUG = on
+GH_TIMEOUT = 5000
+GH_USER = 'am'
+GH_REPO = 'www.bit-ink.com'
+
 cache = new NodeCache stdTTl: 100, checkperiod: 120
 github = new Github(
-  version: "3.0.0"
-  debug: on
-  timeout: 5000
+  version: GH_VERSION
+  debug: GH_DEBUG
+  timeout: GH_TIMEOUT
 )
+
+githubResolve = (resolve, reject, href) ->
+  (err, res, next) ->
+    if err? then reject err
+    else
+      setCache href, res
+      resolve res
+
+cacheKey = (href) ->
+  "viewsource_#{ href }"
+
+getCache = (href) ->
+  cache.get cacheKey href
+
+setCache = (href, content) ->
+  cache.set cacheKey(href), content
 
 getModelPromise = (href = '') ->
   href = href.replace /\/$/, ''
 
   new Promise (resolve, reject) ->
-    cachekey = "cache#{ href }"
-    cached = cache.get  cachekey
+    cached = getCache href
 
     if cached then resolve cached
     else
       github.repos.getContent(
-        user: 'am'
-        repo: 'www.bit-ink.com'
+        user: GH_USER
+        repo: GH_REPO
         path: href
-        , (err, res, next) ->
-          if err? then reject err
-          else
-            content = JSON.stringify res
-            cache.set cachekey, res
-            resolve res
+        , githubResolve resolve, reject, href
       )
 
 addSlash = (path) ->
