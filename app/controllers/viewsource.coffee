@@ -1,5 +1,8 @@
-express = require 'express'
-router = express.Router()
+# express = require 'express'
+# router = express.Router()
+{Router} = require 'express'
+viewsourceRouter = Router()
+
 Github = require 'github'
 NodeCache =  require 'node-cache'
 path = require 'path'
@@ -10,6 +13,13 @@ GH_DEBUG = on
 GH_TIMEOUT = 5000
 GH_USER = 'am'
 GH_REPO = 'www.bit-ink.com'
+
+FILE_TYPES =
+  js: 'javascript'
+  coffee: 'coffeescript'
+  html: 'html'
+  jade: 'jade'
+
 
 cache = new NodeCache stdTTl: 100, checkperiod: 120
 github = new Github(
@@ -64,18 +74,24 @@ getFileContent = (data) ->
   return null if data.length
   new Buffer data.content, 'base64'
 
-router.get '/:href(*)', (req, res, next) ->
-  modelPromise = getModelPromise req.params.href
-  modelPromise.then (data) ->
-    model =
-      collection: getDirContent data
-      file: getFileContent data
-      dir: "/viewsource#{ addSlash req.path }"
+getFileType = (data) ->
+  return null if data.length
+  FILE_TYPES[data.name.split('.').pop()]
 
-    res.render 'viewsource', model
+viewsourceRouter.route '/:href(*)'
+  .get (req, res, next) ->
+    ghPromise = getModelPromise req.params.href
+    ghPromise.then (data) ->
+      model =
+        collection: getDirContent data
+        file: getFileContent data
+        fileType: getFileType data
+        dir: "/viewsource#{ addSlash req.path }"
 
-  modelPromise.catch (error) ->
-    console.log error.code
-    res.status(error.code).render '404'
+      res.render 'viewsource', model
 
-module.exports = router
+    ghPromise.catch (error) ->
+      console.log error.code
+      res.status(error.code).render '404'
+
+module.exports = viewsourceRouter
