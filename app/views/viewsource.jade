@@ -6,16 +6,17 @@ block head
 block content
   h1 view source
  
-  ul
-    li
-      a(href= dir + '..') ..
-    if collection
+  
+  if collection
+    ul
+      li
+        a(href= dir + '..') ..
       for file in collection
         li
           a(href= dir + file.name )!= file.name
-    else
-      pre
-        code(class="language-#{ fileType }")!= file
+  else
+    pre
+      code(class="language-#{ fileType }")!= file
 
 block scripts
   script(src='/components/prism/prism.js')
