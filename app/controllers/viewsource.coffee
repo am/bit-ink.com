@@ -76,7 +76,7 @@ getFileContent = (data) ->
 
 getFileType = (data) ->
   return null if data.length
-  FILE_TYPES[data.name.split('.').pop()]
+  FILE_TYPES[data.name.split('.').pop()] || 'none'
 
 viewsourceRouter.route '/:href(*)'
   .get (req, res, next) ->
