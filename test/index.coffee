@@ -1,7 +1,11 @@
 should = require 'should'
 sinon = require 'sinon'
-App = require('../app/')
 express = require 'express'
+path = require 'path'
+fs = require 'fs'
+StylusMiddleware = require '../app/middleware/stylus'
+
+App = require '../app/'
 
 describe 'application Class instance', ->
   app = new App
@@ -17,13 +21,30 @@ describe 'application Class instance', ->
     app.express.should.be.Function
 
 describe 'application initialization', ->
+  app = new App
 
   it 'should call setup', ->
-    @setupSpy = sinon.spy App::, 'setup'
-    new App
-    @setupSpy.calledOnce.should.be.true()
+    spy = sinon.spy app, 'setup'
+    app.setup()
+    spy.calledOnce.should.be.true()
 
   it 'should call server', ->
-    @serverSpy = sinon.spy App::, 'server'
-    new App
-    @serverSpy.calledOnce.should.be.true()
+    spy = sinon.spy app, 'server'
+    app.server()
+    spy.calledOnce.should.be.true()
+
+describe 'setup', ->
+  app = new App
+  spy = sinon.spy app.express, 'set'
+  app.setup()
+
+  it 'should configure views', ->
+    # Code smell here, now the test file can't be moved since this path is relative
+    viewsPath = path.join __dirname, '../app/views'
+    spy.calledWith('views', viewsPath).should.be.true()
+
+  it 'should configure jade as view engine', ->
+    spy.calledWith('view engine', 'jade').should.be.true()
+
+  it 'should setup stylus middleware', ->
+    spy.calledWith(new StylusMiddleware)
