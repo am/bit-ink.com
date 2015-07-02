@@ -1,0 +1,20 @@
+{
+  "name": "www.bit-ink.com",
+  "main": "index.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/am/www.bit-ink.com",
+  "authors": [
+    "Antonio Miranda <antsmiranda@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "prism": "~1.0.0"
+  }
+}

@@ -15,9 +15,11 @@ block content
           a(href= dir + file.name )!= file.name
     else
       pre
-        code.language-javascript!= file
+        code(class="language-#{ fileType }")!= file
 
 block scripts
   script(src='/components/prism/prism.js')
   script(src='/components/prism/components/prism-javascript.min.js')
+  script(src='/components/prism/components/prism-coffeescript.min.js')
+  script(src='/components/prism/components/prism-jade.min.js')
   script(src='/scripts/viewsource.js')
