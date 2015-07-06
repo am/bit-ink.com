@@ -35,16 +35,25 @@ describe 'application initialization', ->
 
 describe 'setup', ->
   app = new App
-  spy = sinon.spy app.express, 'set'
+  setSpy = sinon.spy app.express, 'set'
+  useSpy = sinon.spy app.express, 'use'
   app.setup()
 
-  it 'should configure views', ->
-    # Code smell here, now the test file can't be moved since this path is relative
+  it 'should set views', ->
+    # Code smell, now the test file can't be moved since this path is relative
     viewsPath = path.join __dirname, '../app/views'
-    spy.calledWith('views', viewsPath).should.be.true()
+    setSpy.calledWith('views', viewsPath).should.be.true()
 
-  it 'should configure jade as view engine', ->
-    spy.calledWith('view engine', 'jade').should.be.true()
+  it 'should set jade as view engine', ->
+    setSpy.calledWith('view engine', 'jade').should.be.true()
 
-  it 'should setup stylus middleware', ->
-    spy.calledWith(new StylusMiddleware)
+  it 'should set stylus middleware', ->
+    setSpy.calledWith(new StylusMiddleware)
+
+  it 'should use components mount for static bower components assets', ->
+    bowerComponentsPath = path.join __dirname, '../bower_components'
+    useSpy.calledWith '/components', express.static bowerComponentsPath
+
+  it 'should use public for static assets', ->
+    publicPath = path.join __dirname, '../public'
+    useSpy.calledWith express.static publicPath
