@@ -22,10 +22,11 @@ class App
     @express.use controllers
 
   server: ->
-    # start server
-    @express.listen config.port, config.ipaddress, =>
-      console.log "
-        #{ util.dateNow() }: Node server started on #{ config.ipaddress }:#{ config.port }...
-      "
+    @express.listen config.port, config.ipaddress, @serverLog
+
+  serverLog: ->
+    => console.log "
+      #{ util.dateNow() }: Node server started on #{ config.ipaddress }:#{ config.port }...
+    "
 
 module.exports = App

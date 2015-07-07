@@ -6,6 +6,7 @@ fs = require 'fs'
 StylusMiddleware = require '../app/middleware/stylus'
 logger = require 'morgan'
 controllers = require '../app/controllers'
+config = require '../app/config'
 
 App = require '../app/'
 
@@ -65,3 +66,11 @@ describe 'setup', ->
 
   it 'should use controllers', ->
     useSpy.calledWith controllers
+
+describe 'server', ->
+  app = new App
+  spy = sinon.spy app.express, 'listen'
+  app.server()
+
+  it 'should listen to port and address', ->
+    spy.calledWith config.port, config.ipaddress, app.serverLog
