@@ -13,6 +13,7 @@ class App
     @express = express()
 
   setup: ->
+    @express.locals.pretty = on
     @express.set 'views', "#{__dirname}/views"
     @express.set 'view engine', 'jade'
     @express.use new StylusMiddleware
