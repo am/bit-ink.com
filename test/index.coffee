@@ -4,6 +4,8 @@ express = require 'express'
 path = require 'path'
 fs = require 'fs'
 StylusMiddleware = require '../app/middleware/stylus'
+logger = require 'morgan'
+controllers = require '../app/controllers'
 
 App = require '../app/'
 
@@ -57,3 +59,9 @@ describe 'setup', ->
   it 'should use public for static assets', ->
     publicPath = path.join __dirname, '../public'
     useSpy.calledWith express.static publicPath
+
+  it 'should use logger with development configuration', ->
+    useSpy.calledWith logger 'development'
+
+  it 'should use controllers', ->
+    useSpy.calledWith controllers
