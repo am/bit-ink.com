@@ -1,5 +1,6 @@
 express = require 'express'
 logger = require 'morgan'
+pjax = require 'express-pjax'
 
 util = require './util'
 config = require './config'
@@ -16,6 +17,7 @@ class App
     @express.locals.pretty = on
     @express.set 'views', "#{__dirname}/views"
     @express.set 'view engine', 'jade'
+    @express.use pjax()
     @express.use new StylusMiddleware
     @express.use '/components', express.static "#{__dirname}/../bower_components"
     @express.use express.static "#{__dirname}/../public"

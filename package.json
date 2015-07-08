@@ -37,6 +37,7 @@
     "bluebird": "^2.9.25",
     "coffee-script": "^1.9.2",
     "express": "^4.12.3",
+    "express-pjax": "git://github.com/optikfluffel/express-pjax.git",
     "github": "^0.2.4",
     "jade": "^1.9.2",
     "marked": "^0.3.3",

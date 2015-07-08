@@ -8,6 +8,10 @@ NodeCache =  require 'node-cache'
 path = require 'path'
 jade = require 'jade'
 
+###
+configuration
+###
+
 GH_VERSION = "3.0.0"
 GH_DEBUG = on
 GH_TIMEOUT = 5000
@@ -27,6 +31,10 @@ github = new Github(
   debug: GH_DEBUG
   timeout: GH_TIMEOUT
 )
+
+###
+helper methods
+###
 
 githubResolve = (resolve, reject, href) ->
   (err, res, next) ->
@@ -78,17 +86,22 @@ getFileType = (data) ->
   return null if data.length
   FILE_TYPES[data.name.split('.').pop()] || 'none'
 
+getViewsourceModel = (data, req) ->
+  collection: getDirContent data
+  file: getFileContent data
+  fileType: getFileType data
+  dir: "/viewsource#{ addSlash req.path }"
+
+###
+router
+###
+
 viewsourceRouter.route '/:href(*)'
   .get (req, res, next) ->
     ghPromise = getModelPromise req.params.href
     ghPromise.then (data) ->
-      model =
-        collection: getDirContent data
-        file: getFileContent data
-        fileType: getFileType data
-        dir: "/viewsource#{ addSlash req.path }"
-
-      res.render 'viewsource', model
+      model = getViewsourceModel data, req
+      res.renderPjax 'index', model
 
     ghPromise.catch (error) ->
       console.log error.code

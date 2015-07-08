@@ -15,6 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "prism": "~1.0.0"
+    "prism": "~1.0.0",
+    "jquery-pjax": "~1.9.6"
   }
 }
