@@ -4,19 +4,7 @@ block head
   link(rel='stylesheet', href='/components/prism/themes/prism.css')
 
 block content
-  h1 view source
- 
-  
-  if collection
-    ul
-      li
-        a(href= dir + '..') ..
-      for file in collection
-        li
-          a(href= dir + file.name )!= file.name
-  else
-    pre
-      code(class="language-#{ fileType }")!= file
+  include pjax/viewsource
 
 block scripts
   script(src='/components/prism/prism.js')

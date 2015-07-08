@@ -2,11 +2,17 @@ extends layout
 
 block head
   link(href='http://fonts.googleapis.com/css?family=Martel+Sans:200,400,700' rel='stylesheet' type='text/css')
+  link(rel='stylesheet', href='/components/prism/themes/prism.css')
   link(href='/css/styles.css', rel='stylesheet')
 
 block content
+  #viewsource
+    a(data-pjax href='/viewsource/') viewsource
+
+    include pjax/index
+
   header
-    img(src='img/am-icon-darkblue.png', alt='am')
+    img(src='/img/am-icon-darkblue.png', alt='am')
     h1 antonio miranda
     br
     h2 front end developer
@@ -14,7 +20,7 @@ block content
   nav
     ul
       li
-        a(href='cv/tech') tech cv
+        a(href='/cv/tech') tech cv
       li
         a(href='https://github.com/ammutable') github
       li
@@ -23,3 +29,10 @@ block content
         a(href='https://www.flickr.com/photos/95126201@N06/') flickr 
       li
         a(href='mailto:antsmiranda@gmail.com') contact
+
+block scripts
+  script(src='/components/prism/prism.js')
+  script(src='/components/prism/components/prism-javascript.min.js')
+  script(src='/components/prism/components/prism-coffeescript.min.js')
+  script(src='/components/prism/components/prism-jade.min.js')
+  script(src='/scripts/app.js')

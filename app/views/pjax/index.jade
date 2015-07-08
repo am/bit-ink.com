@@ -1,0 +1,10 @@
+if collection
+  ul
+    li
+      a(data-pjax href= dir + '..') ..
+    for file in collection
+      li
+        a(data-pjax href= dir + file.name )!= file.name
+else if file
+  pre
+    code(class="language-#{ fileType }")!= file
