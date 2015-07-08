@@ -8,6 +8,9 @@ html
     meta(content='yes', name='apple-mobile-web-app-capable')
     meta(content='width=device-width, initial-scale=1, maximum-scale=1.0', name='viewport')
     link(rel="icon", type="image/x-icon", href="/favicon.ico")
+    link(href='http://fonts.googleapis.com/css?family=Martel+Sans:200,400,700' rel='stylesheet' type='text/css')
+    link(rel='stylesheet', href='/components/prism/themes/prism.css')
+    link(href='/css/styles.css', rel='stylesheet')
 
     block head
 
@@ -16,6 +19,14 @@ body
 
   script(src='/components/jquery/dist/jquery.min.js')
   script(src='/components/jquery-pjax/jquery.pjax.js')
+  script(src='/components/prism/prism.js')
+  script(src='/components/prism/components/prism-javascript.min.js')
+  script(src='/components/prism/components/prism-coffeescript.min.js')
+  script(src='/components/prism/components/prism-jade.min.js')
+  script(src='/components/prism/components/prism-stylus.min.js')
+  script(src='/components/prism/components/prism-markdown.min.js')
+  script(src='/components/prism/components/prism-markup.min.js')
+  script(src='/components/prism/components/prism-css.min.js')
   block scripts
 
   script.

@@ -1,14 +1,8 @@
 extends layout
 
-block head
-  link(href='http://fonts.googleapis.com/css?family=Martel+Sans:200,400,700' rel='stylesheet' type='text/css')
-  link(rel='stylesheet', href='/components/prism/themes/prism.css')
-  link(href='/css/styles.css', rel='stylesheet')
-
 block content
   #viewsource
     a(data-pjax href='/viewsource/') viewsource
-
     include pjax/index
 
   header
@@ -31,8 +25,4 @@ block content
         a(href='mailto:antsmiranda@gmail.com') contact
 
 block scripts
-  script(src='/components/prism/prism.js')
-  script(src='/components/prism/components/prism-javascript.min.js')
-  script(src='/components/prism/components/prism-coffeescript.min.js')
-  script(src='/components/prism/components/prism-jade.min.js')
   script(src='/scripts/app.js')
