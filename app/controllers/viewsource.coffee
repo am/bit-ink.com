@@ -20,10 +20,13 @@ GH_REPO = 'www.bit-ink.com'
 
 FILE_TYPES =
   js: 'javascript'
+  json: 'javascript'
   coffee: 'coffeescript'
-  html: 'html'
+  html: 'markup'
   jade: 'jade'
-
+  md: 'markdown'
+  css: 'css'
+  styl: 'stylus'
 
 cache = new NodeCache stdTTl: 100, checkperiod: 120
 github = new Github(
