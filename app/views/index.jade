@@ -1,10 +1,12 @@
 extends layout
 
 block content
-  #viewsource
-    a(data-pjax href='/viewsource/') viewsource
-    include pjax/index
+  .viewsource.container-fluid
+    #viewsource.text-left
+      include pjax/index
 
+  .container-fluid.text-center
+    a.btn.btn-link(data-pjax href='/viewsource/') viewsource
   header
     img(src='/img/am-icon-darkblue.png', alt='am')
     h1 antonio miranda
