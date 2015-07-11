@@ -1,4 +1,5 @@
-@require 'reset.css'
+// @require 'reset.css'
+@require 'fontello.css'
 
 /* CS04 */
 swatch-a = #F6F792
@@ -17,6 +18,20 @@ body
   line-height 17px
   font-family 'Martel Sans', sans-serif
 
+a
+  color: swatch-c
+
+.viewsource
+  min-height: 0.5em
+  background-color: swatch-b
+
+  table
+    color: swatch-c
+  p
+    opacity: 0.5
+  a
+    opacity: 1
+
 header
   display inline-block
   vertical-align top
@@ -26,8 +41,11 @@ header
   img
     margin-bottom 20px
     height 40px
-  h1
+  h1, h2
     font-weight 800
+    font-size: 14px
+    padding: 0
+    margin: 0
 
 nav
   margin-left margin_axis
@@ -35,6 +53,8 @@ nav
     list-style none
   li
     overflow hidden
+  a:hover
+    text-decoration: none
   a:before
     content '—'
     position relative

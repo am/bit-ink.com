@@ -1,10 +1,22 @@
 if collection
-  ul
-    li
-      a(data-pjax href= dir + '..') ..
-    for file in collection
-      li
-        a(data-pjax href= dir + file.name )!= file.name
+  table.table
+
+    tbody
+      tr
+        td
+          a(data-pjax href= dir + '..') ..
+      for file in collection
+        tr
+          td
+            if file.type == 'dir'
+              i.icon.icon-folder
+            if file.type == 'file'
+              i.icon.icon-doc
+          td
+            a(data-pjax href= dir + file.name )!= file.name
+          td
+            p!= file.sha
+
 else if file
   pre
     code(class="language-#{ fileType }")!= file
