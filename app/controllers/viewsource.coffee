@@ -1,22 +1,14 @@
-# express = require 'express'
-# router = express.Router()
 {Router} = require 'express'
 viewsourceRouter = Router()
 
-Github = require 'github'
 NodeCache =  require 'node-cache'
+RepoContent = require '../models/repocontent'
 path = require 'path'
 jade = require 'jade'
 
 ###
 configuration
 ###
-
-GH_VERSION = "3.0.0"
-GH_DEBUG = on
-GH_TIMEOUT = 5000
-GH_USER = 'am'
-GH_REPO = 'www.bit-ink.com'
 
 FILE_TYPES =
   js: 'javascript'
@@ -29,49 +21,20 @@ FILE_TYPES =
   styl: 'stylus'
 
 cache = new NodeCache stdTTl: 100, checkperiod: 120
-github = new Github(
-  version: GH_VERSION
-  debug: GH_DEBUG
-  timeout: GH_TIMEOUT
-)
 
 ###
 helper methods
 ###
 
-githubResolve = (resolve, reject, href) ->
-  (err, res, next) ->
-    if err? then reject err
-    else
-      setCache href, res
-      resolve res
-
-cacheKey = (href) ->
-  "viewsource_#{ href }"
-
-getCache = (href) ->
-  cache.get cacheKey href
-
-setCache = (href, content) ->
-  cache.set cacheKey(href), content
-
-githubSettings = (href) ->
-  user: GH_USER
-  repo: GH_REPO
-  path: href
-
 getModelPromise = (href = '') ->
   href = href.replace /\/$/, ''
-
   new Promise (resolve, reject) ->
-    cached = getCache href
-
-    if cached then resolve cached
-    else
-      github.repos.getContent(
-        githubSettings href
-        githubResolve resolve, reject, href
-      )
+    model = new RepoContent cache
+    promise = model.getContent href
+    promise.then (data) ->
+      resolve data
+    promise.catch (error) ->
+      reject error
 
 addSlash = (path) ->
   endSlash = /\/$/
