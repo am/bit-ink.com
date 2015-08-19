@@ -15,7 +15,7 @@ if collection
           td
             a(data-pjax href= dir + file.name )!= file.name
           td
-            p!= file.sha
+            p!= file.sha.slice(0, 7)
 
 else if file
   pre
