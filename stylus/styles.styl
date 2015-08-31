@@ -21,16 +21,28 @@ body
 a
   color: swatch-c
 
+.table
+  & > tbody
+    & > tr
+      border-top 1px solid rgba(0, 0, 0, 0.25)
+      box-shadow 0px 2px rgba(255, 255, 255, 0.1)
+      & > td
+        border none
+  
 .viewsource
-  min-height: 0.5em
-  background-color: swatch-b
+  height 0.5em
+  overflow hidden
+  min-height 0.5em
+  background-color swatch-b
+  box-shadow inset 0px -10px 20px rgba(0, 0, 0, 0.6)
+  transition height .5s cubic-bezier(0.65, 0.05, 0.36, 1)
 
   table
-    color: swatch-c
+    color swatch-c
   p
-    opacity: 0.5
+    opacity 0.5
   a
-    opacity: 1
+    opacity 1
 
 header
   display inline-block
@@ -43,9 +55,9 @@ header
     height 40px
   h1, h2
     font-weight 800
-    font-size: 14px
-    padding: 0
-    margin: 0
+    font-size 14px
+    padding 0
+    margin 0
 
 nav
   margin-left margin_axis
@@ -54,7 +66,7 @@ nav
   li
     overflow hidden
   a:hover
-    text-decoration: none
+    text-decoration none
   a:before
     content '—'
     position relative
@@ -90,36 +102,36 @@ nav li a:focus
 
 // 404
 .error404
-  margin-left: 120px
+  margin-left 120px
 
   h1
-    font-size: 50px
-    line-height: 60px
-    padding: 20px 0
+    font-size 50px
+    line-height 60px
+    padding 20px 0
 
 // responsive using https://github.com/jenius/rupture
 +mobile()
   header
     text-align left
-    margin-left: 5em
+    margin-left 5em
   nav
-    margin-left: 5em
+    margin-left 5em
 
 +tablet()
   header
-    width: 300px
+    width 300px
   nav
     margin-left 300px
 
 +desktop()
   header
-    width: 400px
+    width 400px
   nav
     margin-left 400px
 
 +hd()
   header
-    width: 30%
+    width 30%
   nav
     margin-left 30%
     
