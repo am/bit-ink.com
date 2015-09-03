@@ -11,7 +11,9 @@
     };
 
     var updateUI = function () {
-        $('.viewsource').height($('#viewsource').height());
+        setTimeout( function () {
+            $('.viewsource').height($('#viewsource').outerHeight(true));
+        }, 300);
     };
 
     // events bind
@@ -28,4 +30,3 @@
     // update UI at first load
     updateUI();
 }());
-p

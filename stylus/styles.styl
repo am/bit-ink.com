@@ -1,7 +1,7 @@
 // @require 'reset.css'
 @require 'fontello.css'
 
-/* CS04 */
+// CS04 
 swatch-a = #F6F792
 swatch-b = #333745
 swatch-c = #77C4D3
@@ -21,6 +21,17 @@ body
 a
   color: swatch-c
 
+// override prism theme
+:not(pre) > code[class*="language-"],
+pre[class*="language-"]
+  background transparent
+
+pre[class*="language-"]
+  padding 20px
+  margin 0
+  border-radius 0
+
+// viewsource styles
 .table
   & > tbody
     & > tr
@@ -44,6 +55,7 @@ a
   a
     opacity 1
 
+// homepage logo and text
 header
   display inline-block
   vertical-align top
@@ -59,6 +71,7 @@ header
     padding 0
     margin 0
 
+// homepage menu
 nav
   margin-left margin_axis
   ul
@@ -109,6 +122,7 @@ nav li a:focus
     line-height 60px
     padding 20px 0
 
+// TODO use bootstrap instead
 // responsive using https://github.com/jenius/rupture
 +mobile()
   header
