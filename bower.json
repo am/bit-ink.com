@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "prism": "~1.0.0",
-    "jquery-pjax": "~1.9.6"
+    "jquery-pjax": "~1.9.6",
+    "bootstrap": "twbs/bootstrap#v4-dev"
   }
 }
