@@ -1,10 +1,7 @@
+a.btn(data-pjax href= dir + '..') &#8592;
 if collection
   table.table
-
     tbody
-      tr
-        td(colspan='3')
-          a(data-pjax href= dir + '..') ..
       for file in collection
         tr
           td
@@ -13,7 +10,7 @@ if collection
             if file.type == 'file'
               i.icon.icon-doc
           td
-            a(data-pjax href= dir + file.name )!= file.name
+            a.btn(data-pjax href= dir + file.name )!= file.name
           td
             p!= file.sha.slice(0, 7)
 
