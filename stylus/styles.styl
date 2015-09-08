@@ -22,10 +22,12 @@ a
   color: swatch-c
 
 // override prism theme
+pre,
 :not(pre) > code[class*="language-"],
 pre[class*="language-"]
   background transparent
 
+pre,
 pre[class*="language-"]
   padding 20px
   margin 0
@@ -52,9 +54,17 @@ pre[class*="language-"]
     color swatch-c
   p
     opacity 0.5
+  p,
+  i
+    display inline-block
+    padding 6px 12px
+    margin-bottom 0
   a
     opacity 1
 
+pre
+  border none
+  
 // homepage logo and text
 header
   display inline-block
@@ -105,10 +115,11 @@ body
   background-color swatch-d
   header
     color swatch-b
-  nav
-    a
-      color swatch-c
+  a
+    color swatch-c
 
+.btn:hover,
+.btn:focus,
 nav li a:hover,
 nav li a:focus
   color swatch-e
