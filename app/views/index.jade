@@ -1,30 +1,20 @@
 extends layout
 
-block content
-  .viewsource.container-fluid
-    #viewsource.text-left
-      include pjax/index
+block head
+  link(href='http://fonts.googleapis.com/css?family=Martel+Sans:200,400,700' rel='stylesheet' type='text/css')
+  link(href='css/styles.css', rel='stylesheet')
 
-  .container-fluid.text-center
-    a.btn(data-pjax href='/viewsource/') viewsource
+block content
   header
-    img(src='/img/am-icon-darkblue.png', alt='am')
+    img(src='img/am-icon-darkblue.png', alt='am')
     h1 antonio miranda
     br
     h2 front end developer
     p(style='font-thin') barcelona
   nav
-    ul
-      li
-        a(href='/cv/tech') tech cv
-      li
-        a(href='https://github.com/ammutable') github
-      li
-        a(href='https://www.twitter.com/ammutable') twitter
-      li
-        a(href='https://www.flickr.com/photos/95126201@N06/') flickr 
-      li
-        a(href='mailto:antsmiranda@gmail.com') contact
-
-block scripts
-  script(src='/scripts/app.js')
+    :markdown
+      - [tech cv](cv/tech)
+      - [github](https://github.com/am)
+      - [twitter](https://www.twitter.com/ammutable)
+      - [flickr](https://www.flickr.com/photos/95126201@N06/)
+      - [contact](mailto:antsmiranda@gmail.com)
