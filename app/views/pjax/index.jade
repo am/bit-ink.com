@@ -1,5 +1,5 @@
-a.btn(data-pjax href= dir + '..') &#8592;
 if collection
+  a.btn(data-pjax href= dir + '..') &#8592;
   table.table
     tbody
       for file in collection
@@ -15,5 +15,6 @@ if collection
             p!= file.sha.slice(0, 7)
 
 else if file
+  a.btn(data-pjax href= dir + '..') &#8592;
   pre
     code(class="language-#{ fileType }")!= file
