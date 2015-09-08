@@ -1,4 +1,3 @@
 # ignore generated files
 node_modules
-bower_components
 public/css

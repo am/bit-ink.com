@@ -4,8 +4,8 @@
   "description": "Home page for bit-ink.com",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/index.coffee --require should --compilers coffee:coffee-script/register",
-    "devserver": "nodemon -e coffee,js,jade"
+    "test": "mocha test/test.coffee --require should --compilers coffee:coffee-script/register",
+    "devserver": "nodemon -e coffee"
   },
   "repository": {
     "type": "git",
@@ -28,22 +28,17 @@
   "devDependencies": {
     "mocha": "^2.2.4",
     "nodemon": "^1.3.7",
-    "should": "^7.0.1",
-    "should-sinon": "0.0.3",
-    "sinon": "^1.15.4",
+    "should": "^6.0.1",
     "source-map-support": "^0.2.10"
   },
   "dependencies": {
     "bluebird": "^2.9.25",
     "coffee-script": "^1.9.2",
     "express": "^4.12.3",
-    "express-pjax": "git://github.com/optikfluffel/express-pjax.git",
-    "github": "^0.2.4",
     "jade": "^1.9.2",
     "marked": "^0.3.3",
     "morgan": "^1.5.2",
     "nib": "^1.1.0",
-    "node-cache": "^3.0.0",
     "rupture": "^0.6.1",
     "stylus": "^0.51.1"
   }

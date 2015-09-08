@@ -12,8 +12,8 @@ router.get '/:page?', (req, res, next) ->
   page = req.params.page or 'index'
   md = path.join __dirname, "../../markdown/#{ page }.md"
   fs.readFileAsync(md).then (val) ->
-    content = markdown: marked val.toString()
-    html = jade.renderFile path.join(__dirname, '../views/markdown.jade'), content
+    options = markdown: marked val.toString()
+    html = jade.renderFile path.join(__dirname, '../views/markdown.jade'), options
     res.send html
 
 module.exports = router
