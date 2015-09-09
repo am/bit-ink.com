@@ -4,7 +4,8 @@
   "description": "Home page for bit-ink.com",
   "main": "index.js",
   "scripts": {
-    "bower": "bower",
+    "postinstall": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi",
+    "bower": "echo $HOME; bower",
     "test": "mocha test/index.coffee --require should --compilers coffee:coffee-script/register",
     "devserver": "nodemon -e coffee,js,jade"
   },
