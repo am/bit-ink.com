@@ -1,4 +1,5 @@
 GithubModel = require './githubmodel'
+Promise = require 'bluebird'
 
 class RepoContent extends GithubModel
 

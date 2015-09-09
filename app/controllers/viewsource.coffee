@@ -3,6 +3,7 @@ viewsourceRouter = Router()
 
 NodeCache =  require 'node-cache'
 RepoContent = require '../models/repocontent'
+Promise = require 'bluebird'
 path = require 'path'
 jade = require 'jade'
 
