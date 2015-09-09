@@ -1,9 +1,10 @@
 express = require 'express'
 logger = require 'morgan'
+pjax = require 'express-pjax'
 
 util = require './util'
 config = require './config'
-stylusMiddleware = require './middleware/stylus'
+StylusMiddleware = require './middleware/stylus'
 controllers = require './controllers'
 
 class App
@@ -11,22 +12,24 @@ class App
 
   constructor: ->
     @express = express()
-    @setup.apply @express
-    @server.apply @express
 
   setup: ->
-    @set 'views', "#{__dirname}/views"
-    @set 'view engine', 'jade'
-    @use new stylusMiddleware
-    @use express.static "#{__dirname}/../public"
-    @use logger(if @settings.env is 'development' then 'dev' else 'short')
-    @use controllers
+    @express.locals.pretty = on
+    @express.set 'views', "#{__dirname}/views"
+    @express.set 'view engine', 'jade'
+    @express.use pjax()
+    @express.use new StylusMiddleware
+    @express.use '/components', express.static "#{__dirname}/../bower_components"
+    @express.use express.static "#{__dirname}/../public"
+    @express.use logger(if @express.settings.env is 'development' then 'dev' else 'short')
+    @express.use controllers
 
   server: ->
-    # start server
-    @listen config.port, config.ipaddress, =>
-      console.log "
-        #{ util.dateNow() }: Node server started on #{ config.ipaddress }:#{ config.port }...
-      "
+    @express.listen config.port, config.ipaddress, @serverLog
+
+  serverLog: ->
+    => console.log "
+      #{ util.dateNow() }: Node server started on #{ config.ipaddress }:#{ config.port }...
+    "
 
 module.exports = App
