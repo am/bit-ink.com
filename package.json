@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi",
     "bower": "echo $HOME; bower",
-    "bundle-client": "browserify public/scripts/app.js > public/scripts/bundle.js ",
+    "bundle-client": "browserify client/scripts/app.js -o public/scripts/bundle.js",
     "test": "mocha test/index.coffee --require should --compilers coffee:coffee-script/register",
     "devserver": "nodemon -e coffee,js,jade"
   },

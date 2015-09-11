@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    Prism = require('../../node_modules/prismjs/components/prism-core.js');
+    var Prism = require('../../node_modules/prismjs/components/prism-core.js');
     require('../../node_modules/prismjs/components/prism-markup.js');
     require('../../node_modules/prismjs/components/prism-markdown.js');
     require('../../node_modules/prismjs/components/prism-clike.js');
