@@ -1,5 +1,8 @@
 #!/bin/env node
 
+// first start new relic
+require('newrelic');
+
 // require coffee-script to parse source in .coffee
 require('coffee-script/register');
 
