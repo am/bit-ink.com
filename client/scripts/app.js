@@ -1,7 +1,7 @@
 // exposing jQuery to globals to support the plugins
-global.jQuery = $ = require('jquery');
+var $ = require('jquery');
 var pjax = require('jquery-pjax');
-var Prism = require('../../bower_components/prism/components/prism-core.js');
+var Prism = require('prism');
 require('../../bower_components/prism/components/prism-markup.js');
 require('../../bower_components/prism/components/prism-markdown.js');
 require('../../bower_components/prism/components/prism-clike.js');

@@ -28,8 +28,19 @@
     "node": ">= 0.12.2",
     "npm": ">= 2.7.4"
   },
+  "browser": {
+    "jquery": "./bower_components/jquery/dist/jquery.js",
+    "prism": "./bower_components/prism/components/prism-core.js"
+  },
   "browserify": {
-    "transform": [ "debowerify" ]
+    "transform": [
+      "browserify-shim",
+      "debowerify"
+    ]
+  },
+  "browserify-shim": {
+    "jquery": "jQuery",
+    "prism": "Prism"
   },
   "devDependencies": {
     "bower": "^1.5.2",
