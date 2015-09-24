@@ -4,7 +4,7 @@
   "description": "Home page for bit-ink.com",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm run bower-install && npm run bundle-client",
+    "postinstall": "npm run bower-install && npm run build",
     "bower-install": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi",
     "build": "browserify -d client/scripts/app.js -o public/scripts/bundle.js",
     "watch": "watchify client/scripts/app.js -o public/scripts/bundle.js --debug --verbose",
