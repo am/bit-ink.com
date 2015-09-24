@@ -1,18 +1,16 @@
-// exposing jQuery to globals to support the plugins
-var $ = require('jquery');
-var pjax = require('jquery-pjax');
-var Prism = require('prism');
-require('../../bower_components/prism/components/prism-markup.js');
-require('../../bower_components/prism/components/prism-markdown.js');
-require('../../bower_components/prism/components/prism-clike.js');
-require('../../bower_components/prism/components/prism-javascript.js');
-require('../../bower_components/prism/components/prism-coffeescript.js');
-require('../../bower_components/prism/components/prism-jade.js');
-require('../../bower_components/prism/components/prism-stylus.js');
-require('../../bower_components/prism/components/prism-css.js');
-
 (function(){
     'use strict';
+    var pjax = require('pjax');
+    var Prism = require('prism');
+    require('prism-markup');
+    require('prism-markdown');
+    require('prism-clike');
+    require('prism-javascript');
+    require('prism-coffeescript');
+    require('prism-jade');
+    require('prism-stylus');
+    require('prism-css');
+    debugger;
 
     // settings
     // the timeout is high since the response could not be cached

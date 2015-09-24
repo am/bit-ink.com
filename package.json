@@ -6,7 +6,8 @@
   "scripts": {
     "postinstall": "npm run bower-install && npm run bundle-client",
     "bower-install": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi",
-    "bundle-client": "browserify client/scripts/app.js -o public/scripts/bundle.js",
+    "build": "browserify -d client/scripts/app.js -o public/scripts/bundle.js",
+    "watch": "watchify client/scripts/app.js -o public/scripts/bundle.js --debug --verbose",
     "test": "mocha test/index.coffee --require should --compilers coffee:coffee-script/register",
     "devserver": "nodemon -e coffee,js,jade"
   },
@@ -30,17 +31,35 @@
   },
   "browser": {
     "jquery": "./bower_components/jquery/dist/jquery.js",
-    "prism": "./bower_components/prism/components/prism-core.js"
+    "pjax": "./bower_components/jquery-pjax/jquery.pjax.js",
+    "prism": "./bower_components/prism/components/prism-core.js",
+    "prism-markup": "./bower_components/prism/components/prism-markup.js",
+    "prism-markdown": "./bower_components/prism/components/prism-markdown.js",
+    "prism-clike": "./bower_components/prism/components/prism-clike.js",
+    "prism-javascript": "./bower_components/prism/components/prism-javascript.js",
+    "prism-coffeescript": "./bower_components/prism/components/prism-coffeescript.js",
+    "prism-jade": "./bower_components/prism/components/prism-jade.js",
+    "prism-stylus": "./bower_components/prism/components/prism-stylus.js",
+    "prism-css": "./bower_components/prism/components/prism-css.js"
   },
   "browserify": {
     "transform": [
-      "browserify-shim",
-      "debowerify"
+      "browserify-shim"
     ]
   },
   "browserify-shim": {
     "jquery": "jQuery",
-    "prism": "Prism"
+    "pjax": {
+      "depends": [
+        "jquery:jQuery"
+      ]
+    },
+    "prism": {
+      "exports": "Prism",
+      "depends": [
+        "jquery:jQuery"
+      ]
+    }
   },
   "devDependencies": {
     "bower": "^1.5.2",
@@ -52,7 +71,8 @@
     "should": "^7.0.1",
     "should-sinon": "0.0.3",
     "sinon": "^1.15.4",
-    "source-map-support": "^0.2.10"
+    "source-map-support": "^0.2.10",
+    "watchify": "^3.4.0"
   },
   "dependencies": {
     "bluebird": "^2.9.25",
