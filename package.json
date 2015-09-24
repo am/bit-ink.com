@@ -4,8 +4,10 @@
   "description": "Home page for bit-ink.com",
   "main": "index.js",
   "scripts": {
-    "postinstall": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi",
-    "bower": "echo $HOME; bower",
+    "postinstall": "npm run bower-install && npm run build",
+    "bower-install": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi",
+    "build": "browserify client/scripts/app.js -d -p [minifyify --no-map] >  public/scripts/bundle.js",
+    "watch": "watchify client/scripts/app.js -o public/scripts/bundle.js --debug --verbose",
     "test": "mocha test/index.coffee --require should --compilers coffee:coffee-script/register",
     "devserver": "nodemon -e coffee,js,jade"
   },
@@ -27,14 +29,51 @@
     "node": ">= 0.12.2",
     "npm": ">= 2.7.4"
   },
+  "browser": {
+    "jquery": "./bower_components/jquery/dist/jquery.js",
+    "pjax": "./bower_components/jquery-pjax/jquery.pjax.js",
+    "prism": "./bower_components/prism/components/prism-core.js",
+    "prism-markup": "./bower_components/prism/components/prism-markup.js",
+    "prism-markdown": "./bower_components/prism/components/prism-markdown.js",
+    "prism-clike": "./bower_components/prism/components/prism-clike.js",
+    "prism-javascript": "./bower_components/prism/components/prism-javascript.js",
+    "prism-coffeescript": "./bower_components/prism/components/prism-coffeescript.js",
+    "prism-jade": "./bower_components/prism/components/prism-jade.js",
+    "prism-stylus": "./bower_components/prism/components/prism-stylus.js",
+    "prism-css": "./bower_components/prism/components/prism-css.js"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "jquery": "jQuery",
+    "pjax": {
+      "depends": [
+        "jquery:jQuery"
+      ]
+    },
+    "prism": {
+      "exports": "Prism",
+      "depends": [
+        "jquery:jQuery"
+      ]
+    }
+  },
   "devDependencies": {
     "bower": "^1.5.2",
+    "browserify": "^11.0.1",
+    "browserify-shim": "^3.8.10",
+    "debowerify": "^1.3.1",
+    "minifyify": "^7.1.0",
     "mocha": "^2.2.4",
     "nodemon": "^1.3.7",
     "should": "^7.0.1",
     "should-sinon": "0.0.3",
     "sinon": "^1.15.4",
-    "source-map-support": "^0.2.10"
+    "source-map-support": "^0.2.10",
+    "watchify": "^3.4.0"
   },
   "dependencies": {
     "bluebird": "^2.9.25",

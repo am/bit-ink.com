@@ -1,4 +1,16 @@
-(function () {
+(function(){
+    'use strict';
+    var pjax = require('pjax');
+    var Prism = require('prism');
+    require('prism-markup');
+    require('prism-markdown');
+    require('prism-clike');
+    require('prism-javascript');
+    require('prism-coffeescript');
+    require('prism-jade');
+    require('prism-stylus');
+    require('prism-css');
+
     // settings
     // the timeout is high since the response could not be cached
     $.pjax.defaults.timeout = 2000;
@@ -29,4 +41,5 @@
     $(document).pjax('a[data-pjax]', '#viewsource');
     // update UI at first load
     updateUI();
+
 }());
