@@ -10,7 +10,6 @@
     require('prism-jade');
     require('prism-stylus');
     require('prism-css');
-    debugger;
 
     // settings
     // the timeout is high since the response could not be cached

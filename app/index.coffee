@@ -19,7 +19,6 @@ class App
     @express.set 'view engine', 'jade'
     @express.use pjax()
     @express.use new StylusMiddleware
-    @express.use '/components', express.static "#{__dirname}/../bower_components"
     @express.use express.static "#{__dirname}/../public"
     @express.use logger(if @express.settings.env is 'development' then 'dev' else 'short')
     @express.use controllers
