@@ -25,7 +25,7 @@ class App
     # using gzip compression
     @express.use compression()
     # serve static files and enable client cache for one day
-    @express.use express.static "#{__dirname}/../public", maxAge: '1d'
+    @express.use express.static "#{__dirname}/../public", maxAge: oneDay
     # enable client cache for one day for other routes
     @express.use (req, res, next) ->
       res.setHeader 'Cache-Control', "public, max-age=#{ oneDay }"
