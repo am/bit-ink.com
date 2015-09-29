@@ -22,8 +22,14 @@ class App
     @express.set 'view engine', 'jade'
     @express.use pjax()
     @express.use new StylusMiddleware
+    # using gzip compression
     @express.use compression()
+    # serve static files and enable client cache for one day
     @express.use express.static "#{__dirname}/../public", maxAge: oneDay
+    # enable client cache for one day for other routes
+    @express.use (req, res, next) ->
+      res.setHeader 'Cache-Control', "public, max-age=#{ oneDay }"
+      next()
     @express.use logger(if @express.settings.env is 'development' then 'dev' else 'short')
     @express.use controllers
 
