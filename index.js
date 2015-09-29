@@ -1,7 +1,8 @@
 #!/bin/env node
 
 // first start new relic
-require('newrelic');
+
+if (process.env.NODE_ENV == 'production') require('newrelic');
 
 // require coffee-script to parse source in .coffee
 require('coffee-script/register');
