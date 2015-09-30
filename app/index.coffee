@@ -5,7 +5,6 @@ pjax = require 'express-pjax'
 
 util = require './util'
 config = require './config'
-StylusMiddleware = require './middleware/stylus'
 controllers = require './controllers'
 
 oneDay = 86400000
@@ -21,7 +20,6 @@ class App
     @express.set 'views', "#{__dirname}/views"
     @express.set 'view engine', 'jade'
     @express.use pjax()
-    @express.use new StylusMiddleware
     # using gzip compression
     @express.use compression()
     # serve static files and enable client cache for one day

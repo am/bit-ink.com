@@ -6,10 +6,12 @@
   "scripts": {
     "postinstall": "npm run bower-install && npm run build",
     "bower-install": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi",
-    "build": "browserify client/scripts/app.js -d -p [minifyify --no-map] >  public/scripts/bundle.js",
-    "watch": "watchify client/scripts/app.js -o public/scripts/bundle.js --debug --verbose",
+    "build": "npm run stylus && npm run browserify",
+    "browserify": "browserify client/scripts/app.js -d -p [minifyify --no-map] > public/scripts/bundle.js",
+    "stylus": "stylus -u rupture -u nib --include-css -I bower_components -I stylus -r -c stylus/styles.styl --out public/css/styles.css",
+    "stylus:watch": "npm run stylus -- --watch",
     "test": "mocha test/index.coffee --require should --compilers coffee:coffee-script/register",
-    "devserver": "nodemon -e coffee,js,jade"
+    "devserver": "npm run stylus:watch & nodemon -e coffee,js,jade"
   },
   "repository": {
     "type": "git",
