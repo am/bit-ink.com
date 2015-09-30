@@ -3,7 +3,6 @@ sinon = require 'sinon'
 express = require 'express'
 path = require 'path'
 fs = require 'fs'
-StylusMiddleware = require '../app/middleware/stylus'
 logger = require 'morgan'
 controllers = require '../app/controllers'
 config = require '../app/config'
@@ -49,9 +48,6 @@ describe 'setup', ->
 
   it 'should set jade as view engine', ->
     setSpy.calledWith('view engine', 'jade').should.be.true()
-
-  it 'should set stylus middleware', ->
-    setSpy.calledWith(new StylusMiddleware)
 
   it 'should use components mount for static bower components assets', ->
     bowerComponentsPath = path.join __dirname, '../bower_components'
