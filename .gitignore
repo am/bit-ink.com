@@ -1,5 +1,6 @@
 # ignore generated files
 node_modules
 bower_components
-public/css
-/public/scripts/bundle.js
+public/css/*
+!public/css/.gitkeep
+public/scripts/bundle.js
