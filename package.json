@@ -1,96 +1,32 @@
 {
   "name": "www.bit-ink.com",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "Home page for bit-ink.com",
   "main": "index.js",
-  "scripts": {
-    "postinstall": "npm run bower-install && npm run build",
-    "bower-install": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi",
-    "build": "npm run stylus && npm run browserify",
-    "browserify": "browserify client/scripts/app.js -d -p [minifyify --no-map] > public/scripts/bundle.js",
-    "stylus": "stylus -u rupture -u nib --include-css -I bower_components -I stylus -r -c stylus/styles.styl --out public/css/styles.css",
-    "stylus:watch": "npm run stylus -- --watch",
-    "test": "mocha test/index.coffee --require should --compilers coffee:coffee-script/register",
-    "devserver": "npm run stylus:watch & nodemon -e coffee,js,jade"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/am/www.bit-ink.com.git"
-  },
-  "keywords": [
-    "bit-ink",
-    "homepage"
-  ],
-  "author": "antsmiranda@gmail.com",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/am/www.bit-ink.com/issues"
-  },
-  "homepage": "https://github.com/am/www.bit-ink.com",
+  "repository": "git@github.com:am/www.bit-ink.com.git",
+  "author": "antonio miranda <antsmiranda@gmail.com>",
+  "license": "MIT",
+  "private": false,
   "engines": {
-    "node": ">= 0.12.2",
-    "npm": ">= 2.7.4"
+    "yarn": "1.7.0",
+    "node": "8.11.3"
   },
-  "browser": {
-    "jquery": "./bower_components/jquery/dist/jquery.js",
-    "pjax": "./bower_components/jquery-pjax/jquery.pjax.js",
-    "prism": "./bower_components/prism/components/prism-core.js",
-    "prism-markup": "./bower_components/prism/components/prism-markup.js",
-    "prism-markdown": "./bower_components/prism/components/prism-markdown.js",
-    "prism-clike": "./bower_components/prism/components/prism-clike.js",
-    "prism-javascript": "./bower_components/prism/components/prism-javascript.js",
-    "prism-coffeescript": "./bower_components/prism/components/prism-coffeescript.js",
-    "prism-jade": "./bower_components/prism/components/prism-jade.js",
-    "prism-stylus": "./bower_components/prism/components/prism-stylus.js",
-    "prism-css": "./bower_components/prism/components/prism-css.js"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
-  },
-  "browserify-shim": {
-    "jquery": "jQuery",
-    "pjax": {
-      "depends": [
-        "jquery:jQuery"
-      ]
-    },
-    "prism": {
-      "exports": "Prism",
-      "depends": [
-        "jquery:jQuery"
-      ]
-    }
-  },
-  "devDependencies": {
-    "bower": "^1.5.2",
-    "browserify": "^11.0.1",
-    "browserify-shim": "^3.8.10",
-    "debowerify": "^1.3.1",
-    "minifyify": "^7.1.0",
-    "mocha": "^2.2.4",
-    "nodemon": "^1.3.7",
-    "should": "^7.0.1",
-    "should-sinon": "0.0.3",
-    "sinon": "^1.15.4",
-    "source-map-support": "^0.2.10",
-    "watchify": "^3.4.0"
-  },
+  "browserslist": "last 3 versions",
   "dependencies": {
-    "bluebird": "^2.9.25",
-    "coffee-script": "^1.9.2",
-    "compression": "^1.5.2",
-    "express": "^4.12.3",
-    "express-pjax": "git://github.com/optikfluffel/express-pjax.git",
-    "github": "^0.2.4",
-    "jade": "^1.9.2",
-    "marked": "^0.3.3",
-    "morgan": "^1.5.2",
-    "newrelic": "^1.22.0",
-    "nib": "^1.1.0",
-    "node-cache": "^3.0.0",
-    "rupture": "^0.6.1",
-    "stylus": "^0.51.1"
+    "@nuxtjs/google-analytics": "^2.0.2",
+    "autoprefixer": "^9.1.0",
+    "node-sass": "^4.9.2",
+    "nuxt": "^1.4.2",
+    "postcss": "^7.0.2",
+    "postcss-normalize": "^6.0.0",
+    "pug": "2.0.3",
+    "pug-plain-loader": "^1.0.0",
+    "sass-loader": "^7.1.0"
+  },
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
   }
 }

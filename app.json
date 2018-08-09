@@ -1,0 +1,17 @@
+{
+  "name": "bit-ink-node",
+  "repository": "https://github.com/am/www.bit-ink.com",
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+    }
+  ],
+  "env": {
+    "NPM_CONFIG_PRODUCTION": false
+  },
+  "scripts": {
+    "dokku": {
+      "predeploy": "yarn run build"
+    }
+  }
+}

@@ -1,6 +1,15 @@
-# ignore generated files
+# dependencies
 node_modules
-bower_components
-public/css/*
-!public/css/.gitkeep
-public/scripts/bundle.js
+
+# logs
+npm-debug.log
+
+# Nuxt build
+.nuxt
+
+# Nuxt generate
+dist
+app
+
+# os
+.DS_Store
