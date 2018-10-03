@@ -1,0 +1,19 @@
+{
+  "name": "www.bit-ink.com",
+  "version": "1.0.0",
+  "description": "website for bit-ink.com",
+  "main": "index.js",
+  "repository": "git@github.com:am/www.bit-ink.com.git",
+  "author": "antonio miranda <antsmiranda@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "browserslist": "last 3 versions",
+  "dependencies": {
+    "autoprefixer": "^9.1.5",
+    "lost": "^8.3.0",
+    "postcss-cli": "^6.0.0",
+    "postcss-nested": "^4.1.0",
+    "postcss-normalize": "^7.0.1",
+    "postcss-preset-env": "^6.0.10"
+  }
+}

@@ -1,0 +1,16 @@
+{{ partial "header.html" . }}
+
+<header class="header-home">
+    <div class="header-home__claim">
+        <h1 class="header-home__list header-home__list--h1">{{ .Site.Params.sitename }}</h1>
+        <h2 class="header-home__list header-home__list--h2">{{ .Site.Params.homeClaim }}</h2>
+    </div>
+</header>
+
+<div class="wrapper">
+    <div class="content">
+        {{ .Content }}
+    </div>
+</div>
+
+{{ partial "footer.html" . }}

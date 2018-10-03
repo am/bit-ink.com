@@ -1,0 +1,25 @@
+baseURL = "https://bit-ink.com/"
+languageCode = "en-us"
+title = "bit-ink"
+
+author = "antonio miranda"
+canonifyurls = true
+languagecode = "en"
+
+pygmentsstyle       = "bw"
+pygmentscodefences  = true
+
+[params]
+  sitename = "bit-ink"
+  homeClaim = "antonio miranda | programmer & maker"
+  disableWebFonts = false
+
+[[menu.main]]
+    name = "about"
+    url  = "/#about"
+[[menu.main]]
+    name = "resume"
+    url  = "/cv/"
+[[menu.main]]
+    name = "more"
+    url  = "/#more"

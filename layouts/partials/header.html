@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="theme-color" content="#282827">
+    {{ if .Site.Params.description }}<meta name="description" content="{{ .Site.Params.description }}">{{ end }}
+
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Karla:400,400i,700,700i" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon_16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon_32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon_128x128.png" sizes="128x128">
+
+    <title>
+      {{ $url := replace .Permalink ( printf "%s" .Site.BaseURL) "" }}
+      {{ if eq $url "/" }}
+        {{ .Site.Title }}
+      {{ else }}
+        {{ if .Params.heading }} {{ .Params.heading }} {{ else }} {{ .Title }} {{ end }}
+      {{ end }}
+    </title>
+    <link rel="canonical" href="{{ .Permalink }}">
+
+    {{ $css := resources.Get "css/main.css" }}
+    {{ $style := $css | resources.PostCSS }}
+    <link rel="stylesheet" href="{{ $style.Permalink }}">
+
+
+    {{ if .RSSLink }}
+      <link href="{{ .RSSLink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
+    {{ end }}
+  </head>
+  <script>
+   // Check that service workers are registered
+   if ('serviceWorker' in navigator) {
+       // Use the window load event to keep the page load performant
+       window.addEventListener('load', () => {
+           navigator.serviceWorker.register('/sw.js');
+       });
+   }
+  </script>
+
+  <body class="body">
+    <section class="navigation-menu">
+      <ul class="navigation-menu__list">
+        {{ range .Site.Menus.main }}
+          <li class="navigation-menu__item">
+              <a class="navigation-menu__link" href="{{ .URL }}">{{ .Name }}</a>
+          </li>
+        {{ end }}
+      </ul>
+    </section>
