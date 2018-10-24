@@ -87,6 +87,9 @@
     }
 }
 
+/* ------- */
+/* content */
+/* ------- */
 .wrapper {
     lost-center: 720px;
 }
@@ -99,8 +102,11 @@
         font-family: 'Abril Fatface', cursive;
         font-size: var(--fontXL);
     }
-    p {
+    p, li {
         line-height: 160%;
+    }
+    li + li {
+        margin-top: 1em;
     }
     blockquote {
         position: relative;
@@ -131,6 +137,61 @@
     a {
         color: var(--backColor);
     }
+}
+
+/* -- */
+/* cv */
+/* -- */
+.cv-log {
+    /* padding: 2em; */
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8em;
+    /* box-shadow: 0 0 32px color(var(--blackColor) alpha(-50%)); */
+    /* border-radius: 0.4em; */
+    /* color: var(--whiteColor); */
+    /* background-color: color(var(--blackColor), alpha(-50%)); */
+}
+
+.cv-log__title {
+    font-weight: bold;
+    margin: 0;
+}
+
+.cv-log__sub {
+    padding-left: 3em;
+    margin: 0 0 0 3em;
+    position: relative;
+    overflow: hidden;
+    &:before {
+        content: '| *\a| |\a| |\a| |\a| |';
+        white-space: pre;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
+.cv-log__sub  + .cv-log__title {
+    &:after, &:before {
+        display: block;
+        font-weight: normal;
+        padding-left: 3em;
+    }
+    &:after {
+        content: '|\\';
+    }
+    &:before {
+        content: '|/';
+    }
+}
+
+.cv-log__year:after {
+    content: ' * '
+}
+
+.cv-log__merge {
+    padding-left: 3em;
+    margin: 0;
 }
 
 @custom-media --phone--only (max-width: 599px);

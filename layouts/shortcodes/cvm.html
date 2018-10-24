@@ -1,0 +1,6 @@
+{{ $merge := .Get 0 }}
+{{ if eq $merge ">" }}
+<!-- <p class="cv-log__merge">|\</p> -->
+{{ else }}
+<!-- <p class="cv-log__merge">|/</p> -->
+{{ end }}
