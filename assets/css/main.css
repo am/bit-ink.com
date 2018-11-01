@@ -1,35 +1,88 @@
 @import-normalize;
 @import './markdown.css';
+@import './utils.css';
 
 @lost flexbox flex;
 
 :root {
+    --base-font-size: 16px;
+    --base-line-height: 1.4;
+    --base-scale-factor: 1.618;
+    --base-units: rem;
+    font-size: var(--base-font-size);
+
     --whiteColor: #eaeae3;
     --blackColor: #282827;
-    --fontXXXL: 6.854em;
-    --fontXXL: 4.236em;
-    --fontXL: 2.618em;
-    --fontL: 1.618em;
-    --fontM: 1em;
-    --fontS: 0.618em;
-}
 
-* {
-    text-decoration-skip: ink;
+    --base-0x: 0gr;
+    --base-1x: 1gr;
+    --base-2x: 2gr;
+    --base-3x: 3gr;
+
+    --font-0x: 0sx;
+    --font-1x: 1sx;
+    --font-2x: 2sx;
+    --font-3x: 3sx;
+    --font-4x: 4sx;
 }
 
 .body {
     font-family: 'Karla', sans-serif;
+    font-size: var(--font-0x);
+    line-height: var(--base-1x);
+    margin: auto;
     color: var(--blackColor);
     background-color: var(--whiteColor);
-    margin: 0;
     position: relative;
-    font-family: 'Karla', sans-serif;
-    font-size: 20px;
-    /* line-height: 1.6em; */
     display: flex;
-    min-height: 100vh;
     flex-direction: column;
+}
+
+h1 {
+    font-size: var(--font-3x);
+    line-height: var(--base-3x);
+    margin-top: var(--base-1x);
+    margin-bottom: var(--base-1x);
+}
+h2 {
+    font-size: var(--font-2x);
+    line-height: var(--base-2x);
+    margin-top: var(--base-1x);
+    margin-bottom: var(--base-1x);
+}
+h3, h4, h5 {
+    font-size: var(--font-1x);
+    line-height: var(--base-0x);
+    margin-top: var(--base-1x);
+    margin-bottom: var(--base-1x);
+}
+p, ul, ol, pre , table, blockquote {
+    margin-top: var(--base-0x);
+    margin-bottom: var(--base-1x);
+}
+ul ul, ol ol, ul ol, ol ul {
+    margin-top: var(--base-0x);
+    margin-bottom: var(--base-0x);
+}
+
+/* Let's make sure all's aligned */
+hr {
+    border: 1px solid;
+    margin: -1px 0;
+}
+a, b, i, strong, em, small, code {
+    line-height: 0;
+}
+sub, sup {
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+sup {
+    top: -0.5em;
+}
+sub {
+    bottom: -0.25em;
 }
 
 /* ---- */
@@ -42,12 +95,11 @@
 .navigation-menu__list {
     list-style: none;
     margin: 0;
-    padding: var(--fontS);
+    padding: var(--base-1x);
     background-color: var(--whiteColor);
 }
 .navigation-menu__item {
     display: inline-block;
-    font-size: var(--fontM);
     & + .navigation-menu__item:before {
         content: '\\';
     }
@@ -71,19 +123,22 @@
 .header-home__claim {
     background-color: var(--whiteColor);
     text-align: center;
-    padding: 1em;
+    padding: var(--base-1x);
     transition: padding 500ms ease-in-out;
-    font-size: 16px;
+    /* font-size: 1gr; */
 }
-.header-home__list {
+.header-home__item {
     margin: 0;
     &--h1 {
-        font-size: var(--fontXXL);
+        font-size: var(--font-3x);
         font-family: 'Abril Fatface', cursive;
         transition: font-size 500ms ease-in-out;
+        margin-bottom: var(--base-1x);
     }
-    &--h2 {
-        font-size: var(--fontM);
+    &--h2, &--h3 {
+        margin: 0;
+        font-size: var(--font-0x);
+        line-height: var(--base-1x);
     }
 }
 
@@ -96,32 +151,25 @@
 
 .content {
     flex: 1;
-    font-size: var(--fontM);
     padding: 0 1em;
     h2 {
         font-family: 'Abril Fatface', cursive;
-        font-size: var(--fontXL);
-    }
-    p, li {
-        line-height: 160%;
-    }
-    li + li {
-        margin-top: 1em;
     }
     blockquote {
         position: relative;
         margin: 0;
-        padding: 1em 0 1em 3em;
+        padding: 0 var(--base-1x) var(--base-1x) var(--base-2x);
         font-style: italic;
         font-weight: bold;
         &:before {
             content: '“';
+            display: inline-block;
             position: absolute;
             left: 0;
-            font-style: normal;
-            display: inline-block;
             font-family: 'Abril Fatface', cursive;
-            font-size: var(--fontXXL);
+            font-size: var(--font-3x);
+            font-style: normal;
+            line-height: var(--base-3x);
         }
         & p:nth-last-child(2):after {
             content: '”';
@@ -132,6 +180,7 @@
             font-style: normal;
             font-weight: normal;
             text-align: right;
+            margin-bottom: 0;
         }
     }
     a {
@@ -201,21 +250,25 @@
 @custom-media --big-desktop--up (min-width: 1800px);
 
 @media (--tablet-portait--up) {
-    .body {
-        font-size: 22px;
-    }
-    .header-home__claim {
-        padding: 2em;
-    }
-    .header-home__list--h1 {
-        font-size: var(--fontXXXL);
+    :root {
+        --base-font-size: 26px; /* Must be in pixels */
+
+        --base-0x: 0gr;
+        --base-1x: 1gr;
+        --base-2x: 2gr;
+        --base-3x: 3gr;
+
+        --font-0x: 0sx;
+        --font-1x: 1sx;
+        --font-2x: 2sx;
+        --font-3x: 3sx;
+        --font-4x: 4sx;
+
+        line-height: auto;
     }
 }
 
 @media (--desktop--up) {
-    .body {
-        font-size: 24px;
-    }
     .wrapper {
         lost-center: 980px;
     }

@@ -12,6 +12,7 @@
     "autoprefixer": "^9.1.5",
     "lost": "^8.3.0",
     "postcss-cli": "^6.0.0",
+    "postcss-gridlover": "^0.2.1",
     "postcss-nested": "^4.1.0",
     "postcss-normalize": "^7.0.1",
     "postcss-preset-env": "^6.0.10"

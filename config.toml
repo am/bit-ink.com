@@ -11,7 +11,8 @@ pygmentscodefences  = true
 
 [params]
   sitename = "bit-ink"
-  homeClaim = "antonio miranda | programmer & maker"
+  homeName = "antonio miranda"
+  homeTitle = "software developer \\ maker"
   disableWebFonts = false
 
 [[menu.main]]
