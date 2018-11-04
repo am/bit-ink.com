@@ -1,6 +1,7 @@
+/* @import 'markdown.css'; */
+/* @import 'utils.css'; */
+
 @import-normalize;
-@import './markdown.css';
-@import './utils.css';
 
 @lost flexbox flex;
 
@@ -15,6 +16,7 @@
     --blackColor: #282827;
 
     --base-0x: 0gr;
+    --base-05x: 0.5gr;
     --base-1x: 1gr;
     --base-2x: 2gr;
     --base-3x: 3gr;
@@ -41,13 +43,13 @@
 h1 {
     font-size: var(--font-3x);
     line-height: var(--base-3x);
-    margin-top: var(--base-1x);
+    margin-top: var(--base-2x);
     margin-bottom: var(--base-1x);
 }
 h2 {
     font-size: var(--font-2x);
     line-height: var(--base-2x);
-    margin-top: var(--base-1x);
+    margin-top: var(--base-2x);
     margin-bottom: var(--base-1x);
 }
 h3, h4, h5 {
@@ -191,56 +193,70 @@ sub {
 /* -- */
 /* cv */
 /* -- */
+.feature-list {
+    padding-left: var(--base-3x);
+    & > li {
+        font-weight: bold;
+        margin-bottom: var(--base-05x);
+    }
+}
 .cv-log {
-    /* padding: 2em; */
-    font-family: 'Roboto Mono', monospace;
-    font-size: 0.8em;
-    /* box-shadow: 0 0 32px color(var(--blackColor) alpha(-50%)); */
-    /* border-radius: 0.4em; */
-    /* color: var(--whiteColor); */
-    /* background-color: color(var(--blackColor), alpha(-50%)); */
-}
-
-.cv-log__title {
-    font-weight: bold;
-    margin: 0;
-}
-
-.cv-log__sub {
-    padding-left: 3em;
-    margin: 0 0 0 3em;
-    position: relative;
-    overflow: hidden;
-    &:before {
-        content: '| *\a| |\a| |\a| |\a| |';
-        white-space: pre;
+    & > ul {
+        list-style: none;
+        padding-left: var(--base-3x);
+    }
+    & > ul > li {
+        margin-bottom: var(--base-1x);
+        position: relative;
+        font-weight: bold;
+    }
+    & > ul > li > strong {
         position: absolute;
-        top: 0;
-        left: 0;
+        display: inline-block;
+        width: calc(3 * var(--base-1x));
+        text-align: right;
+        left: calc(-3.5 * var(--base-1x));
+        font-family: 'Abril Fatface';
+        /* font-size: var(--font-1x); */
+    }
+    & ul > li > ul {
+        column-count: 2;
+        column-gap: var(--base-05x);
+        margin-top: var(--base-05x);
+        padding: 0;
+    }
+    & ul > li > ul > li {
+        list-style: none;
+        width: 100%;
+        margin-bottom: var(--base-05x);
+        break-inside: avoid-column;
+        & em {
+            display: block;
+            line-height: var(--base-1x);
+            padding: var(--base-05x);
+            border-left: 4px solid #28282717;
+            background-color: #2828270d;
+            font-style: normal;
+            font-weight: normal;
+            border-radius: 0.1rem;
+        }
     }
 }
 
-.cv-log__sub  + .cv-log__title {
-    &:after, &:before {
-        display: block;
-        font-weight: normal;
-        padding-left: 3em;
-    }
-    &:after {
-        content: '|\\';
-    }
-    &:before {
-        content: '|/';
-    }
+.grid {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    user-select: none;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(rgba(0, 119, 179, 0.3) 1px, transparent 1px) left top / var(--base-1x) var(--base-1x);
 }
 
-.cv-log__year:after {
-    content: ' * '
-}
-
-.cv-log__merge {
-    padding-left: 3em;
-    margin: 0;
+.hide {
+    display: none!important;
 }
 
 @custom-media --phone--only (max-width: 599px);
@@ -251,9 +267,10 @@ sub {
 
 @media (--tablet-portait--up) {
     :root {
-        --base-font-size: 26px; /* Must be in pixels */
+        --base-font-size: 22px; /* Must be in pixels */
 
         --base-0x: 0gr;
+        --base-05x: 0.5gr;
         --base-1x: 1gr;
         --base-2x: 2gr;
         --base-3x: 3gr;

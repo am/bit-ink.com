@@ -19,7 +19,7 @@ pygmentscodefences  = true
     name = "about"
     url  = "/#about"
 [[menu.main]]
-    name = "resume"
+    name = "résumé"
     url  = "/cv/"
 [[menu.main]]
     name = "more"

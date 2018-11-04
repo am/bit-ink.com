@@ -1,5 +1,6 @@
 module.exports = {
   plugins: [
+    require('postcss-import'),
     require('postcss-nested'),
     require('postcss-gridlover'),
     require('postcss-normalize'),
