@@ -1,1 +1,3 @@
-https://github.com/dalssaso/heroku-buildpack-hugo.git
+https://github.com/heroku/heroku-buildpack-nodejs.git#v131
+https://github.com/am/heroku-buildpack-hugo.git
+https://github.com/dokku/buildpack-nginx#v10
