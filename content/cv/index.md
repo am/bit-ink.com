@@ -1,7 +1,6 @@
 ---
 title: "Curriculum Vitæ"
 date: 2018-09-28T23:19:49+02:00
-draft: true
 ---
 
 About
