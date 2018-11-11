@@ -1,0 +1,296 @@
+/* @import 'markdown.css'; */
+/* @import 'utils.css'; */
+
+@import-normalize;
+
+@lost flexbox flex;
+
+:root {
+    --base-font-size: 16px;
+    --base-line-height: 1.4;
+    --base-scale-factor: 1.414;
+    --base-units: rem;
+    font-size: var(--base-font-size);
+
+    --whiteColor: #eaeae3;
+    --blackColor: #282827;
+
+    --base-0x: 0gr;
+    --base-05x: 0.5gr;
+    --base-1x: 1gr;
+    --base-2x: 2gr;
+    --base-3x: 3gr;
+
+    --font-0x: 0sx;
+    --font-1x: 1sx;
+    --font-2x: 2sx;
+    --font-3x: 3sx;
+    --font-4x: 4sx;
+}
+
+.body {
+    font-family: 'Karla', sans-serif;
+    font-size: var(--font-0x);
+    line-height: var(--base-1x);
+    margin: auto;
+    color: var(--blackColor);
+    background-color: var(--whiteColor);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-family: 'Abril Fatface', cursive;
+    font-size: var(--font-3x);
+    line-height: var(--base-3x);
+    margin-top: var(--base-2x);
+    margin-bottom: var(--base-1x);
+}
+h2 {
+    font-family: 'Abril Fatface', cursive;
+    font-size: var(--font-2x);
+    line-height: var(--base-2x);
+    margin-top: var(--base-2x);
+    margin-bottom: var(--base-1x);
+}
+h3, h4, h5 {
+    font-family: 'Abril Fatface', cursive;
+    font-size: var(--font-1x);
+    line-height: var(--base-0x);
+    margin-top: var(--base-1x);
+    margin-bottom: var(--base-1x);
+}
+p, ul, ol, pre , table, blockquote {
+    margin-top: var(--base-0x);
+    margin-bottom: var(--base-1x);
+}
+ul ul, ol ol, ul ol, ol ul {
+    margin-top: var(--base-0x);
+    margin-bottom: var(--base-0x);
+}
+
+/* Let's make sure all's aligned */
+hr {
+    border: 1px solid;
+    margin: -1px 0;
+}
+a, b, i, strong, em, small, code {
+    line-height: 0;
+}
+sub, sup {
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+sup {
+    top: -0.5em;
+}
+sub {
+    bottom: -0.25em;
+}
+
+/* ---- */
+/* menu */
+/* ---- */
+.navigation-menu {
+    position: absolute;
+    right: 0;
+}
+.navigation-menu__list {
+    list-style: none;
+    margin: 0;
+    padding: var(--base-1x);
+    background-color: var(--whiteColor);
+}
+.navigation-menu__item {
+    display: inline-block;
+    & + .navigation-menu__item:before {
+        content: '\\';
+    }
+}
+.navigation-menu__link {
+    &:visited, &:link {
+        color: var(--blackColor);
+        text-decoration-line: none;
+    }
+}
+
+/* ------ */
+/* header */
+/* ------ */
+.header-home {
+    lost-align: center;
+    height: 100vh;
+    background: url('../img/background.jpg') no-repeat;
+    background-size: cover;
+}
+.header-home__claim {
+    background-color: var(--whiteColor);
+    text-align: center;
+    padding: var(--base-1x) var(--base-2x) var(--base-05x);
+    transition: padding 500ms ease-in-out;
+    /* font-size: 1gr; */
+}
+.header-home__item {
+    margin: 0;
+    &--h1 {
+        font-size: var(--font-4x);
+        transition: font-size 500ms ease-in-out;
+        margin-bottom: var(--base-1x);
+    }
+    &--h2, &--h3 {
+        margin: 0;
+        font-family: 'Karla', sans-serif;
+        font-size: var(--font-0x);
+        line-height: var(--base-1x);
+    }
+}
+
+/* ------- */
+/* content */
+/* ------- */
+.wrapper {
+    lost-center: 720px;
+}
+
+.content {
+    flex: 1;
+    padding: 0 1em;
+    h2 {
+        font-family: 'Abril Fatface', cursive;
+    }
+    blockquote {
+        position: relative;
+        margin: 0;
+        padding: 0 var(--base-1x) var(--base-1x) var(--base-2x);
+        font-style: italic;
+        font-weight: bold;
+        &:before {
+            content: '“';
+            display: inline-block;
+            position: absolute;
+            left: 0;
+            font-family: 'Abril Fatface', cursive;
+            font-size: var(--font-3x);
+            font-style: normal;
+            line-height: var(--base-3x);
+        }
+        & p:nth-last-child(2):after {
+            content: '”';
+            font-style: normal;
+            display: inline-block;
+        }
+        & p:last-child {
+            font-style: normal;
+            font-weight: normal;
+            text-align: right;
+            margin-bottom: 0;
+        }
+    }
+    a {
+        color: var(--backColor);
+        font-weight: bold;
+    }
+}
+
+/* -- */
+/* cv */
+/* -- */
+.feature-list {
+    padding-left: var(--base-3x);
+    & > li {
+        font-weight: bold;
+        margin-bottom: var(--base-05x);
+    }
+}
+.cv-log {
+    & > ul {
+        list-style: none;
+        padding-left: var(--base-3x);
+    }
+    & > ul > li {
+        margin-bottom: var(--base-1x);
+        position: relative;
+        font-weight: bold;
+    }
+    & > ul > li > strong {
+        position: absolute;
+        display: inline-block;
+        width: calc(3 * var(--base-1x));
+        text-align: right;
+        left: calc(-3.5 * var(--base-1x));
+        font-family: 'Abril Fatface';
+        /* font-size: var(--font-1x); */
+    }
+    & ul > li > ul {
+        column-count: 2;
+        column-gap: var(--base-05x);
+        margin-top: var(--base-05x);
+        padding: 0;
+    }
+    & ul > li > ul > li {
+        list-style: none;
+        width: 100%;
+        margin-bottom: var(--base-05x);
+        break-inside: avoid-column;
+        & em {
+            display: block;
+            line-height: var(--base-1x);
+            padding: var(--base-05x);
+            border-left: 4px solid #28282717;
+            background-color: #2828270d;
+            font-style: normal;
+            font-weight: normal;
+            border-radius: 0.1rem;
+        }
+    }
+}
+
+.grid {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    user-select: none;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(rgba(0, 119, 179, 0.3) 1px, transparent 1px) left top / var(--base-1x) var(--base-1x);
+}
+
+.hide {
+    display: none!important;
+}
+
+@custom-media --phone--only (max-width: 599px);
+@custom-media --tablet-portait--up (min-width: 600px);
+@custom-media --tablet-landscape--up (min-width: 900px);
+@custom-media --desktop--up (min-width: 1200px);
+@custom-media --big-desktop--up (min-width: 1800px);
+
+@media (--tablet-portait--up) {
+    :root {
+        --base-font-size: 22px; /* Must be in pixels */
+
+        --base-0x: 0gr;
+        --base-05x: 0.5gr;
+        --base-1x: 1gr;
+        --base-2x: 2gr;
+        --base-3x: 3gr;
+
+        --font-0x: 0sx;
+        --font-1x: 1sx;
+        --font-2x: 2sx;
+        --font-3x: 3sx;
+        --font-4x: 4sx;
+
+        line-height: auto;
+    }
+}
+
+@media (--desktop--up) {
+    .wrapper {
+        lost-center: 980px;
+    }
+}

@@ -1,0 +1,6 @@
+{{ $year := .Get 0 }}
+{{ if ge $year 1 }}
+<li class="cv-log__title"><span class="cv-log__year">{{$year}}</span>{{.Inner}}</li>
+{{ else }}
+    <li class="cv-log__sub">{{.Inner}}</li>
+{{ end }}

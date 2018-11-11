@@ -4,12 +4,8 @@ node_modules
 # logs
 npm-debug.log
 
-# Nuxt build
-.nuxt
-
-# Nuxt generate
-dist
-app
-
 # os
 .DS_Store
+
+# hugo gen
+resources/_gen
