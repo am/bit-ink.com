@@ -8,14 +8,24 @@
   "license": "MIT",
   "private": true,
   "browserslist": "last 3 versions",
+  "scripts": {
+    "serve": "./hugo serve -D",
+    "cy:run": "cypress run",
+    "test": "start-server-and-test serve http://localhost:1313 cy:run"
+  },
+  "engines": {
+    "node": "8.12.0"
+  },
   "dependencies": {
     "autoprefixer": "^9.1.5",
+    "cypress": "^3.1.1",
     "lost": "^8.3.0",
     "postcss-cli": "^6.0.0",
     "postcss-gridlover": "^0.2.1",
     "postcss-import": "^12.0.1",
     "postcss-nested": "^4.1.0",
     "postcss-normalize": "^7.0.1",
-    "postcss-preset-env": "^6.0.10"
+    "postcss-preset-env": "^6.0.10",
+    "start-server-and-test": "^1.7.9"
   }
 }
