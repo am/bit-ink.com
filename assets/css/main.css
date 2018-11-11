@@ -8,7 +8,7 @@
 :root {
     --base-font-size: 16px;
     --base-line-height: 1.4;
-    --base-scale-factor: 1.618;
+    --base-scale-factor: 1.414;
     --base-units: rem;
     font-size: var(--base-font-size);
 
@@ -41,18 +41,21 @@
 }
 
 h1 {
+    font-family: 'Abril Fatface', cursive;
     font-size: var(--font-3x);
     line-height: var(--base-3x);
     margin-top: var(--base-2x);
     margin-bottom: var(--base-1x);
 }
 h2 {
+    font-family: 'Abril Fatface', cursive;
     font-size: var(--font-2x);
     line-height: var(--base-2x);
     margin-top: var(--base-2x);
     margin-bottom: var(--base-1x);
 }
 h3, h4, h5 {
+    font-family: 'Abril Fatface', cursive;
     font-size: var(--font-1x);
     line-height: var(--base-0x);
     margin-top: var(--base-1x);
@@ -125,20 +128,20 @@ sub {
 .header-home__claim {
     background-color: var(--whiteColor);
     text-align: center;
-    padding: var(--base-1x);
+    padding: var(--base-1x) var(--base-2x) var(--base-05x);
     transition: padding 500ms ease-in-out;
     /* font-size: 1gr; */
 }
 .header-home__item {
     margin: 0;
     &--h1 {
-        font-size: var(--font-3x);
-        font-family: 'Abril Fatface', cursive;
+        font-size: var(--font-4x);
         transition: font-size 500ms ease-in-out;
         margin-bottom: var(--base-1x);
     }
     &--h2, &--h3 {
         margin: 0;
+        font-family: 'Karla', sans-serif;
         font-size: var(--font-0x);
         line-height: var(--base-1x);
     }
@@ -187,6 +190,7 @@ sub {
     }
     a {
         color: var(--backColor);
+        font-weight: bold;
     }
 }
 

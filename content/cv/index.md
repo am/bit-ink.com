@@ -1,7 +1,10 @@
 ---
-title: "Curriculum Vitæ"
+title: "Résumé"
 date: 2018-09-28T23:19:49+02:00
 ---
+
+Résumé
+======
 
 About
 -----
