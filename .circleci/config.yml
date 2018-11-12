@@ -4,10 +4,9 @@ jobs:
     docker:
       - image: cypress/base:8
         environment:
+          HUGO_VERSION: 0.51
           ## this enables colors in the output
           TERM: xterm
-      - image: cibuilds/hugo:latest
-        command: [hugo]
     working_directory: ~/app
     steps:
       - checkout
@@ -17,10 +16,20 @@ jobs:
             - v1-deps-{{ .Branch }}
             - v1-deps
       - run:
+          name: Patch hugo install
+          command: wget -q -O libstdc++6 http://security.ubuntu.com/ubuntu/pool/main/g/gcc-5/libstdc++6_5.4.0-6ubuntu1~16.04.10_amd64.deb && dpkg --force-all -i libstdc++6
+      - run:
+          name: Make bin folder
+          command: mkdir -p $HOME/bin
+      - run:
+          name: Install Hugo
+          command: ./install_hugo.sh
+      - run:
           name: Install Dependencies
           command: yarn install --frozen-lockfile
       - save_cache:
           key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - ~/.cache  ## cache both yarn and Cypress!
+            - /home/circleci/bin
       - run: yarn test

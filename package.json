@@ -9,7 +9,7 @@
   "private": true,
   "browserslist": "last 3 versions",
   "scripts": {
-    "serve": "hugo serve -D",
+    "serve": "$HOME/bin/hugo serve -D",
     "cy:run": "cypress run",
     "test": "start-server-and-test serve http://localhost:1313 cy:run"
   },
