@@ -31,6 +31,10 @@ Work Experience
 
 {{% cv %}}
 
+- **2019** Senior Software Engineer at [New Relic](https://newrelic.com)
+  - *Worked with different teams to help deliver New Relic One, a brand new and shinny observability platform.*
+  - *Started from the group-up a new initiative to help users analyze and cut their cloud services cost and optimize resources based on performance data.*
+  - *Worked improving a Kubernetes experience adding new features like Controle Plane metrics, show information about the underling hosts, improve wizards to setup a new cluster with less ease.*
 - **2017** Senior Developer at [Lernin.com](https://lernin.com)
   - *Planned and implemented building multiple hybrid mobile applications sharing the same source code*
   - *Ignite together with very talented people a new business (startup)*
