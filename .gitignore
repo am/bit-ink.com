@@ -1,11 +1,21 @@
+# build output
+dist/
+# generated types
+.astro/
+
 # dependencies
-node_modules
+node_modules/
 
 # logs
-npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# os
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
 .DS_Store
-
-# hugo gen
-resources/_gen
