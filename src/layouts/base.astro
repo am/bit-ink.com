@@ -1,0 +1,19 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION } from "consts";
+import Navigation from "@components/Navigation.astro";
+import BaseHead from "@components/BaseHead.astro";
+import "@fontsource/abril-fatface";
+import "@fontsource/karla";
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body class="pt-36 h-screen bg-cover bg-hero-background common-ligatures">
+		<Navigation />
+		<main>
+			<slot />
+		</main>
+	</body>
+</html>

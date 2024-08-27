@@ -1,0 +1,94 @@
+---
+import FormattedDate from "@components/FormattedDate.astro";
+import { type CollectionEntry, getCollection } from "astro:content";
+import Base from "../../layouts/base.astro";
+
+export async function getStaticPaths() {
+	const posts = await getCollection("blog");
+
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: { posts, post },
+	}));
+}
+// type Props = CollectionEntry<"blog">;
+type Props = {
+	post: CollectionEntry<"blog">;
+	posts: CollectionEntry<"blog">[];
+};
+
+const { post, posts } = Astro.props;
+const { heroImage, pubDate, title, updatedDate } = post.data;
+const { Content } = await post.render();
+
+// Sort posts by publication date
+const sortedPosts = posts.sort(
+	(a, b) =>
+		new Date(a.data.pubDate).getTime() - new Date(b.data.pubDate).getTime()
+);
+
+// Find the index of the current post
+const currentIndex = sortedPosts.findIndex((p) => p.slug === post.slug);
+
+// Determine previous and next posts
+const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+const previousPost =
+	currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+---
+
+<Base>
+	{
+		previousPost && (
+			<article class="container mx-auto max-w-3xl p-4 bg-white shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
+				<div class="flex justify-between items-center">
+					<a class="underline text-ink" href={`/blog/${previousPost.slug}`}>
+						{previousPost?.data.title}
+					</a>
+					<div class="text-sm">
+						<FormattedDate date={previousPost.data.pubDate} />
+					</div>
+				</div>
+			</article>
+		)
+	}
+	<article
+		class="container mx-auto max-w-3xl bg-white my-8 shadow-[0_16px_0px_rgba(0,0,0,0.4)]"
+	>
+		<section class="relative p-4 pb-0">
+			{heroImage && <img width={740} height={360} src={heroImage} alt="" />}
+			<div
+				class="absolute top-0 right-0 pt-4 pb-2 px-4 uppercase bg-white text-sm text-right"
+			>
+				<div class="font-bold">
+					<FormattedDate date={pubDate} />
+				</div>
+				{
+					updatedDate && (
+						<div class="font-gray">
+							+ <FormattedDate date={updatedDate} />
+						</div>
+					)
+				}
+			</div>
+		</section>
+		<section class="prose prose-lg max-w-none prose-headings:font-display p-16">
+			<h1 class="">{title}</h1>
+			<Content />
+		</section>
+	</article>
+
+	{
+		nextPost && (
+			<article class="container mx-auto max-w-3xl p-4 bg-white shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
+				<div class="flex justify-between items-center">
+					<a class="underline" href={`/blog/${nextPost.slug}`}>
+						{nextPost?.data.title}
+					</a>
+					<div class="text-sm">
+						<FormattedDate date={nextPost.data.pubDate} />
+					</div>
+				</div>
+			</article>
+		)
+	}
+</Base>
