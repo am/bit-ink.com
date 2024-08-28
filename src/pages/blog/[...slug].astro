@@ -41,7 +41,10 @@ const previousPost =
 		previousPost && (
 			<article class="container mx-auto max-w-3xl p-4 bg-white shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
 				<div class="flex justify-between items-center">
-					<a class="underline text-ink" href={`/blog/${previousPost.slug}`}>
+					<a
+						class="text-lg underline text-ink"
+						href={`/blog/${previousPost.slug}`}
+					>
 						{previousPost?.data.title}
 					</a>
 					<div class="text-sm uppercase">
@@ -81,7 +84,7 @@ const previousPost =
 		nextPost && (
 			<article class="container mx-auto max-w-3xl p-4 bg-white shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
 				<div class="flex justify-between items-center">
-					<a class="underline" href={`/blog/${nextPost.slug}`}>
+					<a class="text-lg underline text-ink" href={`/blog/${nextPost.slug}`}>
 						{nextPost?.data.title}
 					</a>
 					<div class="text-sm uppercase">
