@@ -15,5 +15,18 @@ import "@fontsource/karla";
 		<main>
 			<slot />
 		</main>
+		<script
+			src="https://cdn.amplitude.com/libs/analytics-browser-1.11.1-min.js.gz"
+		></script>
+		<script
+			src="https://cdn.amplitude.com/libs/plugin-session-replay-browser0.6.22-min.js.gz"
+		></script>
+		<script>
+			window.amplitude.add(window.sessionReplay.plugin({ sampleRate: 2 }));
+			window.amplitude.init("bcdc81af61926ecf2915584d5535e94b", {
+				serverZone: "EU",
+				autocapture: { elementInteractions: true },
+			});
+		</script>
 	</body>
 </html>
