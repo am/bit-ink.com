@@ -42,18 +42,5 @@ import { Content as About } from "../content/pages/index.mdx";
 				<About />
 			</section>
 		</main>
-		<script
-			src="https://cdn.amplitude.com/libs/analytics-browser-2.11.1-min.js.gz"
-		></script>
-		<script
-			src="https://cdn.amplitude.com/libs/plugin-session-replay-browser-1.6.22-min.js.gz"
-		></script>
-		<script>
-			window.amplitude.add(window.sessionReplay.plugin({ sampleRate: 1 }));
-			window.amplitude.init("bcdc80af61926ecf2915584d5535e94b", {
-				serverZone: "EU",
-				autocapture: { elementInteractions: true },
-			});
-		</script>
 	</body>
 </html>
