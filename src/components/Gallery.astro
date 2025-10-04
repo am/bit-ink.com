@@ -13,20 +13,20 @@ const { images } = Astro.props;
 <div class="not-prose">
   <div class="w-full my-8">
     {images.map((image, index) => (
-      <div class="w-full cursor-pointer border-b border-gray-200 transition-all duration-500 ease-in-out overflow-hidden mb-4 p-0 gallery-item" data-index={index}>
-        <div class="relative h-20 overflow-hidden transition-all duration-500 ease-in-out gallery-image-container">
+      <div class="w-full cursor-pointer border-b border-gray-200 transition-all duration-500 ease-in-out overflow-hidden mb-2 p-0 gallery-item" data-index={index}>
+        <div class="relative h-32 overflow-hidden transition-all duration-500 ease-in-out gallery-image-container">
           <img
             src={image['src-thumb']}
             alt={image.alt}
             title={image.alt}
-            class="w-full h-96 object-cover object-center transition-all duration-500 ease-in-out transform -translate-y-40 filter brightness-75 grayscale gallery-thumb"
+            class="w-full h-96 object-cover object-center transition-all duration-500 ease-in-out transform -translate-y-32 filter brightness-75 grayscale gallery-thumb"
             loading="lazy"
           />
           <img
             src={image.src}
             alt={image.alt}
             title={image.alt}
-            class="w-full h-96 object-cover object-center transition-all duration-500 ease-in-out transform -translate-y-40 filter brightness-100 grayscale-0 hidden gallery-full"
+            class="w-full h-96 object-cover object-center transition-all duration-500 ease-in-out transform -translate-y-32 filter brightness-100 grayscale-0 hidden gallery-full"
             loading="lazy"
           />
         </div>
@@ -74,14 +74,10 @@ const { images } = Astro.props;
   }
   
   /* Hover effects with custom timing - only for collapsed items */
-  .gallery-item:not(.expanded):hover .gallery-image-container {
-    height: 10rem; /* h-21 equivalent: 84px */
-    transition: height 0.3s ease-in-out;
-  }
-  
   .gallery-item:not(.expanded):hover .gallery-thumb {
+    transform: translateY(-133px); /* Base -128px + hover -5px = -133px */
     filter: brightness(0.8) grayscale(0);
-    transition: filter 0.3s ease-in-out;
+    transition: transform 0.8s ease-in-out, filter 0.3s ease-in-out;
   }
   
   /* Modal active state */
