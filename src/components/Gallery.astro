@@ -34,6 +34,11 @@ const { images } = Astro.props;
       </div>
     ))}
   </div>
+  
+  <!-- Fullscreen modal -->
+  <div class="gallery-modal" id="gallery-modal">
+    <img id="modal-image" src="" alt="" />
+  </div>
 </div>
 
 <style>
@@ -50,6 +55,15 @@ const { images } = Astro.props;
     overflow: hidden;
     margin: 0;
     padding: 0;
+  }
+  
+  /* Cursor states */
+  .gallery-item:not(.expanded) {
+    cursor: pointer; /* Normal click hand for collapsed stripes */
+  }
+  
+  .gallery-item.expanded {
+    cursor: zoom-in; /* Zoom in cursor for expanded images */
   }
   
   .gallery-item:last-child {
@@ -110,26 +124,76 @@ const { images } = Astro.props;
   .gallery-item.expanded:hover .gallery-full {
     filter: brightness(1) grayscale(0);
   }
+  
+  /* Fullscreen modal */
+  .gallery-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    cursor: pointer;
+  }
+  
+  .gallery-modal.active {
+    display: flex;
+  }
+  
+  .gallery-modal {
+    cursor: zoom-out; /* Zoom out cursor for entire modal */
+  }
+  
+  .gallery-modal img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    cursor: zoom-out; /* Zoom out cursor when hovering over the image too */
+  }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const galleryItems = document.querySelectorAll('.gallery-item');
+    const modal = document.getElementById('gallery-modal');
+    const modalImage = document.getElementById('modal-image');
     
     galleryItems.forEach(item => {
       item.addEventListener('click', function() {
         const isExpanded = this.classList.contains('expanded');
         
-        // Close all items first
-        galleryItems.forEach(otherItem => {
-          otherItem.classList.remove('expanded');
-        });
-        
-        // If this item wasn't expanded, expand it
-        if (!isExpanded) {
+        if (isExpanded) {
+          // If already expanded, open in fullscreen modal
+          const fullImage = this.querySelector('.gallery-full');
+          modalImage.src = fullImage.src;
+          modalImage.alt = fullImage.alt;
+          modal.classList.add('active');
+        } else {
+          // Close all items first
+          galleryItems.forEach(otherItem => {
+            otherItem.classList.remove('expanded');
+          });
+          
+          // Expand this item
           this.classList.add('expanded');
         }
       });
+    });
+    
+    // Close modal when clicking on it
+    modal.addEventListener('click', function() {
+      this.classList.remove('active');
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+      }
     });
   });
 </script>
