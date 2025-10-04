@@ -1,0 +1,135 @@
+---
+interface Props {
+  images: Array<{
+    src: string;
+    'src-thumb': string;
+    alt: string;
+    title: string;
+  }>;
+}
+
+const { images } = Astro.props;
+---
+
+<div class="not-prose">
+  <div class="gallery-stack">
+    {images.map((image, index) => (
+      <div class="gallery-item" data-index={index}>
+        <div class="gallery-image-container">
+          <img
+            src={image['src-thumb']}
+            alt={image.alt}
+            title={image.title}
+            class="gallery-image gallery-thumb"
+            loading="lazy"
+          />
+          <img
+            src={image.src}
+            alt={image.alt}
+            title={image.title}
+            class="gallery-image gallery-full"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .gallery-stack {
+    width: 100%;
+    margin: 2rem 0;
+  }
+  
+  .gallery-item {
+    width: 100%;
+    cursor: pointer;
+    border-bottom: 1px solid #e5e5e5;
+    transition: all 0.5s ease;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .gallery-item:last-child {
+    border-bottom: none;
+  }
+  
+  .gallery-image-container {
+    position: relative;
+    height: 80px;
+    overflow: hidden;
+    transition: height 0.5s ease;
+  }
+  
+  .gallery-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    object-position: center;
+    transition: all 0.5s ease;
+    transform: translateY(-160px);
+  }
+  
+  .gallery-thumb {
+    filter: brightness(0.7) grayscale(1);
+    display: block;
+  }
+  
+  .gallery-full {
+    filter: brightness(1) grayscale(0);
+    display: none;
+  }
+  
+  
+  /* Expanded state - reveal the image by expanding the mask */
+  .gallery-item.expanded .gallery-image-container {
+    height: auto;
+    min-height: 400px;
+    max-height: 80vh;
+  }
+  
+  .gallery-item.expanded .gallery-thumb {
+    display: none;
+  }
+  
+  .gallery-item.expanded .gallery-full {
+    display: block;
+    filter: brightness(1) grayscale(0);
+    transform: translateY(0);
+    height: auto;
+    object-fit: contain;
+  }
+  
+  
+  .gallery-item:hover .gallery-thumb {
+    filter: brightness(0.8) grayscale(1);
+  }
+  
+  .gallery-item.expanded:hover .gallery-full {
+    filter: brightness(1) grayscale(0);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    galleryItems.forEach(item => {
+      item.addEventListener('click', function() {
+        const isExpanded = this.classList.contains('expanded');
+        
+        // Close all items first
+        galleryItems.forEach(otherItem => {
+          otherItem.classList.remove('expanded');
+        });
+        
+        // If this item wasn't expanded, expand it
+        if (!isExpanded) {
+          this.classList.add('expanded');
+        }
+      });
+    });
+  });
+</script>
