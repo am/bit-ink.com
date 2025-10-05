@@ -1,0 +1,136 @@
+---
+interface Props {
+  images: Array<{
+    src: string;
+    'src-thumb': string;
+    alt: string;
+  }>;
+}
+
+const { images } = Astro.props;
+---
+
+<div class="not-prose">
+  <div class="w-full my-8">
+    {images.map((image, index) => (
+      <div class="w-full cursor-pointer border-b border-gray-200 transition-all duration-500 ease-in-out overflow-hidden mb-2 p-0 gallery-item" data-index={index}>
+        <div class="relative h-32 overflow-hidden transition-all duration-500 ease-in-out gallery-image-container">
+          <img
+            src={image['src-thumb']}
+            alt={image.alt}
+            title={image.alt}
+            class="w-full h-96 object-cover object-center transition-all duration-500 ease-in-out transform -translate-y-32 filter brightness-75 grayscale gallery-thumb"
+            loading="lazy"
+          />
+          <img
+            src={image.src}
+            alt={image.alt}
+            title={image.alt}
+            class="w-full h-96 object-cover object-center transition-all duration-500 ease-in-out transform -translate-y-32 filter brightness-100 grayscale-0 hidden gallery-full"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+  
+  <!-- Fullscreen modal -->
+  <div class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-90 hidden justify-center items-center z-50 cursor-zoom-out gallery-modal" id="gallery-modal">
+    <img id="modal-image" src="" alt="" class="max-w-[90vw] max-h-[90vh] object-contain cursor-zoom-out" />
+  </div>
+</div>
+
+<style>
+  /* Dynamic state classes that can't be handled by Tailwind */
+  .gallery-item:not(.expanded) {
+    cursor: pointer; /* Normal click hand for collapsed stripes */
+  }
+  
+  .gallery-item.expanded {
+    cursor: zoom-in; /* Zoom in cursor for expanded images */
+  }
+  
+  .gallery-item:last-child {
+    border-bottom: none;
+  }
+  
+  /* Expanded state - reveal the image by expanding the mask */
+  .gallery-item.expanded .gallery-image-container {
+    height: auto;
+    min-height: 400px;
+    max-height: 80vh;
+  }
+  
+  .gallery-item.expanded .gallery-thumb {
+    display: none;
+  }
+  
+  .gallery-item.expanded .gallery-full {
+    display: block;
+    filter: brightness(1) grayscale(0);
+    transform: translateY(0);
+    height: auto;
+    object-fit: contain;
+  }
+  
+  /* Hover effects with custom timing - only for collapsed items */
+  .gallery-item:not(.expanded):hover .gallery-thumb {
+    transform: translateY(-133px); /* Base -128px + hover -5px = -133px */
+    filter: brightness(0.8) grayscale(0);
+    transition: transform 0.8s ease-in-out, filter 0.3s ease-in-out;
+  }
+  
+  /* Modal active state */
+  .gallery-modal.active {
+    display: flex;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const modal = document.getElementById('gallery-modal') as HTMLElement | null;
+    const modalImage = document.getElementById('modal-image') as HTMLImageElement | null;
+    
+    if (!modal || !modalImage) {
+      console.error('Modal elements not found');
+      return;
+    }
+    
+    galleryItems.forEach(item => {
+      item.addEventListener('click', function(this: HTMLElement) {
+        const isExpanded = this.classList.contains('expanded');
+        
+        if (isExpanded) {
+          // If already expanded, open in fullscreen modal
+          const fullImage = this.querySelector('.gallery-full') as HTMLImageElement | null;
+          if (fullImage) {
+            modalImage.src = fullImage.src;
+            modalImage.alt = fullImage.alt;
+            modal.classList.add('active');
+          }
+        } else {
+          // Close all items first
+          galleryItems.forEach(otherItem => {
+            otherItem.classList.remove('expanded');
+          });
+          
+          // Expand this item
+          this.classList.add('expanded');
+        }
+      });
+    });
+    
+    // Close modal when clicking on it
+    modal.addEventListener('click', function(this: HTMLElement) {
+      this.classList.remove('active');
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e: KeyboardEvent) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+      }
+    });
+  });
+</script>

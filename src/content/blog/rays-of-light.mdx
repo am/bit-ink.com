@@ -1,0 +1,50 @@
+---
+title: 'Rays of light'
+description: 'A new Photo Gallery'
+pubDate: 'Oct 5 2025'
+heroImage: '/photos/DSC01552.jpg'
+---
+
+I've been playing around adding a gallery component to this blog. And it was about time to share some new photos, it has been a while! There is not specific theme, just some of the things that surround us: the sea, the dunes, and some beautiful flowers from the family farm.
+
+import Gallery from '../../components/Gallery.astro'
+
+<Gallery
+	images={[
+		{
+			src: '/photos/DSC00238.jpg',
+			'src-thumb': '/photos/DSC00238-thumb.jpg',
+			alt: 'petals of a rose',
+		},
+		{
+			src: '/photos/DSC00247.jpg',
+			'src-thumb': '/photos/DSC00247-thumb.jpg',
+			alt: 'tractor with a mad face',
+		},
+		{
+			src: '/photos/DSC00764.jpg',
+			'src-thumb': '/photos/DSC00764-thumb.jpg',
+			alt: 'dune plants',
+		},
+		{
+			src: '/photos/DSC00766.jpg',
+			'src-thumb': '/photos/DSC00766-thumb.jpg',
+			alt: 'dune yellow dried flowers',
+		},
+		{
+			src: '/photos/DSC00797.jpg',
+			'src-thumb': '/photos/DSC00797-thumb.jpg',
+			alt: 'sneak peak through a farm door',
+		},
+		{
+			src: '/photos/DSC01552.jpg',
+			'src-thumb': '/photos/DSC01552-thumb.jpg',
+			alt: 'fisherman boat comming back home',
+		},
+		{
+			src: '/photos/DSC01565.jpg',
+			'src-thumb': '/photos/DSC01565-thumb.jpg',
+			alt: 'sunset colors reflected in the water',
+		},
+	]}
+/>
