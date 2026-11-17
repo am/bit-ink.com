@@ -7,7 +7,9 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "astro build && wrangler deploy",
+    "preview:cf": "astro build && wrangler dev"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.6",
@@ -23,6 +25,7 @@
     "tailwindcss-opentype": "^1.1.0"
   },
   "devDependencies": {
-    "prettier-plugin-astro": "^0.8.0"
+    "prettier-plugin-astro": "^0.8.0",
+    "wrangler": "^4.164.0"
   }
 }
