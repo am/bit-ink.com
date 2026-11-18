@@ -266,12 +266,19 @@ const items = await Promise.all(
 		-webkit-backdrop-filter: blur(0) saturate(1);
 		backdrop-filter: blur(0) saturate(1);
 	}
+	/* Layout: [gap][photo][gap][nav column][gap], with the same gap above. */
+	.gallery-viewer {
+		--gap: 1rem;
+		--nav: 2.1rem;
+	}
 	.gallery-stage {
 		position: absolute;
-		inset: 0 0 4.5rem;
+		inset: var(--gap) calc(var(--gap) * 2 + var(--nav)) 4.5rem var(--gap);
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		/* Sit the photo against the nav column, one gap away from it. When the
+		   photo is limited by height, the extra room goes to the left. */
+		justify-content: flex-end;
 		touch-action: pan-y pinch-zoom;
 		cursor: pointer;
 		user-select: none;
@@ -281,35 +288,29 @@ const items = await Promise.all(
 		display: block;
 		width: auto;
 		height: auto;
-		max-width: calc(100vw - 2rem);
-		max-height: calc(100dvh - 7rem);
+		max-width: 100%;
+		max-height: 100%;
 		object-fit: contain;
 		box-shadow: 0 16px 0 rgb(0 0 0 / 0.4);
 		will-change: transform;
 	}
-	@media (min-width: 768px) {
-		.gallery-photo {
-			max-width: calc(100vw - 9rem);
-		}
-	}
 	.gallery-meta {
 		position: absolute;
-		left: 0;
-		right: 0;
+		left: var(--gap);
+		right: calc(var(--gap) * 2 + var(--nav));
 		bottom: 2.25rem;
 		margin: 0;
 		display: flex;
-		justify-content: center;
+		justify-content: flex-end;
 		gap: 0.75rem;
 		font-size: 0.9rem;
-		padding: 0 1rem;
-		text-align: center;
+		text-align: right;
 	}
 	/* Right-hand column: up arrow, a small vertical stack of bars showing the
 	   position (like the gallery itself), down arrow. */
 	.gallery-nav {
 		position: absolute;
-		right: 1rem;
+		right: var(--gap);
 		top: 50%;
 		transform: translateY(-50%);
 		display: flex;
@@ -321,7 +322,7 @@ const items = await Promise.all(
 		position: static;
 	}
 	.gallery-dots {
-		width: 2.1rem;
+		width: var(--nav);
 		display: flex;
 		flex-direction: column;
 		gap: 2px;
@@ -360,8 +361,8 @@ const items = await Promise.all(
 		position: absolute;
 		display: grid;
 		place-items: center;
-		width: 2.1rem;
-		height: 2.1rem;
+		width: var(--nav);
+		height: var(--nav);
 		padding: 0;
 		border: 0;
 		border-radius: 0;
@@ -390,8 +391,8 @@ const items = await Promise.all(
 		stroke-linejoin: round;
 	}
 	.gallery-close {
-		top: 1rem;
-		right: 1rem;
+		top: var(--gap);
+		right: var(--gap);
 	}
 	@media (hover: none) and (max-width: 767px) {
 		/* On phones, swipe does the work; keep the arrows out of the photo. */
