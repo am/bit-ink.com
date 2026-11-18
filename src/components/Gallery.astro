@@ -447,6 +447,9 @@ const items = await Promise.all(
 
 		let current = 0;
 		let busy = false;
+		// Only hand focus back to the stripe when the viewer was opened with the
+		// keyboard; after a mouse or touch click, a focus ring would just be noise.
+		let openedWithKeyboard = false;
 		const loaded = new Set<number>();
 
 		const wrap = (i: number) => (i + photos.length) % photos.length;
@@ -582,7 +585,12 @@ const items = await Promise.all(
 
 		viewer.addEventListener("close", () => {
 			document.documentElement.style.overflow = "";
-			photos[current].bar.focus({ preventScroll: true });
+			if (openedWithKeyboard) {
+				photos[current].bar.focus({ preventScroll: true });
+			} else {
+				// The dialog returns focus to the stripe that opened it; drop it.
+				(document.activeElement as HTMLElement | null)?.blur();
+			}
 		});
 
 		async function go(step: number) {
@@ -611,7 +619,13 @@ const items = await Promise.all(
 			busy = false;
 		}
 
-		bars.forEach((bar, i) => bar.addEventListener("click", () => open(i)));
+		bars.forEach((bar, i) =>
+			bar.addEventListener("click", (e) => {
+				// detail is 0 when the button was activated with Enter or Space.
+				openedWithKeyboard = e.detail === 0;
+				open(i);
+			})
+		);
 		dots.forEach((dot, i) =>
 			dot.addEventListener("click", () => {
 				if (i !== current) go(i - current);
