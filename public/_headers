@@ -1,0 +1,17 @@
+# Response headers for Workers static assets.
+# https://developers.cloudflare.com/workers/static-assets/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+
+# Astro puts a content hash in every file name under /_astro/, so browsers can keep them for a year.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Keep the workers.dev copy and PR preview URLs out of search results.
+https://:name.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex

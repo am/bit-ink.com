@@ -3,17 +3,17 @@
   "name": "bit-ink",
   "compatibility_date": "2026-11-01",
   // Static-only site: Astro builds to ./dist and Workers serves it as static assets.
-  // No Worker script is needed (no functions, forms, redirects or headers on Netlify).
+  // No Worker script is needed. Unknown URLs get dist/404.html with a 404 status.
   "assets": {
     "directory": "./dist",
     // Astro emits blog/post/index.html, so /blog/post redirects to /blog/post/ (same as Netlify).
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "none"
+    "not_found_handling": "404-page",
   },
   // Production domains. www.bit-ink.com is 301-redirected to the apex by a zone redirect rule.
   "routes": [
     { "pattern": "bit-ink.com", "custom_domain": true },
-    { "pattern": "www.bit-ink.com", "custom_domain": true }
+    { "pattern": "www.bit-ink.com", "custom_domain": true },
   ],
   // Keep the workers.dev URL and preview URLs on. With custom domains in `routes`,
   // Wrangler would otherwise turn both off on deploy, breaking PR preview links.
@@ -22,5 +22,5 @@
   "observability": { "enabled": true },
   // Required by `wrangler preview`, which Workers Builds runs for non-production branches.
   // Empty: previews use the same assets and settings as production.
-  "previews": {}
+  "previews": {},
 }
