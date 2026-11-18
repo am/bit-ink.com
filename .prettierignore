@@ -1,0 +1,7 @@
+dist/
+.astro/
+.wrangler/
+package-lock.json
+# Prose: Prettier re-wraps MDX and can change how it renders.
+*.md
+*.mdx

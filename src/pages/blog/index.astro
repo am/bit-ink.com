@@ -12,31 +12,29 @@ const posts = (await getCollection("blog")).sort(
 	<h1 class="sr-only">Blog</h1>
 	<section>
 		<ul>
-			{
-				posts.map((post) => (
-					<li class="container mx-auto max-w-3xl bg-white p-16 my-8 shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
-						<article>
-							<div class="flex justify-between items-center font-bold mb-8">
-								<h2 class="font-display text-4xl">
-									<a class="underline text-ink" href={`/blog/${post.id}/`}>
-										{post.data.title}
-									</a>
-								</h2>
-								<p class="text-zinc-600">
-									<FormattedDate date={post.data.pubDate} />
-								</p>
-							</div>
-							<hr />
-							<p>
-								{post.data.description}{" "}
-								<a class="text-ink font-bold" href={`/blog/${post.id}/`}>
-									[continues...]
+			{posts.map((post) => (
+				<li class="container mx-auto max-w-3xl bg-white p-16 my-8 shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
+					<article>
+						<div class="flex justify-between items-center font-bold mb-8">
+							<h2 class="font-display text-4xl">
+								<a class="underline text-ink" href={`/blog/${post.id}/`}>
+									{post.data.title}
 								</a>
+							</h2>
+							<p class="text-zinc-600">
+								<FormattedDate date={post.data.pubDate} />
 							</p>
-						</article>
-					</li>
-				))
-			}
+						</div>
+						<hr />
+						<p>
+							{post.data.description}{" "}
+							<a class="text-ink font-bold" href={`/blog/${post.id}/`}>
+								[continues...]
+							</a>
+						</p>
+					</article>
+				</li>
+			))}
 		</ul>
 	</section>
 </Base>

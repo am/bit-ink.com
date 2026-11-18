@@ -9,16 +9,16 @@ const links = [
 
 <nav class="fixed top-0 z-50 w-full lg:w-min lg:right-0 p-6 bg-white/60 backdrop-blur-sm text-xl">
 	<ul class="flex justify-end gap-6">
-		{
-			links.map(({ href, label, current }) => (
-				<li>
-					<a
-						class={current ? "text-zinc-600" : "underline text-ink"}
-						href={href}
-						aria-current={current ? "page" : undefined}
-					>{label}</a>
-				</li>
-			))
-		}
+		{links.map(({ href, label, current }) => (
+			<li>
+				<a
+					class={current ? "text-zinc-600" : "underline text-ink"}
+					href={href}
+					aria-current={current ? "page" : undefined}
+				>
+					{label}
+				</a>
+			</li>
+		))}
 	</ul>
 </nav>

@@ -30,9 +30,7 @@ function resolve(src: string | ImageMetadata): ImageMetadata {
 	const name = src.split("/").pop();
 	const match = photos[`/src/assets/photos/${name}`];
 	if (!match) {
-		throw new Error(
-			`Gallery: "${src}" not found. Put the photo in src/assets/photos/.`
-		);
+		throw new Error(`Gallery: "${src}" not found. Put the photo in src/assets/photos/.`);
 	}
 	return match.default;
 }
@@ -50,9 +48,9 @@ const items = await Promise.all(
 		});
 		const large = await getImage({
 			src: meta,
-			widths: [1024, 1600, 2400].filter((w) => w < meta.width).concat(
-				meta.width <= 2400 ? [meta.width] : []
-			),
+			widths: [1024, 1600, 2400]
+				.filter((w) => w < meta.width)
+				.concat(meta.width <= 2400 ? [meta.width] : []),
 			format: "webp",
 			quality: 82,
 		});
@@ -77,36 +75,34 @@ const items = await Promise.all(
 
 <div class="not-prose gallery" data-gallery>
 	<ul class="gallery-stack">
-		{
-			items.map((item, index) => (
-				<li style={`z-index: ${index + 1}`}>
-					<button
-						type="button"
-						class="gallery-bar"
-						data-index={index}
-						data-id={item.id}
-						data-large-src={item.large.src}
-						data-large-srcset={item.large.srcSet.attribute}
-						data-width={item.width}
-						data-height={item.height}
-						aria-label={`Open photo ${index + 1} of ${items.length}: ${item.alt}`}
-					>
-						<img
-							src={item.bar.src}
-							srcset={item.bar.srcSet.attribute}
-							sizes="(min-width: 768px) 640px, 100vw"
-							width={item.width}
-							height={item.height}
-							alt={item.alt}
-							style={`object-position: ${item.position}`}
-							loading={index < 3 ? "eager" : "lazy"}
-							decoding="async"
-						/>
-						<span class="gallery-caption">{item.alt}</span>
-					</button>
-				</li>
-			))
-		}
+		{items.map((item, index) => (
+			<li style={`z-index: ${index + 1}`}>
+				<button
+					type="button"
+					class="gallery-bar"
+					data-index={index}
+					data-id={item.id}
+					data-large-src={item.large.src}
+					data-large-srcset={item.large.srcSet.attribute}
+					data-width={item.width}
+					data-height={item.height}
+					aria-label={`Open photo ${index + 1} of ${items.length}: ${item.alt}`}
+				>
+					<img
+						src={item.bar.src}
+						srcset={item.bar.srcSet.attribute}
+						sizes="(min-width: 768px) 640px, 100vw"
+						width={item.width}
+						height={item.height}
+						alt={item.alt}
+						style={`object-position: ${item.position}`}
+						loading={index < 3 ? "eager" : "lazy"}
+						decoding="async"
+					/>
+					<span class="gallery-caption">{item.alt}</span>
+				</button>
+			</li>
+		))}
 	</ul>
 
 	<dialog class="gallery-viewer" aria-label="Photo viewer" tabindex="-1">
@@ -117,26 +113,30 @@ const items = await Promise.all(
 			<span class="gallery-meta-caption"></span>
 		</p>
 		<button type="button" class="gallery-btn gallery-close" aria-label="Close">
-			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+			<svg viewBox="0 0 24 24" aria-hidden="true">
+				<path d="M6 6l12 12M18 6L6 18" />
+			</svg>
 		</button>
 		<nav class="gallery-nav" aria-label="Photo navigation">
 			<button type="button" class="gallery-btn gallery-prev" aria-label="Previous photo">
-				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7" /></svg>
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<path d="M5 15l7-7 7 7" />
+				</svg>
 			</button>
 			<div class="gallery-dots" role="group" aria-label="Photos">
-				{
-					items.map((item, index) => (
-						<button
-							type="button"
-							class="gallery-dot"
-							data-index={index}
-							aria-label={`Photo ${index + 1}: ${item.alt}`}
-						/>
-					))
-				}
+				{items.map((item, index) => (
+					<button
+						type="button"
+						class="gallery-dot"
+						data-index={index}
+						aria-label={`Photo ${index + 1}: ${item.alt}`}
+					/>
+				))}
 			</div>
 			<button type="button" class="gallery-btn gallery-next" aria-label="Next photo">
-				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7" /></svg>
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<path d="M5 9l7 7 7-7" />
+				</svg>
 			</button>
 		</nav>
 	</dialog>
@@ -286,8 +286,8 @@ const items = await Promise.all(
 	}
 	.gallery-stage {
 		position: absolute;
-		inset: calc(var(--gap) + var(--vshift)) var(--right)
-			calc(var(--bottom) + var(--shadow)) var(--gap);
+		inset: calc(var(--gap) + var(--vshift)) var(--right) calc(var(--bottom) + var(--shadow))
+			var(--gap);
 		display: flex;
 		align-items: flex-end;
 		/* Sit the photo against the nav column and the title. */
@@ -457,9 +457,7 @@ const items = await Promise.all(
 	};
 
 	function setup(root: HTMLElement) {
-		const bars = Array.from(
-			root.querySelectorAll<HTMLButtonElement>(".gallery-bar")
-		);
+		const bars = Array.from(root.querySelectorAll<HTMLButtonElement>(".gallery-bar"));
 		const photos: Photo[] = bars.map((bar) => {
 			const thumb = bar.querySelector("img")!;
 			return {
@@ -478,9 +476,7 @@ const items = await Promise.all(
 		const stage = viewer.querySelector<HTMLElement>(".gallery-stage")!;
 		const img = viewer.querySelector<HTMLImageElement>(".gallery-photo")!;
 		const caption = viewer.querySelector<HTMLElement>(".gallery-meta-caption")!;
-		const dots = Array.from(
-			viewer.querySelectorAll<HTMLButtonElement>(".gallery-dot")
-		);
+		const dots = Array.from(viewer.querySelectorAll<HTMLButtonElement>(".gallery-dot"));
 
 		let current = 0;
 		let busy = false;
@@ -567,9 +563,7 @@ const items = await Promise.all(
 
 			caption.textContent = p.alt;
 			dots.forEach((d, j) =>
-				j === current
-					? d.setAttribute("aria-current", "true")
-					: d.removeAttribute("aria-current")
+				j === current ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")
 			);
 			fit();
 			preload(current + 1);
@@ -707,15 +701,9 @@ const items = await Promise.all(
 				if (i !== current) go(i - current);
 			})
 		);
-		viewer
-			.querySelector(".gallery-close")!
-			.addEventListener("click", () => close());
-		viewer
-			.querySelector(".gallery-prev")!
-			.addEventListener("click", () => go(-1));
-		viewer
-			.querySelector(".gallery-next")!
-			.addEventListener("click", () => go(1));
+		viewer.querySelector(".gallery-close")!.addEventListener("click", () => close());
+		viewer.querySelector(".gallery-prev")!.addEventListener("click", () => go(-1));
+		viewer.querySelector(".gallery-next")!.addEventListener("click", () => go(1));
 
 		viewer.addEventListener("keydown", (e) => {
 			if (e.key === "ArrowDown" || e.key === "ArrowRight") go(1);
@@ -846,7 +834,5 @@ const items = await Promise.all(
 		window.addEventListener("hashchange", openFromHash);
 	}
 
-	document
-		.querySelectorAll<HTMLElement>("[data-gallery]")
-		.forEach((root) => setup(root));
+	document.querySelectorAll<HTMLElement>("[data-gallery]").forEach((root) => setup(root));
 </script>
