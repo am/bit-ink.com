@@ -17,7 +17,7 @@ const posts = (await getCollection("blog")).sort(
 						<article>
 							<span class="flex justify-between items-center font-bold mb-8">
 								<h2 class="font-display text-4xl">
-									<a class="underline text-ink " href={`/blog/${post.slug}/`}>
+									<a class="underline text-ink " href={`/blog/${post.id}/`}>
 										{post.data.title}
 									</a>
 								</h2>
@@ -28,7 +28,7 @@ const posts = (await getCollection("blog")).sort(
 							<hr />
 							<p>
 								{post.body.split("\n").slice(0, 2).join(" ").slice(0, 160)}
-								<a class="text-ink text-bold" href={`/blog/${post.slug}/`}>
+								<a class="text-ink text-bold" href={`/blog/${post.id}/`}>
 									[continues...]
 								</a>
 							</p>
