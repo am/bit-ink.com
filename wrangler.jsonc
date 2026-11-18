@@ -12,5 +12,8 @@
   },
   // Custom domains are added at DNS cutover, once the Netlify CNAMEs are removed:
   // "routes": [{ "pattern": "bit-ink.com", "custom_domain": true }],
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // Required by `wrangler preview`, which Workers Builds runs for non-production branches.
+  // Empty: previews use the same assets and settings as production.
+  "previews": {}
 }
