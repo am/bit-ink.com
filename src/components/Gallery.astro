@@ -107,7 +107,6 @@ const items = await Promise.all(
 		</div>
 		<p class="gallery-meta">
 			<span class="gallery-meta-caption"></span>
-			<span class="gallery-meta-count"></span>
 		</p>
 		<div class="gallery-dots" role="tablist" aria-label="Photos">
 			{
@@ -261,6 +260,7 @@ const items = await Promise.all(
 		align-items: center;
 		justify-content: center;
 		touch-action: pan-y pinch-zoom;
+		cursor: pointer;
 		user-select: none;
 		-webkit-user-select: none;
 	}
@@ -292,21 +292,20 @@ const items = await Promise.all(
 		padding: 0 1rem;
 		text-align: center;
 	}
-	.gallery-meta-count {
-		opacity: 0.6;
-		font-variant-numeric: tabular-nums;
-	}
+	/* Position indicator: a small vertical stack of bars, like the gallery
+	   itself, in the bottom-right corner. */
 	.gallery-dots {
 		position: absolute;
-		left: 50%;
+		right: 1rem;
 		bottom: 1rem;
-		transform: translateX(-50%);
+		width: 3rem;
 		display: flex;
-		gap: 4px;
+		flex-direction: column;
+		gap: 2px;
 	}
 	.gallery-dot {
-		width: 1.75rem;
-		height: 0.75rem;
+		width: 100%;
+		height: 0.6rem;
 		padding: 0;
 		border: 0;
 		background: transparent;
@@ -332,7 +331,7 @@ const items = await Promise.all(
 	}
 	.gallery-dot[aria-selected="true"]::after {
 		opacity: 1;
-		height: 5px;
+		height: 6px;
 	}
 	.gallery-btn {
 		position: absolute;
@@ -342,13 +341,14 @@ const items = await Promise.all(
 		height: 3rem;
 		padding: 0;
 		border: 0;
-		border-radius: 999px;
+		border-radius: 0;
 		color: inherit;
 		background: rgb(255 255 255 / 0.55);
 		cursor: pointer;
 		transition: background 0.2s ease;
 	}
-	.gallery-btn:hover {
+	.gallery-btn:hover,
+	.gallery-btn.is-hot {
 		color: #eaeae3;
 		background: #3b2ee6;
 	}
@@ -440,7 +440,6 @@ const items = await Promise.all(
 		const stage = viewer.querySelector<HTMLElement>(".gallery-stage")!;
 		const img = viewer.querySelector<HTMLImageElement>(".gallery-photo")!;
 		const caption = viewer.querySelector<HTMLElement>(".gallery-meta-caption")!;
-		const count = viewer.querySelector<HTMLElement>(".gallery-meta-count")!;
 		const dots = Array.from(
 			viewer.querySelectorAll<HTMLButtonElement>(".gallery-dot")
 		);
@@ -501,7 +500,6 @@ const items = await Promise.all(
 			);
 
 			caption.textContent = p.alt;
-			count.textContent = `${current + 1} / ${photos.length}`;
 			dots.forEach((d, j) =>
 				d.setAttribute("aria-selected", String(j === current))
 			);
@@ -658,6 +656,22 @@ const items = await Promise.all(
 			close();
 		});
 
+		// The whole left/right half of the stage acts as the prev/next button,
+		// so light up that button while the pointer is over its half.
+		const prevBtn = viewer.querySelector<HTMLElement>(".gallery-prev")!;
+		const nextBtn = viewer.querySelector<HTMLElement>(".gallery-next")!;
+		const sideOf = (x: number) => (x < window.innerWidth / 2 ? -1 : 1);
+		stage.addEventListener("pointermove", (e) => {
+			if (e.pointerType !== "mouse") return;
+			const side = sideOf(e.clientX);
+			prevBtn.classList.toggle("is-hot", side < 0);
+			nextBtn.classList.toggle("is-hot", side > 0);
+		});
+		stage.addEventListener("pointerleave", () => {
+			prevBtn.classList.remove("is-hot");
+			nextBtn.classList.remove("is-hot");
+		});
+
 		// Swipe: the photo follows your finger; let go past a threshold to move on.
 		let startX = 0;
 		let startY = 0;
@@ -690,11 +704,8 @@ const items = await Promise.all(
 			if (!tracking) return;
 			tracking = false;
 			if (!moved) {
-				// A plain click/tap: outside the photo closes, on the photo goes next.
-				if (e.type === "pointerup") {
-					if (e.target === img) go(1);
-					else close();
-				}
+				// A plain click/tap: the left half goes back, the right half forward.
+				if (e.type === "pointerup") go(sideOf(e.clientX));
 				return;
 			}
 			const threshold = Math.min(90, window.innerWidth * 0.18);
