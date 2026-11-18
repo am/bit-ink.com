@@ -155,8 +155,7 @@ const items = await Promise.all(
 	}
 	/* A straight stack of stripes, each cropped from its photo. Each stripe
 	   lies on top of the one before it and casts the blog's solid translucent
-	   shadow bar up onto it. The shadow belongs to the list item, so it stays
-	   put while the photo itself nudges on hover. */
+	   shadow bar up onto it. */
 	.gallery-stack > li {
 		position: relative;
 	}
@@ -165,15 +164,9 @@ const items = await Promise.all(
 	.gallery-stack > li + li {
 		margin-top: calc(-1 * var(--tuck));
 	}
-	.gallery-stack > li + li::before {
-		content: "";
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: -16px;
-		height: 16px;
-		background: rgb(0 0 0 / 0.4);
-		pointer-events: none;
+	/* The shadow belongs to the stripe, so it moves with it on hover. */
+	.gallery-stack > li + li .gallery-bar {
+		box-shadow: 0 -16px 0 rgb(0 0 0 / 0.4);
 	}
 	.gallery-bar {
 		position: relative;
