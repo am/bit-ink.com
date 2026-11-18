@@ -8,12 +8,17 @@
 
 	--font-display: "Abril Fatface", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 	--font-sans:
-		"Karla", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+		"Karla Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
 		"Segoe UI Symbol", "Noto Color Emoji";
 }
 
+/* AVIF is about half the size of the JPEG; the JPEG stays for older browsers and link previews. */
 @utility bg-hero-background {
 	background-image: url("/hero-background.jpg");
+	background-image: image-set(
+		url("/hero-background.avif") type("image/avif"),
+		url("/hero-background.jpg") type("image/jpeg")
+	);
 }
 
 @utility common-ligatures {

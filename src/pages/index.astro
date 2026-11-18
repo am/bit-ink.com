@@ -5,6 +5,8 @@ import { Content as About } from "../content/pages/index.mdx";
 ---
 
 <Base bodyClass="flex flex-col bg-white text-black font-sans">
+	<!-- The header background is the largest thing on screen; start loading it before the CSS. -->
+	<link slot="head" rel="preload" as="image" href="/hero-background.avif" type="image/avif" />
 	<header
 		slot="header"
 		class="flex h-[80vh] px-4 justify-center items-center bg-cover bg-hero-background"
