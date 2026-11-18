@@ -72,7 +72,7 @@ const items = await Promise.all(
 	<ul class="gallery-stack">
 		{
 			items.map((item, index) => (
-				<li style={`z-index: ${items.length - index}`}>
+				<li style={`z-index: ${index + 1}`}>
 					<button
 						type="button"
 						class="gallery-bar"
@@ -150,10 +150,22 @@ const items = await Promise.all(
 		margin: 0;
 		padding: 0;
 	}
-	/* A straight stack of stripes, each cropped from its photo. Earlier
-	   stripes sit on top, so each one's shadow falls on the next. */
+	/* A straight stack of stripes, each cropped from its photo. Each stripe
+	   lies on top of the one before it and casts the blog's solid translucent
+	   shadow bar up onto it. The shadow belongs to the list item, so it stays
+	   put while the photo itself nudges on hover. */
 	.gallery-stack > li {
 		position: relative;
+	}
+	.gallery-stack > li + li::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: -16px;
+		height: 16px;
+		background: rgb(0 0 0 / 0.4);
+		pointer-events: none;
 	}
 	.gallery-bar {
 		position: relative;
@@ -165,11 +177,7 @@ const items = await Promise.all(
 		overflow: hidden;
 		cursor: zoom-in;
 		background: #d6d6cf;
-		/* Same solid, translucent bar as the blog's cards. */
-		box-shadow: 0 16px 0 rgb(0 0 0 / 0.4);
-		transition:
-			transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
-			box-shadow 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+		transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
 	}
 	.gallery-bar img {
 		display: block;
@@ -197,7 +205,6 @@ const items = await Promise.all(
 		/* Pull the photo gently out of the pile. */
 		.gallery-bar:hover {
 			transform: translateY(-6px);
-			box-shadow: 0 22px 0 rgb(0 0 0 / 0.4);
 		}
 		.gallery-bar:hover .gallery-caption {
 			opacity: 1;
