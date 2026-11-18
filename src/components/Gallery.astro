@@ -275,7 +275,7 @@ const items = await Promise.all(
 	.gallery-viewer {
 		--gap: 1rem;
 		--nav: 2.1rem;
-		--meta: 1.35rem;
+		--meta: 2rem;
 		--shadow: 16px;
 		--shift: 0px;
 		--vshift: 0px;
@@ -316,8 +316,12 @@ const items = await Promise.all(
 		display: flex;
 		justify-content: flex-end;
 		gap: 0.75rem;
-		font-size: 0.9rem;
+		font-family: "Abril Fatface", serif;
+		font-size: 1.6rem;
 		text-align: right;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	/* Right-hand column: up arrow, a small vertical stack of bars showing the
 	   position (like the gallery itself), down arrow. */
