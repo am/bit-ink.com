@@ -266,18 +266,28 @@ const items = await Promise.all(
 		-webkit-backdrop-filter: blur(0) saturate(1);
 		backdrop-filter: blur(0) saturate(1);
 	}
-	/* Layout: [gap][photo][gap][nav column][gap], with the same gap above. */
+	/* One gap everywhere:
+	     across: [gap][photo][gap][nav column][gap]
+	     down:   [gap][photo + shadow][gap][title][gap]
+	   The photo, title and nav are centred as a group: the script sets --shift
+	   and --vshift to half the room the photo leaves free in each direction. */
 	.gallery-viewer {
 		--gap: 1rem;
 		--nav: 2.1rem;
+		--meta: 1.35rem;
+		--shadow: 16px;
+		--shift: 0px;
+		--vshift: 0px;
+		--right: calc(var(--gap) * 2 + var(--nav) + var(--shift));
+		--bottom: calc(var(--gap) * 2 + var(--meta) + var(--vshift));
 	}
 	.gallery-stage {
 		position: absolute;
-		inset: var(--gap) calc(var(--gap) * 2 + var(--nav)) 4.5rem var(--gap);
+		inset: calc(var(--gap) + var(--vshift)) var(--right)
+			calc(var(--bottom) + var(--shadow)) var(--gap);
 		display: flex;
-		align-items: center;
-		/* Sit the photo against the nav column, one gap away from it. When the
-		   photo is limited by height, the extra room goes to the left. */
+		align-items: flex-end;
+		/* Sit the photo against the nav column and the title. */
 		justify-content: flex-end;
 		touch-action: pan-y pinch-zoom;
 		cursor: pointer;
@@ -291,14 +301,16 @@ const items = await Promise.all(
 		max-width: 100%;
 		max-height: 100%;
 		object-fit: contain;
-		box-shadow: 0 16px 0 rgb(0 0 0 / 0.4);
+		box-shadow: 0 var(--shadow) 0 rgb(0 0 0 / 0.4);
 		will-change: transform;
 	}
 	.gallery-meta {
 		position: absolute;
 		left: var(--gap);
-		right: calc(var(--gap) * 2 + var(--nav));
-		bottom: 2.25rem;
+		right: var(--right);
+		bottom: calc(var(--gap) + var(--vshift));
+		height: var(--meta);
+		line-height: var(--meta);
 		margin: 0;
 		display: flex;
 		justify-content: flex-end;
@@ -310,7 +322,7 @@ const items = await Promise.all(
 	   position (like the gallery itself), down arrow. */
 	.gallery-nav {
 		position: absolute;
-		right: var(--gap);
+		right: calc(var(--gap) + var(--shift));
 		top: 50%;
 		transform: translateY(-50%);
 		display: flex;
@@ -497,6 +509,25 @@ const items = await Promise.all(
 			history.replaceState(history.state, "", id ? url : url.href.replace(/#$/, ""));
 		};
 
+		// Centre the photo, title and nav as a group: measure the photo in the
+		// full stage, then shift everything by half the room it leaves free.
+		function fit() {
+			if (!viewer.open) return;
+			viewer.style.setProperty("--shift", "0px");
+			viewer.style.setProperty("--vshift", "0px");
+			// Size the photo from its real shape, not from whichever file is
+			// showing (the small stripe image goes up first).
+			const p = photos[current];
+			const sw = stage.clientWidth;
+			const sh = stage.clientHeight;
+			const w = Math.min(sw, sh * (p.width / p.height));
+			const h = w * (p.height / p.width);
+			img.style.width = `${w}px`;
+			img.style.height = `${h}px`;
+			viewer.style.setProperty("--shift", `${(sw - w) / 2}px`);
+			viewer.style.setProperty("--vshift", `${(sh - h) / 2}px`);
+		}
+
 		function show(i: number) {
 			current = wrap(i);
 			const p = photos[current];
@@ -528,6 +559,7 @@ const items = await Promise.all(
 			dots.forEach((d, j) =>
 				d.setAttribute("aria-selected", String(j === current))
 			);
+			fit();
 			preload(current + 1);
 			preload(current - 1);
 		}
@@ -570,6 +602,7 @@ const items = await Promise.all(
 			// focus ring as soon as an arrow key is pressed. Focus the dialog
 			// itself instead; Tab still reaches the buttons.
 			viewer.focus({ preventScroll: true });
+			fit();
 			document.documentElement.style.overflow = "hidden";
 			requestAnimationFrame(() => {
 				viewer.classList.remove("is-fading");
@@ -683,6 +716,8 @@ const items = await Promise.all(
 			} else return;
 			e.preventDefault();
 		});
+		window.addEventListener("resize", fit);
+
 		// Esc can also arrive as a "cancel" event without a keydown (e.g. back gesture).
 		viewer.addEventListener("cancel", (e) => {
 			e.preventDefault();
