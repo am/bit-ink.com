@@ -66,3 +66,12 @@ Check out [our documentation](https://docs.astro.build) or jump into our [Discor
 ## Credit
 
 This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+
+## Deploying (Cloudflare Workers)
+
+The site is served as static assets by a Cloudflare Worker named `bit-ink` (see `wrangler.jsonc`).
+
+- `npm run preview:cf` builds and serves the site locally with the Workers runtime.
+- `npm run deploy` builds and deploys with Wrangler.
+- With Workers Builds connected to this repo, pushes to `master` deploy automatically
+  (build command `npm run build`, deploy command `npx wrangler deploy`).

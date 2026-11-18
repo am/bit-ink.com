@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bit-ink",
+  "compatibility_date": "2026-11-01",
+  // Static-only site: Astro builds to ./dist and Workers serves it as static assets.
+  // No Worker script is needed (no functions, forms, redirects or headers on Netlify).
+  "assets": {
+    "directory": "./dist",
+    // Astro emits blog/post/index.html, so /blog/post redirects to /blog/post/ (same as Netlify).
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  },
+  // Custom domains are added at DNS cutover, once the Netlify CNAMEs are removed:
+  // "routes": [{ "pattern": "bit-ink.com", "custom_domain": true }],
+  "observability": { "enabled": true }
+}
