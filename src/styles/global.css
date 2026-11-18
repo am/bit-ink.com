@@ -1,5 +1,24 @@
 @import "tailwindcss";
-@config "../../tailwind.config.cjs";
+@plugin "@tailwindcss/typography";
+
+@theme {
+	--color-white: #eaeae3;
+	--color-black: #282827;
+	--color-ink: #3b2ee6;
+
+	--font-display: "Abril Fatface", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+	--font-sans:
+		"Karla", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+		"Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@utility bg-hero-background {
+	background-image: url("/hero-background.jpg");
+}
+
+@utility common-ligatures {
+	font-variant-ligatures: common-ligatures;
+}
 
 /*
   Tailwind v4 changed the default border color to currentColor.
