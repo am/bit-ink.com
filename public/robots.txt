@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bit-ink.com/sitemap-index.xml

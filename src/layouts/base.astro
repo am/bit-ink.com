@@ -2,16 +2,34 @@
 import { SITE_TITLE, SITE_DESCRIPTION } from "consts";
 import Navigation from "@components/Navigation.astro";
 import BaseHead from "@components/BaseHead.astro";
+import type { Props as HeadProps } from "@components/BaseHead.astro";
 import "@fontsource/abril-fatface";
 import "@fontsource/karla";
+
+type Props = Partial<HeadProps> & {
+	/** Classes for <body>. Defaults to the blog's fixed background. */
+	bodyClass?: string;
+};
+
+const {
+	title,
+	description = SITE_DESCRIPTION,
+	bodyClass = "pt-36 h-screen bg-cover bg-fixed bg-hero-background common-ligatures",
+	...head
+} = Astro.props;
+
+// Page titles read "Post title · bit-ink"; the home page is just "bit-ink".
+const pageTitle = title ? `${title} · ${SITE_TITLE}` : SITE_TITLE;
 ---
 
+<!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={pageTitle} description={description} {...head} />
 	</head>
-	<body class="pt-36 h-screen bg-cover bg-fixed bg-hero-background common-ligatures">
+	<body class={bodyClass}>
 		<Navigation />
+		<slot name="header" />
 		<main>
 			<slot />
 		</main>
