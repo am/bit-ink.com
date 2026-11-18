@@ -11,44 +11,47 @@ export async function getStaticPaths() {
 		props: { posts, post },
 	}));
 }
-// type Props = CollectionEntry<"blog">;
 type Props = {
 	post: CollectionEntry<"blog">;
 	posts: CollectionEntry<"blog">[];
 };
 
 const { post, posts } = Astro.props;
-const { heroImage, pubDate, title, updatedDate } = post.data;
+const { description, heroImage, pubDate, title, updatedDate } = post.data;
 const { Content } = await render(post);
 
-// Sort posts by publication date
-const sortedPosts = posts.sort(
-	(a, b) =>
-		new Date(a.data.pubDate).getTime() - new Date(b.data.pubDate).getTime()
+// Oldest first. Copy before sorting: `posts` is shared by every page.
+const sortedPosts = [...posts].sort(
+	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
 );
-
-// Find the index of the current post
 const currentIndex = sortedPosts.findIndex((p) => p.id === post.id);
 
-// Determine previous and next posts
-const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
-const previousPost =
+// The newer post is linked above this one and the older post below it.
+const olderPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+const newerPost =
 	currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 ---
 
-<Base>
+<Base
+	title={title}
+	description={description}
+	image={heroImage}
+	type="article"
+	publishedTime={pubDate}
+	modifiedTime={updatedDate}
+>
 	{
-		previousPost && (
+		newerPost && (
 			<article class="container mx-auto max-w-3xl p-4 bg-white shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
 				<div class="flex justify-between items-center">
 					<a
 						class="text-lg underline text-ink"
-						href={`/blog/${previousPost.id}`}
+						href={`/blog/${newerPost.id}/`}
 					>
-						{previousPost?.data.title}
+						{newerPost.data.title}
 					</a>
 					<div class="text-sm uppercase">
-						<FormattedDate date={previousPost.data.pubDate} />
+						<FormattedDate date={newerPost.data.pubDate} />
 					</div>
 				</div>
 			</article>
@@ -67,7 +70,7 @@ const previousPost =
 				</div>
 				{
 					updatedDate && (
-						<div class="font-gray">
+						<div class="text-zinc-600">
 							+ <FormattedDate date={updatedDate} />
 						</div>
 					)
@@ -81,14 +84,14 @@ const previousPost =
 	</article>
 
 	{
-		nextPost && (
+		olderPost && (
 			<article class="container mx-auto max-w-3xl p-4 bg-white shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
 				<div class="flex justify-between items-center">
-					<a class="text-lg underline text-ink" href={`/blog/${nextPost.id}`}>
-						{nextPost?.data.title}
+					<a class="text-lg underline text-ink" href={`/blog/${olderPost.id}/`}>
+						{olderPost.data.title}
 					</a>
 					<div class="text-sm uppercase">
-						<FormattedDate date={nextPost.data.pubDate} />
+						<FormattedDate date={olderPost.data.pubDate} />
 					</div>
 				</div>
 			</article>
