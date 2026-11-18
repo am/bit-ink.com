@@ -39,10 +39,6 @@ function resolve(src: string | ImageMetadata): ImageMetadata {
 
 const { images } = Astro.props;
 
-// Small, fixed tilts and offsets so the stack looks like a loose pile of prints.
-const TILTS = [-0.6, 0.45, -0.25, 0.7, -0.5, 0.3, -0.75, 0.55];
-const SHIFTS = [-3, 4, -1, 2, -4, 3, 0, -2];
-
 const items = await Promise.all(
 	images.map(async (image) => {
 		const meta = resolve(image.src);
@@ -76,7 +72,7 @@ const items = await Promise.all(
 	<ul class="gallery-stack">
 		{
 			items.map((item, index) => (
-				<li style={`--tilt: ${TILTS[index % TILTS.length]}deg; --shift: ${SHIFTS[index % SHIFTS.length]}px; z-index: ${index + 1}`}>
+				<li style={`z-index: ${items.length - index}`}>
 					<button
 						type="button"
 						class="gallery-bar"
@@ -141,12 +137,12 @@ const items = await Promise.all(
 	/* ---------- Stack ---------- */
 	.gallery {
 		margin: 2.5rem 0 3rem;
-		/* How much of each photo peeks out from under the next one. */
-		--peek: 3.75rem;
+		/* Height of each stripe. */
+		--stripe: 4.5rem;
 	}
 	@media (min-width: 640px) {
 		.gallery {
-			--peek: 5.5rem;
+			--stripe: 7rem;
 		}
 	}
 	.gallery-stack {
@@ -154,31 +150,26 @@ const items = await Promise.all(
 		margin: 0;
 		padding: 0;
 	}
+	/* A straight stack of stripes, each cropped from its photo. Earlier
+	   stripes sit on top, so each one's shadow falls on the next. */
 	.gallery-stack > li {
 		position: relative;
-		transform: translateX(var(--shift)) rotate(var(--tilt));
-	}
-	/* Each photo is a full 3:2 print laid over the previous one, leaving
-	   only its top band visible. */
-	.gallery-stack > li + li {
-		margin-top: calc(-66.6667% + var(--peek));
 	}
 	.gallery-bar {
 		position: relative;
 		display: block;
 		width: 100%;
-		aspect-ratio: 3 / 2;
+		height: var(--stripe);
 		padding: 0;
 		border: 0;
 		overflow: hidden;
 		cursor: zoom-in;
 		background: #d6d6cf;
-		box-shadow:
-			0 -2px 6px rgb(40 40 39 / 0.14),
-			0 -10px 24px rgb(40 40 39 / 0.12);
+		/* Same solid, translucent bar as the blog's cards. */
+		box-shadow: 0 16px 0 rgb(0 0 0 / 0.4);
 		transition:
-			transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
-			box-shadow 0.5s ease;
+			transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+			box-shadow 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
 	}
 	.gallery-bar img {
 		display: block;
@@ -189,14 +180,14 @@ const items = await Promise.all(
 	.gallery-caption {
 		position: absolute;
 		right: 0.75rem;
-		top: 0.6rem;
+		bottom: 0.6rem;
 		padding: 0.15rem 0.5rem;
 		font-size: 0.8rem;
 		letter-spacing: 0.02em;
 		color: #eaeae3;
 		background: rgb(40 40 39 / 0.6);
 		opacity: 0;
-		transform: translateY(-3px);
+		transform: translateY(3px);
 		transition:
 			opacity 0.25s ease,
 			transform 0.25s ease;
@@ -205,10 +196,8 @@ const items = await Promise.all(
 	@media (hover: hover) {
 		/* Pull the photo gently out of the pile. */
 		.gallery-bar:hover {
-			transform: translateY(-14px) rotate(calc(var(--tilt) * -0.6));
-			box-shadow:
-				0 -4px 10px rgb(40 40 39 / 0.18),
-				0 -16px 36px rgb(40 40 39 / 0.16);
+			transform: translateY(-6px);
+			box-shadow: 0 22px 0 rgb(0 0 0 / 0.4);
 		}
 		.gallery-bar:hover .gallery-caption {
 			opacity: 1;
@@ -218,7 +207,7 @@ const items = await Promise.all(
 	.gallery-bar:focus-visible {
 		outline: 3px solid #3b2ee6;
 		outline-offset: 3px;
-		transform: translateY(-14px);
+		transform: translateY(-6px);
 	}
 
 	/* ---------- Viewer ---------- */
@@ -274,7 +263,7 @@ const items = await Promise.all(
 		max-width: calc(100vw - 2rem);
 		max-height: calc(100dvh - 7rem);
 		object-fit: contain;
-		box-shadow: 0 24px 60px rgb(40 40 39 / 0.28);
+		box-shadow: 0 16px 0 rgb(0 0 0 / 0.4);
 		will-change: transform;
 	}
 	@media (min-width: 768px) {
