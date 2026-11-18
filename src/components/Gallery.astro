@@ -597,8 +597,8 @@ const items = await Promise.all(
 			busy = true;
 			const out = img.animate(
 				[
-					{ transform: "translateX(0)", opacity: 1 },
-					{ transform: `translateX(${-step * 60}px)`, opacity: 0 },
+					{ transform: "translateY(0)", opacity: 1 },
+					{ transform: `translateY(${-step * 60}px)`, opacity: 0 },
 				],
 				{ duration: 160, easing: "ease-in", fill: "forwards" }
 			);
@@ -608,8 +608,8 @@ const items = await Promise.all(
 			await img
 				.animate(
 					[
-						{ transform: `translateX(${step * 60}px)`, opacity: 0 },
-						{ transform: "translateX(0)", opacity: 1 },
+						{ transform: `translateY(${step * 60}px)`, opacity: 0 },
+						{ transform: "translateY(0)", opacity: 1 },
 					],
 					{ duration: 220, easing: EASE }
 				)
@@ -720,7 +720,7 @@ const items = await Promise.all(
 			const out = img.animate(
 				[
 					{ transform: `translateX(${dx}px)`, opacity: img.style.opacity },
-					{ transform: `translateX(${-step * window.innerWidth * 0.6}px)`, opacity: 0 },
+					{ transform: `translateX(${dx}px) translateY(${-step * 60}px)`, opacity: 0 },
 				],
 				{ duration: 160, easing: "ease-out", fill: "forwards" }
 			);
@@ -732,8 +732,8 @@ const items = await Promise.all(
 			await img
 				.animate(
 					[
-						{ transform: `translateX(${step * 80}px)`, opacity: 0 },
-						{ transform: "translateX(0)", opacity: 1 },
+						{ transform: `translateY(${step * 60}px)`, opacity: 0 },
+						{ transform: "translateY(0)", opacity: 1 },
 					],
 					{ duration: 220, easing: EASE }
 				)
