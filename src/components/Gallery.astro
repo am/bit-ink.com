@@ -123,7 +123,7 @@ const items = await Promise.all(
 			<button type="button" class="gallery-btn gallery-prev" aria-label="Previous photo">
 				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7" /></svg>
 			</button>
-			<div class="gallery-dots" role="tablist" aria-label="Photos">
+			<div class="gallery-dots" role="group" aria-label="Photos">
 				{
 					items.map((item, index) => (
 						<button
@@ -305,6 +305,12 @@ const items = await Promise.all(
 		box-shadow: 0 var(--shadow) 0 rgb(0 0 0 / 0.4);
 		will-change: transform;
 	}
+	.gallery-meta-caption {
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 	.gallery-meta {
 		position: absolute;
 		left: var(--gap);
@@ -319,9 +325,6 @@ const items = await Promise.all(
 		font-family: "Abril Fatface", serif;
 		font-size: 1.6rem;
 		text-align: right;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 	/* Right-hand column: up arrow, a small vertical stack of bars showing the
 	   position (like the gallery itself), down arrow. */
@@ -370,7 +373,7 @@ const items = await Promise.all(
 	.gallery-dot:hover::after {
 		opacity: 0.6;
 	}
-	.gallery-dot[aria-selected="true"]::after {
+	.gallery-dot[aria-current="true"]::after {
 		opacity: 1;
 		height: 6px;
 	}
@@ -486,10 +489,10 @@ const items = await Promise.all(
 
 		const wrap = (i: number) => (i + photos.length) % photos.length;
 
-		// Large images are sized to the viewport: never wider than the screen,
-		// never taller than it allows given the photo's shape.
+		// Large images are sized to the stage: the screen minus the gaps and nav
+		// column across, and minus the gaps, caption and shadow down (see CSS).
 		const sizesFor = (p: Photo) =>
-			`min(100vw, calc((100vh - 7rem) * ${(p.width / p.height).toFixed(4)}))`;
+			`min(calc(100vw - 5.1rem), calc((100vh - 5rem - 16px) * ${(p.width / p.height).toFixed(4)}))`;
 
 		function preload(i: number) {
 			const p = photos[wrap(i)];
@@ -562,7 +565,9 @@ const items = await Promise.all(
 
 			caption.textContent = p.alt;
 			dots.forEach((d, j) =>
-				d.setAttribute("aria-selected", String(j === current))
+				j === current
+					? d.setAttribute("aria-current", "true")
+					: d.removeAttribute("aria-current")
 			);
 			fit();
 			preload(current + 1);
@@ -663,7 +668,7 @@ const items = await Promise.all(
 		});
 
 		async function go(step: number) {
-			if (busy) return;
+			if (busy || !step) return;
 			if (reduceMotion.matches) return show(current + step);
 			busy = true;
 			const out = img.animate(
@@ -818,7 +823,12 @@ const items = await Promise.all(
 
 		// Open the photo named in the URL hash, on load and when the hash changes.
 		const openFromHash = () => {
-			const id = decodeURIComponent(location.hash.slice(1));
+			let id: string;
+			try {
+				id = decodeURIComponent(location.hash.slice(1));
+			} catch {
+				return; // A malformed hash (e.g. "#%") names no photo.
+			}
 			const i = photos.findIndex((p) => p.id === id);
 			if (i < 0) return;
 			if (viewer.open) {
