@@ -109,7 +109,7 @@ const items = await Promise.all(
 		}
 	</ul>
 
-	<dialog class="gallery-viewer" aria-label="Photo viewer">
+	<dialog class="gallery-viewer" aria-label="Photo viewer" tabindex="-1">
 		<div class="gallery-stage">
 			<img class="gallery-photo" alt="" draggable="false" />
 		</div>
@@ -228,6 +228,9 @@ const items = await Promise.all(
 	}
 
 	/* ---------- Viewer ---------- */
+	.gallery-viewer:focus {
+		outline: none;
+	}
 	.gallery-viewer {
 		position: fixed;
 		inset: 0;
@@ -562,6 +565,10 @@ const items = await Promise.all(
 			opening = false;
 			viewer.classList.add("is-fading");
 			viewer.showModal();
+			// showModal() focuses the first button (close), which then shows a
+			// focus ring as soon as an arrow key is pressed. Focus the dialog
+			// itself instead; Tab still reaches the buttons.
+			viewer.focus({ preventScroll: true });
 			document.documentElement.style.overflow = "hidden";
 			requestAnimationFrame(() => {
 				viewer.classList.remove("is-fading");
