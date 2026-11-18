@@ -417,8 +417,8 @@ const items = await Promise.all(
 		right: var(--gap);
 	}
 	/* Narrow screens: swipe does the work, so there are no arrows and no nav
-	   column. The photo takes the full width and the bars sit on its right
-	   edge as a position indicator only. */
+	   column. The photo takes the full width and the bars sit in the right
+	   gutter, against the screen edge, as a position indicator only. */
 	@media (max-width: 767px) {
 		.gallery-viewer {
 			--right: calc(var(--gap) + var(--shift));
@@ -435,30 +435,22 @@ const items = await Promise.all(
 		.gallery-stage {
 			touch-action: pinch-zoom;
 		}
-		/* Same box as the photo (see .gallery-stage), bars centred down its
-		   right edge. */
+		/* Level with the photo (see .gallery-stage), in the gutter to its right,
+		   touching the screen edge. */
 		.gallery-nav {
 			top: calc(var(--gap) + var(--vshift));
 			bottom: calc(var(--bottom) + var(--shadow));
-			right: var(--right);
+			right: 0;
 			transform: none;
 			justify-content: center;
 			pointer-events: none;
 		}
 		.gallery-dots {
-			width: 1.1rem;
+			width: calc(var(--gap) - 4px);
 			gap: 0;
 		}
 		.gallery-dot {
 			height: 0.5rem;
-		}
-		.gallery-dot::after {
-			background: #eaeae3;
-			opacity: 0.45;
-			box-shadow: 0 0 3px rgb(0 0 0 / 0.35);
-		}
-		.gallery-dot[aria-current="true"]::after {
-			opacity: 1;
 		}
 	}
 	.gallery-viewer.is-fading .gallery-btn,
