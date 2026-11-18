@@ -5,5 +5,3 @@ package-lock.json
 # Prose: Prettier re-wraps MDX and can change how it renders.
 *.md
 *.mdx
-# Being rewritten in #64. Format it and remove this line once that merges.
-src/components/Gallery.astro

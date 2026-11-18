@@ -1,136 +1,836 @@
 ---
+/**
+ * Photo gallery: a stack of horizontal bars, each showing a band of a photo.
+ * Clicking a bar opens a full-screen viewer with previous/next navigation
+ * (buttons, arrow keys, swipe).
+ *
+ * Photos live in src/assets/photos/ so Astro can resize and convert them at
+ * build time. Pass either the file name (e.g. "DSC00238.jpg") or an imported
+ * image as `src`.
+ */
+import type { ImageMetadata } from "astro";
+import { getImage } from "astro:assets";
+
 interface Props {
-  images: Array<{
-    src: string;
-    'src-thumb': string;
-    alt: string;
-  }>;
+	images: Array<{
+		src: string | ImageMetadata;
+		alt: string;
+		/** Which part of the photo the bar shows, as CSS object-position (default "center"). */
+		position?: string;
+	}>;
+}
+
+const photos = import.meta.glob<{ default: ImageMetadata }>(
+	"/src/assets/photos/*.{jpg,jpeg,png,webp,avif}",
+	{ eager: true }
+);
+
+function resolve(src: string | ImageMetadata): ImageMetadata {
+	if (typeof src !== "string") return src;
+	const name = src.split("/").pop();
+	const match = photos[`/src/assets/photos/${name}`];
+	if (!match) {
+		throw new Error(`Gallery: "${src}" not found. Put the photo in src/assets/photos/.`);
+	}
+	return match.default;
 }
 
 const { images } = Astro.props;
+
+const items = await Promise.all(
+	images.map(async (image) => {
+		const meta = resolve(image.src);
+		const bar = await getImage({
+			src: meta,
+			widths: [480, 720, 960, 1280],
+			format: "webp",
+			quality: 75,
+		});
+		const large = await getImage({
+			src: meta,
+			widths: [1024, 1600, 2400]
+				.filter((w) => w < meta.width)
+				.concat(meta.width <= 2400 ? [meta.width] : []),
+			format: "webp",
+			quality: 82,
+		});
+		// Used in the URL hash (e.g. #DSC00238) so each photo can be linked to.
+		const id = (typeof image.src === "string" ? image.src : meta.src)
+			.split("/")
+			.pop()!
+			.split(".")[0]
+			.split("?")[0];
+		return {
+			id,
+			alt: image.alt,
+			position: image.position ?? "center",
+			width: meta.width,
+			height: meta.height,
+			bar,
+			large,
+		};
+	})
+);
 ---
 
-<div class="not-prose">
-  <div class="w-full my-8">
-    {images.map((image, index) => (
-      <div class="w-full cursor-pointer border-b border-gray-200 transition-all duration-500 ease-in-out overflow-hidden mb-2 p-0 gallery-item" data-index={index}>
-        <div class="relative h-32 overflow-hidden transition-all duration-500 ease-in-out gallery-image-container">
-          <img
-            src={image['src-thumb']}
-            alt={image.alt}
-            title={image.alt}
-            class="w-full h-96 object-cover object-center transition-all duration-500 ease-in-out transform -translate-y-32 filter brightness-75 grayscale gallery-thumb"
-            loading="lazy"
-          />
-          <img
-            src={image.src}
-            alt={image.alt}
-            title={image.alt}
-            class="w-full h-96 object-cover object-center transition-all duration-500 ease-in-out transform -translate-y-32 filter brightness-100 grayscale-0 hidden gallery-full"
-            loading="lazy"
-          />
-        </div>
-      </div>
-    ))}
-  </div>
-  
-  <!-- Fullscreen modal -->
-  <div class="fixed top-0 left-0 w-screen h-screen bg-black/90 hidden justify-center items-center z-50 cursor-zoom-out gallery-modal" id="gallery-modal">
-    <img id="modal-image" src="" alt="" class="max-w-[90vw] max-h-[90vh] object-contain cursor-zoom-out" />
-  </div>
+<div class="not-prose gallery" data-gallery>
+	<ul class="gallery-stack">
+		{items.map((item, index) => (
+			<li style={`z-index: ${index + 1}`}>
+				<button
+					type="button"
+					class="gallery-bar"
+					data-index={index}
+					data-id={item.id}
+					data-large-src={item.large.src}
+					data-large-srcset={item.large.srcSet.attribute}
+					data-width={item.width}
+					data-height={item.height}
+					aria-label={`Open photo ${index + 1} of ${items.length}: ${item.alt}`}
+				>
+					<img
+						src={item.bar.src}
+						srcset={item.bar.srcSet.attribute}
+						sizes="(min-width: 768px) 640px, 100vw"
+						width={item.width}
+						height={item.height}
+						alt={item.alt}
+						style={`object-position: ${item.position}`}
+						loading={index < 3 ? "eager" : "lazy"}
+						decoding="async"
+					/>
+					<span class="gallery-caption">{item.alt}</span>
+				</button>
+			</li>
+		))}
+	</ul>
+
+	<dialog class="gallery-viewer" aria-label="Photo viewer" tabindex="-1">
+		<div class="gallery-stage">
+			<img class="gallery-photo" alt="" draggable="false" />
+		</div>
+		<p class="gallery-meta">
+			<span class="gallery-meta-caption"></span>
+		</p>
+		<button type="button" class="gallery-btn gallery-close" aria-label="Close">
+			<svg viewBox="0 0 24 24" aria-hidden="true">
+				<path d="M6 6l12 12M18 6L6 18" />
+			</svg>
+		</button>
+		<nav class="gallery-nav" aria-label="Photo navigation">
+			<button type="button" class="gallery-btn gallery-prev" aria-label="Previous photo">
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<path d="M5 15l7-7 7 7" />
+				</svg>
+			</button>
+			<div class="gallery-dots" role="group" aria-label="Photos">
+				{items.map((item, index) => (
+					<button
+						type="button"
+						class="gallery-dot"
+						data-index={index}
+						aria-label={`Photo ${index + 1}: ${item.alt}`}
+					/>
+				))}
+			</div>
+			<button type="button" class="gallery-btn gallery-next" aria-label="Next photo">
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<path d="M5 9l7 7 7-7" />
+				</svg>
+			</button>
+		</nav>
+	</dialog>
 </div>
 
 <style>
-  /* Dynamic state classes that can't be handled by Tailwind */
-  .gallery-item:not(.expanded) {
-    cursor: pointer; /* Normal click hand for collapsed stripes */
-  }
-  
-  .gallery-item.expanded {
-    cursor: zoom-in; /* Zoom in cursor for expanded images */
-  }
-  
-  .gallery-item:last-child {
-    border-bottom: none;
-  }
-  
-  /* Expanded state - reveal the image by expanding the mask */
-  .gallery-item.expanded .gallery-image-container {
-    height: auto;
-    min-height: 400px;
-    max-height: 80vh;
-  }
-  
-  .gallery-item.expanded .gallery-thumb {
-    display: none;
-  }
-  
-  .gallery-item.expanded .gallery-full {
-    display: block;
-    filter: brightness(1) grayscale(0);
-    transform: translateY(0);
-    height: auto;
-    object-fit: contain;
-  }
-  
-  /* Hover effects with custom timing - only for collapsed items */
-  .gallery-item:not(.expanded):hover .gallery-thumb {
-    transform: translateY(-133px); /* Base -128px + hover -5px = -133px */
-    filter: brightness(0.8) grayscale(0);
-    transition: transform 0.8s ease-in-out, filter 0.3s ease-in-out;
-  }
-  
-  /* Modal active state */
-  .gallery-modal.active {
-    display: flex;
-  }
+	/* ---------- Stack ---------- */
+	.gallery {
+		margin: 2.5rem 0 3rem;
+		/* Height of each stripe, how far it tucks under the next one, and how
+		   far it nudges up on hover (must stay below --tuck). */
+		--stripe: 4.5rem;
+		--tuck: 12px;
+		--nudge: 8px;
+	}
+	@media (min-width: 640px) {
+		.gallery {
+			--stripe: 7rem;
+		}
+	}
+	.gallery-stack {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	/* A straight stack of stripes, each cropped from its photo. Each stripe
+	   lies on top of the one before it and casts the blog's solid translucent
+	   shadow bar up onto it. */
+	.gallery-stack > li {
+		position: relative;
+	}
+	/* Each stripe extends a little under the next one, so nudging it up on
+	   hover reveals more photo instead of a gap. */
+	.gallery-stack > li + li {
+		margin-top: calc(-1 * var(--tuck));
+	}
+	/* The shadow belongs to the stripe, so it moves with it on hover. */
+	.gallery-stack > li + li .gallery-bar {
+		box-shadow: 0 -16px 0 rgb(0 0 0 / 0.4);
+	}
+	.gallery-bar {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: var(--stripe);
+		padding: 0;
+		border: 0;
+		overflow: hidden;
+		cursor: zoom-in;
+		background: #d6d6cf;
+		transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+	}
+	.gallery-bar img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.gallery-caption {
+		position: absolute;
+		right: 0.75rem;
+		top: 0.6rem;
+		padding: 0.15rem 0.5rem;
+		font-size: 0.8rem;
+		letter-spacing: 0.02em;
+		color: #eaeae3;
+		background: rgb(40 40 39 / 0.6);
+		opacity: 0;
+		transform: translateY(-3px);
+		transition:
+			opacity 0.25s ease,
+			transform 0.25s ease;
+		pointer-events: none;
+	}
+	@media (hover: hover) {
+		/* Pull the photo gently out of the pile. */
+		.gallery-bar:hover {
+			transform: translateY(calc(-1 * var(--nudge)));
+		}
+		.gallery-bar:hover .gallery-caption {
+			opacity: 1;
+			transform: none;
+		}
+	}
+	.gallery-bar:focus-visible {
+		outline: 3px solid #3b2ee6;
+		outline-offset: 3px;
+		transform: translateY(calc(-1 * var(--nudge)));
+	}
+
+	/* ---------- Viewer ---------- */
+	.gallery-viewer:focus {
+		outline: none;
+	}
+	.gallery-viewer {
+		position: fixed;
+		inset: 0;
+		width: 100vw;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: #282827;
+		overflow: hidden;
+		overscroll-behavior: contain;
+	}
+	/* Blur the page and wash it out towards the site's off-white. */
+	.gallery-viewer::backdrop {
+		background: rgb(234 234 227 / 0.72);
+		-webkit-backdrop-filter: blur(18px) saturate(0.85);
+		backdrop-filter: blur(18px) saturate(0.85);
+		transition:
+			background 0.35s ease,
+			backdrop-filter 0.35s ease,
+			-webkit-backdrop-filter 0.35s ease;
+	}
+	@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+		.gallery-viewer::backdrop {
+			background: rgb(234 234 227 / 0.94);
+		}
+	}
+	.gallery-viewer.is-fading::backdrop {
+		background: rgb(234 234 227 / 0);
+		-webkit-backdrop-filter: blur(0) saturate(1);
+		backdrop-filter: blur(0) saturate(1);
+	}
+	/* One gap everywhere:
+	     across: [gap][photo][gap][nav column][gap]
+	     down:   [gap][photo + shadow][gap][title][gap]
+	   The nav column stays on the right edge. The photo and title are centred
+	   in the room left of it: the script sets --shift and --vshift to half the
+	   room the photo leaves free in each direction. */
+	.gallery-viewer {
+		--gap: 1rem;
+		--nav: 2.1rem;
+		--meta: 2rem;
+		--shadow: 16px;
+		--shift: 0px;
+		--vshift: 0px;
+		--right: calc(var(--gap) * 2 + var(--nav) + var(--shift));
+		--bottom: calc(var(--gap) * 2 + var(--meta) + var(--vshift));
+	}
+	.gallery-stage {
+		position: absolute;
+		inset: calc(var(--gap) + var(--vshift)) var(--right) calc(var(--bottom) + var(--shadow))
+			var(--gap);
+		display: flex;
+		align-items: flex-end;
+		/* Sit the photo against the nav column and the title. */
+		justify-content: flex-end;
+		touch-action: pan-y pinch-zoom;
+		cursor: pointer;
+		user-select: none;
+		-webkit-user-select: none;
+	}
+	.gallery-photo {
+		display: block;
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+		box-shadow: 0 var(--shadow) 0 rgb(0 0 0 / 0.4);
+		will-change: transform;
+	}
+	.gallery-meta-caption {
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.gallery-meta {
+		position: absolute;
+		left: var(--gap);
+		right: var(--right);
+		bottom: calc(var(--gap) + var(--vshift));
+		height: var(--meta);
+		line-height: var(--meta);
+		margin: 0;
+		display: flex;
+		justify-content: flex-end;
+		gap: 0.75rem;
+		font-family: "Abril Fatface", serif;
+		font-size: 1.6rem;
+		text-align: right;
+	}
+	/* Right-hand column: up arrow, a small vertical stack of bars showing the
+	   position (like the gallery itself), down arrow. */
+	.gallery-nav {
+		position: absolute;
+		right: var(--gap);
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.75rem;
+	}
+	.gallery-nav .gallery-btn {
+		position: static;
+	}
+	.gallery-dots {
+		width: var(--nav);
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+	.gallery-dot {
+		width: 100%;
+		height: 0.6rem;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		cursor: pointer;
+		position: relative;
+	}
+	.gallery-dot::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		height: 3px;
+		transform: translateY(-50%);
+		background: #282827;
+		opacity: 0.25;
+		transition:
+			opacity 0.2s ease,
+			height 0.2s ease;
+	}
+	.gallery-dot:hover::after {
+		opacity: 0.6;
+	}
+	.gallery-dot[aria-current="true"]::after {
+		opacity: 1;
+		height: 6px;
+	}
+	.gallery-btn {
+		position: absolute;
+		display: grid;
+		place-items: center;
+		width: var(--nav);
+		height: var(--nav);
+		padding: 0;
+		border: 0;
+		border-radius: 0;
+		color: inherit;
+		background: rgb(255 255 255 / 0.55);
+		cursor: pointer;
+		transition: background 0.2s ease;
+	}
+	.gallery-btn:hover,
+	.gallery-btn.is-hot {
+		color: #eaeae3;
+		background: #3b2ee6;
+	}
+	.gallery-btn:focus-visible,
+	.gallery-dot:focus-visible {
+		outline: 2px solid #3b2ee6;
+		outline-offset: 2px;
+	}
+	.gallery-btn svg {
+		width: 1rem;
+		height: 1rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.gallery-close {
+		top: var(--gap);
+		right: var(--gap);
+	}
+	@media (hover: none) and (max-width: 767px) {
+		/* On phones, swipe does the work; keep the arrows out of the photo. */
+		.gallery-prev,
+		.gallery-next {
+			display: none;
+		}
+	}
+	.gallery-viewer.is-fading .gallery-btn,
+	.gallery-viewer.is-fading .gallery-meta,
+	.gallery-viewer.is-fading .gallery-dots {
+		opacity: 0;
+	}
+	.gallery-btn,
+	.gallery-meta,
+	.gallery-dots {
+		transition: opacity 0.25s ease;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.gallery-bar,
+		.gallery-viewer::backdrop {
+			transition: none;
+		}
+	}
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    const modal = document.getElementById('gallery-modal') as HTMLElement | null;
-    const modalImage = document.getElementById('modal-image') as HTMLImageElement | null;
-    
-    if (!modal || !modalImage) {
-      console.error('Modal elements not found');
-      return;
-    }
-    
-    galleryItems.forEach(item => {
-      item.addEventListener('click', function(this: HTMLElement) {
-        const isExpanded = this.classList.contains('expanded');
-        
-        if (isExpanded) {
-          // If already expanded, open in fullscreen modal
-          const fullImage = this.querySelector('.gallery-full') as HTMLImageElement | null;
-          if (fullImage) {
-            modalImage.src = fullImage.src;
-            modalImage.alt = fullImage.alt;
-            modal.classList.add('active');
-          }
-        } else {
-          // Close all items first
-          galleryItems.forEach(otherItem => {
-            otherItem.classList.remove('expanded');
-          });
-          
-          // Expand this item
-          this.classList.add('expanded');
-        }
-      });
-    });
-    
-    // Close modal when clicking on it
-    modal.addEventListener('click', function(this: HTMLElement) {
-      this.classList.remove('active');
-    });
-    
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(e: KeyboardEvent) {
-      if (e.key === 'Escape' && modal.classList.contains('active')) {
-        modal.classList.remove('active');
-      }
-    });
-  });
+	const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+	const EASE = "cubic-bezier(0.2, 0.7, 0.2, 1)";
+
+	type Photo = {
+		bar: HTMLButtonElement;
+		thumb: HTMLImageElement;
+		src: string;
+		srcset: string;
+		width: number;
+		height: number;
+		alt: string;
+		id: string;
+	};
+
+	function setup(root: HTMLElement) {
+		const bars = Array.from(root.querySelectorAll<HTMLButtonElement>(".gallery-bar"));
+		const photos: Photo[] = bars.map((bar) => {
+			const thumb = bar.querySelector("img")!;
+			return {
+				bar,
+				thumb,
+				src: bar.dataset.largeSrc!,
+				srcset: bar.dataset.largeSrcset!,
+				width: Number(bar.dataset.width),
+				height: Number(bar.dataset.height),
+				alt: thumb.alt,
+				id: bar.dataset.id!,
+			};
+		});
+
+		const viewer = root.querySelector<HTMLDialogElement>(".gallery-viewer")!;
+		const stage = viewer.querySelector<HTMLElement>(".gallery-stage")!;
+		const img = viewer.querySelector<HTMLImageElement>(".gallery-photo")!;
+		const caption = viewer.querySelector<HTMLElement>(".gallery-meta-caption")!;
+		const dots = Array.from(viewer.querySelectorAll<HTMLButtonElement>(".gallery-dot"));
+
+		let current = 0;
+		let busy = false;
+		// Only hand focus back to the stripe when the viewer was opened with the
+		// keyboard; after a mouse or touch click, a focus ring would just be noise.
+		let openedWithKeyboard = false;
+		const loaded = new Set<number>();
+
+		const wrap = (i: number) => (i + photos.length) % photos.length;
+
+		// Large images are sized to the stage: the screen minus the gaps and nav
+		// column across, and minus the gaps, caption and shadow down (see CSS).
+		const sizesFor = (p: Photo) =>
+			`min(calc(100vw - 5.1rem), calc((100vh - 5rem - 16px) * ${(p.width / p.height).toFixed(4)}))`;
+
+		function preload(i: number) {
+			const p = photos[wrap(i)];
+			if (loaded.has(wrap(i))) return;
+			const pre = new Image();
+			pre.sizes = sizesFor(p);
+			pre.srcset = p.srcset;
+			pre.src = p.src;
+			pre.decode().then(
+				() => loaded.add(wrap(i)),
+				() => {}
+			);
+		}
+
+		// Show photo i: put the (already loaded) bar image up first so there is
+		// never a blank frame, then swap in the large one once it has decoded.
+		// Keep the URL hash on the open photo, so the address can be shared.
+		// replaceState: moving between photos shouldn't fill up the history.
+		const setHash = (id: string | null) => {
+			const url = new URL(location.href);
+			url.hash = id ?? "";
+			history.replaceState(history.state, "", id ? url : url.href.replace(/#$/, ""));
+		};
+
+		// Centre the photo, title and nav as a group: measure the photo in the
+		// full stage, then shift everything by half the room it leaves free.
+		function fit() {
+			if (!viewer.open) return;
+			viewer.style.setProperty("--shift", "0px");
+			viewer.style.setProperty("--vshift", "0px");
+			// Size the photo from its real shape, not from whichever file is
+			// showing (the small stripe image goes up first).
+			const p = photos[current];
+			const sw = stage.clientWidth;
+			const sh = stage.clientHeight;
+			const w = Math.min(sw, sh * (p.width / p.height));
+			const h = w * (p.height / p.width);
+			img.style.width = `${w}px`;
+			img.style.height = `${h}px`;
+			viewer.style.setProperty("--shift", `${(sw - w) / 2}px`);
+			viewer.style.setProperty("--vshift", `${(sh - h) / 2}px`);
+		}
+
+		function show(i: number) {
+			current = wrap(i);
+			const p = photos[current];
+			if (viewer.open || opening) setHash(p.id);
+			img.width = p.width;
+			img.height = p.height;
+			img.alt = p.alt;
+			img.removeAttribute("srcset");
+			img.removeAttribute("sizes");
+			img.src = p.thumb.currentSrc || p.thumb.src;
+
+			const large = new Image();
+			large.sizes = sizesFor(p);
+			large.srcset = p.srcset;
+			large.src = p.src;
+			const target = current;
+			large.decode().then(
+				() => {
+					loaded.add(target);
+					if (current !== target) return;
+					img.sizes = large.sizes;
+					img.srcset = p.srcset;
+					img.src = p.src;
+				},
+				() => {}
+			);
+
+			caption.textContent = p.alt;
+			dots.forEach((d, j) =>
+				j === current ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")
+			);
+			fit();
+			preload(current + 1);
+			preload(current - 1);
+		}
+
+		// Animate between a bar on the page and the photo in the viewer.
+		// The bar shows a horizontal band of the photo, so we scale the photo
+		// down to the bar's width and clip it to the band.
+		function barToPhotoKeyframes(p: Photo): Keyframe[] | null {
+			const b = p.bar.getBoundingClientRect();
+			const f = img.getBoundingClientRect();
+			if (!f.width || b.bottom < 0 || b.top > window.innerHeight) return null;
+			const k = b.width / f.width;
+			const visible = Math.min(f.height, b.height / k);
+			const inset = (f.height - visible) / 2;
+			const dx = b.left - f.left;
+			const dy = b.top + b.height / 2 - (f.top + (f.height * k) / 2);
+			return [
+				{
+					transformOrigin: "top left",
+					transform: `translate(${dx}px, ${dy}px) scale(${k})`,
+					clipPath: `inset(${inset}px 0px ${inset}px 0px)`,
+				},
+				{
+					transformOrigin: "top left",
+					transform: "none",
+					// Negative inset so the drop shadow isn't cut off.
+					clipPath: "inset(-120px -120px -120px -120px)",
+				},
+			];
+		}
+
+		let opening = false;
+		function open(i: number) {
+			opening = true;
+			show(i);
+			opening = false;
+			viewer.classList.add("is-fading");
+			viewer.showModal();
+			// showModal() focuses the first button (close), which then shows a
+			// focus ring as soon as an arrow key is pressed. Focus the dialog
+			// itself instead; Tab still reaches the buttons.
+			viewer.focus({ preventScroll: true });
+			fit();
+			document.documentElement.style.overflow = "hidden";
+			requestAnimationFrame(() => {
+				viewer.classList.remove("is-fading");
+				if (reduceMotion.matches) return;
+				const frames = barToPhotoKeyframes(photos[current]);
+				if (frames) {
+					img.animate(frames, { duration: 420, easing: EASE });
+				} else {
+					img.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250 });
+				}
+			});
+		}
+
+		async function close() {
+			if (busy || !viewer.open) return;
+			busy = true;
+			const p = photos[current];
+			// Keep the page in step, so closing lands on the photo you were on.
+			const b = p.bar.getBoundingClientRect();
+			if (b.top < 0 || b.bottom > window.innerHeight) {
+				p.bar.scrollIntoView({ block: "center" });
+			}
+			if (!reduceMotion.matches) {
+				viewer.classList.add("is-fading");
+				const frames = barToPhotoKeyframes(p);
+				const anim = frames
+					? img.animate(frames.slice().reverse(), {
+							duration: 360,
+							easing: EASE,
+							fill: "forwards",
+						})
+					: img.animate([{ opacity: 1 }, { opacity: 0 }], {
+							duration: 200,
+							fill: "forwards",
+						});
+				await anim.finished.catch(() => {});
+				anim.cancel();
+			}
+			viewer.close();
+			viewer.classList.remove("is-fading");
+			busy = false;
+		}
+
+		viewer.addEventListener("close", () => {
+			document.documentElement.style.overflow = "";
+			setHash(null);
+			if (openedWithKeyboard) {
+				photos[current].bar.focus({ preventScroll: true });
+			} else {
+				// The dialog returns focus to the stripe that opened it; drop it.
+				(document.activeElement as HTMLElement | null)?.blur();
+			}
+		});
+
+		async function go(step: number) {
+			if (busy || !step) return;
+			if (reduceMotion.matches) return show(current + step);
+			busy = true;
+			const out = img.animate(
+				[
+					{ transform: "translateY(0)", opacity: 1 },
+					{ transform: `translateY(${-step * 60}px)`, opacity: 0 },
+				],
+				{ duration: 160, easing: "ease-in", fill: "forwards" }
+			);
+			await out.finished.catch(() => {});
+			show(current + step);
+			out.cancel();
+			await img
+				.animate(
+					[
+						{ transform: `translateY(${step * 60}px)`, opacity: 0 },
+						{ transform: "translateY(0)", opacity: 1 },
+					],
+					{ duration: 220, easing: EASE }
+				)
+				.finished.catch(() => {});
+			busy = false;
+		}
+
+		bars.forEach((bar, i) =>
+			bar.addEventListener("click", (e) => {
+				// detail is 0 when the button was activated with Enter or Space.
+				openedWithKeyboard = e.detail === 0;
+				open(i);
+			})
+		);
+		dots.forEach((dot, i) =>
+			dot.addEventListener("click", () => {
+				if (i !== current) go(i - current);
+			})
+		);
+		viewer.querySelector(".gallery-close")!.addEventListener("click", () => close());
+		viewer.querySelector(".gallery-prev")!.addEventListener("click", () => go(-1));
+		viewer.querySelector(".gallery-next")!.addEventListener("click", () => go(1));
+
+		viewer.addEventListener("keydown", (e) => {
+			if (e.key === "ArrowDown" || e.key === "ArrowRight") go(1);
+			else if (e.key === "ArrowUp" || e.key === "ArrowLeft") go(-1);
+			else if (e.key === "Home") go(-current);
+			else if (e.key === "End") go(photos.length - 1 - current);
+			else if (e.key === "Escape") {
+				e.preventDefault();
+				close();
+			} else return;
+			e.preventDefault();
+		});
+		window.addEventListener("resize", fit);
+
+		// Esc can also arrive as a "cancel" event without a keydown (e.g. back gesture).
+		viewer.addEventListener("cancel", (e) => {
+			e.preventDefault();
+			close();
+		});
+
+		// The whole top/bottom half of the stage acts as the up/down button,
+		// so light up that button while the pointer is over its half.
+		const prevBtn = viewer.querySelector<HTMLElement>(".gallery-prev")!;
+		const nextBtn = viewer.querySelector<HTMLElement>(".gallery-next")!;
+		const sideOf = (y: number) => (y < window.innerHeight / 2 ? -1 : 1);
+		stage.addEventListener("pointermove", (e) => {
+			if (e.pointerType !== "mouse") return;
+			const side = sideOf(e.clientY);
+			prevBtn.classList.toggle("is-hot", side < 0);
+			nextBtn.classList.toggle("is-hot", side > 0);
+		});
+		stage.addEventListener("pointerleave", () => {
+			prevBtn.classList.remove("is-hot");
+			nextBtn.classList.remove("is-hot");
+		});
+
+		// Swipe: the photo follows your finger; let go past a threshold to move on.
+		let startX = 0;
+		let startY = 0;
+		let dx = 0;
+		let tracking = false;
+		let moved = false;
+
+		stage.addEventListener("pointerdown", (e) => {
+			if (busy || (e.pointerType === "mouse" && e.button !== 0)) return;
+			tracking = true;
+			moved = false;
+			startX = e.clientX;
+			startY = e.clientY;
+			dx = 0;
+		});
+		stage.addEventListener("pointermove", (e) => {
+			if (!tracking) return;
+			dx = e.clientX - startX;
+			const dy = e.clientY - startY;
+			if (!moved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+				moved = true;
+				stage.setPointerCapture(e.pointerId);
+			}
+			if (moved) {
+				img.style.transform = `translateX(${dx}px)`;
+				img.style.opacity = String(1 - Math.min(Math.abs(dx) / 600, 0.5));
+			}
+		});
+		const endSwipe = async (e: PointerEvent) => {
+			if (!tracking) return;
+			tracking = false;
+			if (!moved) {
+				// A plain click/tap: the top half goes back, the bottom half forward.
+				if (e.type === "pointerup") go(sideOf(e.clientY));
+				return;
+			}
+			const threshold = Math.min(90, window.innerWidth * 0.18);
+			const step = dx < -threshold ? 1 : dx > threshold ? -1 : 0;
+			if (step === 0 || reduceMotion.matches) {
+				img.style.transform = "";
+				img.style.opacity = "";
+				if (step) show(current + step);
+				return;
+			}
+			busy = true;
+			const out = img.animate(
+				[
+					{ transform: `translateX(${dx}px)`, opacity: img.style.opacity },
+					{ transform: `translateX(${dx}px) translateY(${-step * 60}px)`, opacity: 0 },
+				],
+				{ duration: 160, easing: "ease-out", fill: "forwards" }
+			);
+			img.style.transform = "";
+			img.style.opacity = "";
+			await out.finished.catch(() => {});
+			show(current + step);
+			out.cancel();
+			await img
+				.animate(
+					[
+						{ transform: `translateY(${step * 60}px)`, opacity: 0 },
+						{ transform: "translateY(0)", opacity: 1 },
+					],
+					{ duration: 220, easing: EASE }
+				)
+				.finished.catch(() => {});
+			busy = false;
+		};
+		stage.addEventListener("pointerup", endSwipe);
+		stage.addEventListener("pointercancel", endSwipe);
+
+		// Open the photo named in the URL hash, on load and when the hash changes.
+		const openFromHash = () => {
+			let id: string;
+			try {
+				id = decodeURIComponent(location.hash.slice(1));
+			} catch {
+				return; // A malformed hash (e.g. "#%") names no photo.
+			}
+			const i = photos.findIndex((p) => p.id === id);
+			if (i < 0) return;
+			if (viewer.open) {
+				if (i !== current) show(i);
+				return;
+			}
+			// Bring its stripe into view first, so closing lands on it.
+			photos[i].bar.scrollIntoView({ block: "center" });
+			openedWithKeyboard = false;
+			open(i);
+		};
+		openFromHash();
+		window.addEventListener("hashchange", openFromHash);
+	}
+
+	document.querySelectorAll<HTMLElement>("[data-gallery]").forEach((root) => setup(root));
 </script>
