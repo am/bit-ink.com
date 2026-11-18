@@ -801,7 +801,7 @@ const items = await Promise.all(
 			nextBtn.classList.remove("is-hot");
 		});
 
-		// Zoom: show the photo at 100% (one photo pixel per CSS pixel), centred
+		// Zoom: show the photo at 100% (one photo pixel per screen pixel), centred
 		// on the point that was double-clicked, and drag to pan. The photo's
 		// transform origin is its top-left corner (see CSS).
 		let zoomed = false;
@@ -829,7 +829,7 @@ const items = await Promise.all(
 			const p = photos[current];
 			img.style.transform = "";
 			base = img.getBoundingClientRect();
-			zs = p.width / base.width;
+			zs = p.width / (base.width * (window.devicePixelRatio || 1));
 			if (zs <= 1.05) return; // Already shown at (about) full size.
 			zoomed = true;
 			zx = (cx - base.left) * (1 - zs);
