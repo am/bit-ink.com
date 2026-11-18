@@ -56,7 +56,14 @@ const items = await Promise.all(
 			format: "webp",
 			quality: 82,
 		});
+		// Used in the URL hash (e.g. #DSC00238) so each photo can be linked to.
+		const id = (typeof image.src === "string" ? image.src : meta.src)
+			.split("/")
+			.pop()!
+			.split(".")[0]
+			.split("?")[0];
 		return {
+			id,
 			alt: image.alt,
 			position: image.position ?? "center",
 			width: meta.width,
@@ -77,6 +84,7 @@ const items = await Promise.all(
 						type="button"
 						class="gallery-bar"
 						data-index={index}
+						data-id={item.id}
 						data-large-src={item.large.src}
 						data-large-srcset={item.large.srcSet.attribute}
 						data-width={item.width}
@@ -419,6 +427,7 @@ const items = await Promise.all(
 		width: number;
 		height: number;
 		alt: string;
+		id: string;
 	};
 
 	function setup(root: HTMLElement) {
@@ -435,6 +444,7 @@ const items = await Promise.all(
 				width: Number(bar.dataset.width),
 				height: Number(bar.dataset.height),
 				alt: thumb.alt,
+				id: bar.dataset.id!,
 			};
 		});
 
@@ -475,9 +485,18 @@ const items = await Promise.all(
 
 		// Show photo i: put the (already loaded) bar image up first so there is
 		// never a blank frame, then swap in the large one once it has decoded.
+		// Keep the URL hash on the open photo, so the address can be shared.
+		// replaceState: moving between photos shouldn't fill up the history.
+		const setHash = (id: string | null) => {
+			const url = new URL(location.href);
+			url.hash = id ?? "";
+			history.replaceState(history.state, "", id ? url : url.href.replace(/#$/, ""));
+		};
+
 		function show(i: number) {
 			current = wrap(i);
 			const p = photos[current];
+			if (viewer.open || opening) setHash(p.id);
 			img.width = p.width;
 			img.height = p.height;
 			img.alt = p.alt;
@@ -536,8 +555,11 @@ const items = await Promise.all(
 			];
 		}
 
+		let opening = false;
 		function open(i: number) {
+			opening = true;
 			show(i);
+			opening = false;
 			viewer.classList.add("is-fading");
 			viewer.showModal();
 			document.documentElement.style.overflow = "hidden";
@@ -585,6 +607,7 @@ const items = await Promise.all(
 
 		viewer.addEventListener("close", () => {
 			document.documentElement.style.overflow = "";
+			setHash(null);
 			if (openedWithKeyboard) {
 				photos[current].bar.focus({ preventScroll: true });
 			} else {
@@ -744,6 +767,23 @@ const items = await Promise.all(
 		};
 		stage.addEventListener("pointerup", endSwipe);
 		stage.addEventListener("pointercancel", endSwipe);
+
+		// Open the photo named in the URL hash, on load and when the hash changes.
+		const openFromHash = () => {
+			const id = decodeURIComponent(location.hash.slice(1));
+			const i = photos.findIndex((p) => p.id === id);
+			if (i < 0) return;
+			if (viewer.open) {
+				if (i !== current) show(i);
+				return;
+			}
+			// Bring its stripe into view first, so closing lands on it.
+			photos[i].bar.scrollIntoView({ block: "center" });
+			openedWithKeyboard = false;
+			open(i);
+		};
+		openFromHash();
+		window.addEventListener("hashchange", openFromHash);
 	}
 
 	document
