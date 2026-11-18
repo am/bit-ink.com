@@ -2,7 +2,8 @@
 /**
  * Photo gallery: a stack of horizontal bars, each showing a band of a photo.
  * Clicking a bar opens a full-screen viewer with previous/next navigation
- * (buttons, arrow keys, swipe).
+ * (buttons, arrow keys, swipe; on narrow screens swipe only). Double-click or
+ * double-tap the photo to see it at 100% and drag to pan; again to fit.
  *
  * Photos live in src/assets/photos/ so Astro can resize and convert them at
  * build time. Pass either the file name (e.g. "DSC00238.jpg") or an imported
@@ -54,6 +55,8 @@ const items = await Promise.all(
 			format: "webp",
 			quality: 82,
 		});
+		// Full size, only fetched when the viewer zooms to 100%.
+		const full = await getImage({ src: meta, width: meta.width, format: "webp", quality: 82 });
 		// Used in the URL hash (e.g. #DSC00238) so each photo can be linked to.
 		const id = (typeof image.src === "string" ? image.src : meta.src)
 			.split("/")
@@ -68,6 +71,7 @@ const items = await Promise.all(
 			height: meta.height,
 			bar,
 			large,
+			full,
 		};
 	})
 );
@@ -84,6 +88,7 @@ const items = await Promise.all(
 					data-id={item.id}
 					data-large-src={item.large.src}
 					data-large-srcset={item.large.srcSet.attribute}
+					data-full-src={item.full.src}
 					data-width={item.width}
 					data-height={item.height}
 					aria-label={`Open photo ${index + 1} of ${items.length}: ${item.alt}`}
@@ -158,6 +163,8 @@ const items = await Promise.all(
 		}
 	}
 	.gallery-stack {
+		/* Keep the stripes' z-indexes inside the stack, below the fixed menu. */
+		isolation: isolate;
 		list-style: none;
 		margin: 0;
 		padding: 0;
@@ -296,6 +303,8 @@ const items = await Promise.all(
 		-webkit-user-select: none;
 	}
 	.gallery-photo {
+		/* Zooming scales from the top-left corner (see the script). */
+		transform-origin: 0 0;
 		display: block;
 		width: auto;
 		height: auto;
@@ -366,16 +375,13 @@ const items = await Promise.all(
 		transform: translateY(-50%);
 		background: #282827;
 		opacity: 0.25;
-		transition:
-			opacity 0.2s ease,
-			height 0.2s ease;
+		transition: opacity 0.2s ease;
 	}
 	.gallery-dot:hover::after {
 		opacity: 0.6;
 	}
 	.gallery-dot[aria-current="true"]::after {
 		opacity: 1;
-		height: 6px;
 	}
 	.gallery-btn {
 		position: absolute;
@@ -414,11 +420,42 @@ const items = await Promise.all(
 		top: var(--gap);
 		right: var(--gap);
 	}
-	@media (hover: none) and (max-width: 767px) {
-		/* On phones, swipe does the work; keep the arrows out of the photo. */
+	/* Narrow screens: swipe does the work, so there are no arrows and no nav
+	   column. The photo takes the full width and the bars sit in the right
+	   gutter, against the screen edge, as a position indicator only. */
+	@media (max-width: 767px) {
+		.gallery-viewer {
+			--right: calc(var(--gap) + var(--shift));
+		}
 		.gallery-prev,
 		.gallery-next {
 			display: none;
+		}
+		/* Fit longer titles across the photo. */
+		.gallery-meta {
+			font-size: 1.25rem;
+		}
+		.gallery-viewer,
+		.gallery-stage {
+			touch-action: pinch-zoom;
+		}
+		/* Level with the photo (see .gallery-stage), in the gutter to its right,
+		   touching the screen edge. */
+		.gallery-nav {
+			top: calc(var(--gap) + var(--vshift));
+			bottom: calc(var(--bottom) + var(--shadow));
+			right: 0;
+			transform: none;
+			justify-content: center;
+			pointer-events: none;
+		}
+		/* Fill the gap, from the photo's edge to the screen's. */
+		.gallery-dots {
+			width: var(--right);
+			gap: 0;
+		}
+		.gallery-dot {
+			height: 0.5rem;
 		}
 	}
 	.gallery-viewer.is-fading .gallery-btn,
@@ -430,6 +467,16 @@ const items = await Promise.all(
 	.gallery-meta,
 	.gallery-dots {
 		transition: opacity 0.25s ease;
+	}
+	.gallery-viewer.is-zoomed,
+	.gallery-viewer.is-zoomed .gallery-stage {
+		touch-action: none;
+		cursor: grab;
+	}
+	.gallery-viewer.is-zoomed .gallery-meta,
+	.gallery-viewer.is-zoomed .gallery-nav {
+		opacity: 0;
+		pointer-events: none;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.gallery-bar,
@@ -448,6 +495,7 @@ const items = await Promise.all(
 		thumb: HTMLImageElement;
 		src: string;
 		srcset: string;
+		full: string;
 		width: number;
 		height: number;
 		alt: string;
@@ -463,6 +511,7 @@ const items = await Promise.all(
 				thumb,
 				src: bar.dataset.largeSrc!,
 				srcset: bar.dataset.largeSrcset!,
+				full: bar.dataset.fullSrc!,
 				width: Number(bar.dataset.width),
 				height: Number(bar.dataset.height),
 				alt: thumb.alt,
@@ -487,8 +536,10 @@ const items = await Promise.all(
 
 		// Large images are sized to the stage: the screen minus the gaps and nav
 		// column across, and minus the gaps, caption and shadow down (see CSS).
+		// Below 768px there is no nav column (see CSS), so the photo is wider.
+		const narrow = window.matchMedia("(max-width: 767px)");
 		const sizesFor = (p: Photo) =>
-			`min(calc(100vw - 5.1rem), calc((100vh - 5rem - 16px) * ${(p.width / p.height).toFixed(4)}))`;
+			`min(calc(100vw - ${narrow.matches ? 2 : 5.1}rem), calc((100vh - 5rem - 16px) * ${(p.width / p.height).toFixed(4)}))`;
 
 		function preload(i: number) {
 			const p = photos[wrap(i)];
@@ -516,6 +567,7 @@ const items = await Promise.all(
 		// Centre the photo, title and nav as a group: measure the photo in the
 		// full stage, then shift everything by half the room it leaves free.
 		function fit() {
+			zoomOut(false);
 			if (!viewer.open) return;
 			viewer.style.setProperty("--shift", "0px");
 			viewer.style.setProperty("--vshift", "0px");
@@ -622,6 +674,7 @@ const items = await Promise.all(
 
 		async function close() {
 			if (busy || !viewer.open) return;
+			zoomOut(false);
 			busy = true;
 			const p = photos[current];
 			// Keep the page in step, so closing lands on the photo you were on.
@@ -663,6 +716,7 @@ const items = await Promise.all(
 
 		async function go(step: number) {
 			if (busy || !step) return;
+			zoomOut(false);
 			if (reduceMotion.matches) return show(current + step);
 			busy = true;
 			const out = img.animate(
@@ -699,6 +753,11 @@ const items = await Promise.all(
 				if (i !== current) go(i - current);
 			})
 		);
+		// On narrow screens the bars only show the position: keep them out of
+		// the tab order there.
+		const syncDots = () => dots.forEach((d) => (d.tabIndex = narrow.matches ? -1 : 0));
+		syncDots();
+		narrow.addEventListener("change", syncDots);
 		viewer.querySelector(".gallery-close")!.addEventListener("click", () => close());
 		viewer.querySelector(".gallery-prev")!.addEventListener("click", () => go(-1));
 		viewer.querySelector(".gallery-next")!.addEventListener("click", () => go(1));
@@ -710,7 +769,8 @@ const items = await Promise.all(
 			else if (e.key === "End") go(photos.length - 1 - current);
 			else if (e.key === "Escape") {
 				e.preventDefault();
-				close();
+				if (zoomed) zoomOut();
+				else close();
 			} else return;
 			e.preventDefault();
 		});
@@ -719,7 +779,8 @@ const items = await Promise.all(
 		// Esc can also arrive as a "cancel" event without a keydown (e.g. back gesture).
 		viewer.addEventListener("cancel", (e) => {
 			e.preventDefault();
-			close();
+			if (zoomed) zoomOut();
+			else close();
 		});
 
 		// The whole top/bottom half of the stage acts as the up/down button,
@@ -729,7 +790,7 @@ const items = await Promise.all(
 		const sideOf = (y: number) => (y < window.innerHeight / 2 ? -1 : 1);
 		stage.addEventListener("pointermove", (e) => {
 			if (e.pointerType !== "mouse") return;
-			const side = sideOf(e.clientY);
+			const side = zoomed ? 0 : sideOf(e.clientY);
 			prevBtn.classList.toggle("is-hot", side < 0);
 			nextBtn.classList.toggle("is-hot", side > 0);
 		});
@@ -738,42 +799,154 @@ const items = await Promise.all(
 			nextBtn.classList.remove("is-hot");
 		});
 
+		// Zoom: show the photo at 100% (one photo pixel per screen pixel), centred
+		// on the point that was double-clicked, and drag to pan. The photo's
+		// transform origin is its top-left corner (see CSS).
+		let zoomed = false;
+		let zs = 1;
+		let zx = 0;
+		let zy = 0;
+		let base = new DOMRect();
+
+		function applyZoom(animate: boolean) {
+			img.style.transition = animate && !reduceMotion.matches ? "transform 0.3s ease" : "";
+			img.style.transform = zoomed ? `translate(${zx}px, ${zy}px) scale(${zs})` : "";
+		}
+		// Keep the photo covering the screen while it is bigger than it, and
+		// centred along any side where it is smaller.
+		function clampPan() {
+			const vw = window.innerWidth;
+			const vh = window.innerHeight;
+			const w = base.width * zs;
+			const h = base.height * zs;
+			zx =
+				w > vw ? Math.min(-base.left, Math.max(vw - base.left - w, zx)) : (vw - w) / 2 - base.left;
+			zy = h > vh ? Math.min(-base.top, Math.max(vh - base.top - h, zy)) : (vh - h) / 2 - base.top;
+		}
+		function zoomIn(cx: number, cy: number) {
+			const p = photos[current];
+			img.style.transform = "";
+			base = img.getBoundingClientRect();
+			zs = p.width / (base.width * (window.devicePixelRatio || 1));
+			if (zs <= 1.05) return; // Already shown at (about) full size.
+			zoomed = true;
+			zx = (cx - base.left) * (1 - zs);
+			zy = (cy - base.top) * (1 - zs);
+			clampPan();
+			viewer.classList.add("is-zoomed");
+			applyZoom(true);
+			// Swap in the full-size file once it has decoded.
+			const full = new Image();
+			full.src = p.full;
+			const target = current;
+			full.decode().then(
+				() => {
+					if (zoomed && current === target) {
+						img.removeAttribute("srcset");
+						img.removeAttribute("sizes");
+						img.src = p.full;
+					}
+				},
+				() => {}
+			);
+		}
+		function zoomOut(animate = true) {
+			if (!zoomed) return;
+			zoomed = false;
+			viewer.classList.remove("is-zoomed");
+			applyZoom(animate);
+		}
+		viewer.addEventListener("dblclick", (e) => e.preventDefault());
+
+		// Taps wait a moment, so the first tap of a double tap doesn't also
+		// move to another photo.
+		let tapTimer = 0;
+		let lastTap = { t: 0, x: 0, y: 0 };
+		function tap(e: PointerEvent) {
+			const now = performance.now();
+			const near = Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 40;
+			if (tapTimer && now - lastTap.t < 300 && near) {
+				clearTimeout(tapTimer);
+				tapTimer = 0;
+				if (zoomed) zoomOut();
+				else zoomIn(e.clientX, e.clientY);
+				return;
+			}
+			lastTap = { t: now, x: e.clientX, y: e.clientY };
+			const side = sideOf(e.clientY);
+			clearTimeout(tapTimer);
+			tapTimer = window.setTimeout(() => {
+				tapTimer = 0;
+				if (!zoomed) go(side);
+			}, 300);
+		}
+
 		// Swipe: the photo follows your finger; let go past a threshold to move on.
+		// Left or up goes to the next photo, right or down to the previous one.
+		// Vertical swipes only on narrow screens, where nothing else uses them.
 		let startX = 0;
 		let startY = 0;
 		let dx = 0;
+		let axis: "x" | "y" = "x";
 		let tracking = false;
 		let moved = false;
+		let panX = 0;
+		let panY = 0;
 
-		stage.addEventListener("pointerdown", (e) => {
+		// On narrow screens swipes work anywhere in the viewer, not just on the
+		// photo; taps still only count on the photo.
+		let onStage = false;
+		viewer.addEventListener("pointerdown", (e) => {
 			if (busy || (e.pointerType === "mouse" && e.button !== 0)) return;
+			const target = e.target as Element;
+			if (target.closest("button")) return;
+			onStage = stage.contains(target);
+			if (!onStage && !narrow.matches && !zoomed) return;
 			tracking = true;
 			moved = false;
 			startX = e.clientX;
 			startY = e.clientY;
 			dx = 0;
+			panX = zx;
+			panY = zy;
+			img.style.transition = "";
 		});
-		stage.addEventListener("pointermove", (e) => {
+		viewer.addEventListener("pointermove", (e) => {
 			if (!tracking) return;
-			dx = e.clientX - startX;
-			const dy = e.clientY - startY;
-			if (!moved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+			const mx = e.clientX - startX;
+			const my = e.clientY - startY;
+			if (zoomed) {
+				// While zoomed in, dragging pans instead of swiping.
+				if (!moved && Math.hypot(mx, my) < 4) return;
+				if (!moved) viewer.setPointerCapture(e.pointerId);
 				moved = true;
-				stage.setPointerCapture(e.pointerId);
+				zx = panX + mx;
+				zy = panY + my;
+				clampPan();
+				applyZoom(false);
+				return;
 			}
-			if (moved) {
-				img.style.transform = `translateX(${dx}px)`;
-				img.style.opacity = String(1 - Math.min(Math.abs(dx) / 600, 0.5));
+			if (!moved) {
+				if (Math.abs(mx) > 8 && Math.abs(mx) > Math.abs(my)) axis = "x";
+				else if (narrow.matches && Math.abs(my) > 8 && Math.abs(my) > Math.abs(mx)) axis = "y";
+				else return;
+				moved = true;
+				viewer.setPointerCapture(e.pointerId);
 			}
+			dx = axis === "x" ? mx : my;
+			img.style.transform = `translate${axis.toUpperCase()}(${dx}px)`;
+			img.style.opacity = String(1 - Math.min(Math.abs(dx) / 600, 0.5));
 		});
 		const endSwipe = async (e: PointerEvent) => {
 			if (!tracking) return;
 			tracking = false;
 			if (!moved) {
-				// A plain click/tap: the top half goes back, the bottom half forward.
-				if (e.type === "pointerup") go(sideOf(e.clientY));
+				// A plain click/tap: the top half goes back, the bottom half forward;
+				// a double one zooms.
+				if (e.type === "pointerup" && onStage) tap(e);
 				return;
 			}
+			if (zoomed) return;
 			const threshold = Math.min(90, window.innerWidth * 0.18);
 			const step = dx < -threshold ? 1 : dx > threshold ? -1 : 0;
 			if (step === 0 || reduceMotion.matches) {
@@ -785,8 +958,14 @@ const items = await Promise.all(
 			busy = true;
 			const out = img.animate(
 				[
-					{ transform: `translateX(${dx}px)`, opacity: img.style.opacity },
-					{ transform: `translateX(${dx}px) translateY(${-step * 60}px)`, opacity: 0 },
+					{ transform: img.style.transform, opacity: img.style.opacity },
+					{
+						transform:
+							axis === "x"
+								? `translateX(${dx}px) translateY(${-step * 60}px)`
+								: `translateY(${dx - step * 60}px)`,
+						opacity: 0,
+					},
 				],
 				{ duration: 160, easing: "ease-out", fill: "forwards" }
 			);
@@ -806,8 +985,8 @@ const items = await Promise.all(
 				.finished.catch(() => {});
 			busy = false;
 		};
-		stage.addEventListener("pointerup", endSwipe);
-		stage.addEventListener("pointercancel", endSwipe);
+		viewer.addEventListener("pointerup", endSwipe);
+		viewer.addEventListener("pointercancel", endSwipe);
 
 		// Open the photo named in the URL hash, on load and when the hash changes.
 		const openFromHash = () => {
