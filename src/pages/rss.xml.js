@@ -1,16 +1,18 @@
-import rss from '@astrojs/rss'
-import { getCollection } from 'astro:content'
+// @ts-check
+import rss from "@astrojs/rss";
+import { getCollection } from "astro:content";
 
+/** @param {import("astro").APIContext} context */
 export async function GET(context) {
-	const blog = (await getCollection('blog')).sort(
+	const blog = (await getCollection("blog")).sort(
 		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-	)
+	);
 
 	return rss({
 		// `<title>` field in output xml
-		title: 'bit-ink.com',
+		title: "bit-ink.com",
 		// `<description>` field in output xml
-		description: 'Photography, memories, and digital thoughts',
+		description: "Photography, memories, and digital thoughts",
 		// Pull in your project "site" from the endpoint context
 		// https://docs.astro.build/en/reference/api-reference/#site
 		site: context.site,
@@ -24,5 +26,5 @@ export async function GET(context) {
 			// This example assumes all posts are rendered as `/blog/[slug]` routes
 			link: `/blog/${post.id}/`,
 		})),
-	})
+	});
 }
