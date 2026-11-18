@@ -15,6 +15,8 @@ const blog = defineCollection({
 			// Path relative to the post, e.g. "../../assets/photos/name.jpg".
 			// Astro resizes it, converts it to WebP and strips camera metadata.
 			heroImage: image().optional(),
+			// Drafts only appear in local dev and PR previews, never on bit-ink.com
+			draft: z.boolean().optional(),
 		}),
 });
 

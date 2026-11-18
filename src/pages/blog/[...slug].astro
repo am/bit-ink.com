@@ -1,11 +1,12 @@
 ---
 import FormattedDate from "@components/FormattedDate.astro";
 import { Image, getImage } from "astro:assets";
-import { type CollectionEntry, getCollection, render } from "astro:content";
+import { type CollectionEntry, render } from "astro:content";
+import { getPosts } from "../../utils/posts";
 import Base from "../../layouts/base.astro";
 
 export async function getStaticPaths() {
-	const posts = await getCollection("blog");
+	const posts = await getPosts();
 
 	return posts.map((post) => ({
 		params: { slug: post.id },
@@ -18,7 +19,7 @@ type Props = {
 };
 
 const { post, posts } = Astro.props;
-const { description, heroImage, pubDate, title, updatedDate } = post.data;
+const { description, draft, heroImage, pubDate, title, updatedDate } = post.data;
 const { Content } = await render(post);
 
 // Link previews get a 1200 px JPEG of the hero, which every social site can read.
@@ -68,6 +69,7 @@ const newerPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentInd
 				/>
 			)}
 			<div class="absolute top-0 right-0 pt-4 pb-2 px-4 uppercase bg-white text-sm text-right">
+				{draft && <div class="font-bold text-ink">Draft</div>}
 				<div class="font-bold">
 					<FormattedDate date={pubDate} />
 				</div>
