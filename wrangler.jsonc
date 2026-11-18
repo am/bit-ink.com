@@ -10,8 +10,11 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
   },
-  // Custom domains are added at DNS cutover, once the Netlify CNAMEs are removed:
-  // "routes": [{ "pattern": "bit-ink.com", "custom_domain": true }],
+  // Production domains. www.bit-ink.com is 301-redirected to the apex by a zone redirect rule.
+  "routes": [
+    { "pattern": "bit-ink.com", "custom_domain": true },
+    { "pattern": "www.bit-ink.com", "custom_domain": true }
+  ],
   "observability": { "enabled": true },
   // Required by `wrangler preview`, which Workers Builds runs for non-production branches.
   // Empty: previews use the same assets and settings as production.
