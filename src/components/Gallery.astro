@@ -137,8 +137,11 @@ const items = await Promise.all(
 	/* ---------- Stack ---------- */
 	.gallery {
 		margin: 2.5rem 0 3rem;
-		/* Height of each stripe. */
+		/* Height of each stripe, how far it tucks under the next one, and how
+		   far it nudges up on hover (must stay below --tuck). */
 		--stripe: 4.5rem;
+		--tuck: 12px;
+		--nudge: 8px;
 	}
 	@media (min-width: 640px) {
 		.gallery {
@@ -156,6 +159,11 @@ const items = await Promise.all(
 	   put while the photo itself nudges on hover. */
 	.gallery-stack > li {
 		position: relative;
+	}
+	/* Each stripe extends a little under the next one, so nudging it up on
+	   hover reveals more photo instead of a gap. */
+	.gallery-stack > li + li {
+		margin-top: calc(-1 * var(--tuck));
 	}
 	.gallery-stack > li + li::before {
 		content: "";
@@ -204,7 +212,7 @@ const items = await Promise.all(
 	@media (hover: hover) {
 		/* Pull the photo gently out of the pile. */
 		.gallery-bar:hover {
-			transform: translateY(-6px);
+			transform: translateY(calc(-1 * var(--nudge)));
 		}
 		.gallery-bar:hover .gallery-caption {
 			opacity: 1;
@@ -214,7 +222,7 @@ const items = await Promise.all(
 	.gallery-bar:focus-visible {
 		outline: 3px solid #3b2ee6;
 		outline-offset: 3px;
-		transform: translateY(-6px);
+		transform: translateY(calc(-1 * var(--nudge)));
 	}
 
 	/* ---------- Viewer ---------- */
