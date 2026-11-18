@@ -158,6 +158,8 @@ const items = await Promise.all(
 		}
 	}
 	.gallery-stack {
+		/* Keep the stripes' z-indexes inside the stack, below the fixed menu. */
+		isolation: isolate;
 		list-style: none;
 		margin: 0;
 		padding: 0;
