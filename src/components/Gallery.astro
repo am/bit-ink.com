@@ -108,27 +108,29 @@ const items = await Promise.all(
 		<p class="gallery-meta">
 			<span class="gallery-meta-caption"></span>
 		</p>
-		<div class="gallery-dots" role="tablist" aria-label="Photos">
-			{
-				items.map((item, index) => (
-					<button
-						type="button"
-						class="gallery-dot"
-						data-index={index}
-						aria-label={`Photo ${index + 1}: ${item.alt}`}
-					/>
-				))
-			}
-		</div>
 		<button type="button" class="gallery-btn gallery-close" aria-label="Close">
 			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
 		</button>
-		<button type="button" class="gallery-btn gallery-prev" aria-label="Previous photo">
-			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
-		</button>
-		<button type="button" class="gallery-btn gallery-next" aria-label="Next photo">
-			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
-		</button>
+		<nav class="gallery-nav" aria-label="Photo navigation">
+			<button type="button" class="gallery-btn gallery-prev" aria-label="Previous photo">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7" /></svg>
+			</button>
+			<div class="gallery-dots" role="tablist" aria-label="Photos">
+				{
+					items.map((item, index) => (
+						<button
+							type="button"
+							class="gallery-dot"
+							data-index={index}
+							aria-label={`Photo ${index + 1}: ${item.alt}`}
+						/>
+					))
+				}
+			</div>
+			<button type="button" class="gallery-btn gallery-next" aria-label="Next photo">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7" /></svg>
+			</button>
+		</nav>
 	</dialog>
 </div>
 
@@ -292,12 +294,22 @@ const items = await Promise.all(
 		padding: 0 1rem;
 		text-align: center;
 	}
-	/* Position indicator: a small vertical stack of bars, like the gallery
-	   itself, in the bottom-right corner. */
-	.gallery-dots {
+	/* Right-hand column: up arrow, a small vertical stack of bars showing the
+	   position (like the gallery itself), down arrow. */
+	.gallery-nav {
 		position: absolute;
 		right: 1rem;
-		bottom: 1rem;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.75rem;
+	}
+	.gallery-nav .gallery-btn {
+		position: static;
+	}
+	.gallery-dots {
 		width: 3rem;
 		display: flex;
 		flex-direction: column;
@@ -368,16 +380,6 @@ const items = await Promise.all(
 	}
 	.gallery-close {
 		top: 1rem;
-		right: 1rem;
-	}
-	.gallery-prev,
-	.gallery-next {
-		top: calc(50% - 2.25rem - 1.5rem);
-	}
-	.gallery-prev {
-		left: 1rem;
-	}
-	.gallery-next {
 		right: 1rem;
 	}
 	@media (hover: none) and (max-width: 767px) {
@@ -640,8 +642,8 @@ const items = await Promise.all(
 			.addEventListener("click", () => go(1));
 
 		viewer.addEventListener("keydown", (e) => {
-			if (e.key === "ArrowRight") go(1);
-			else if (e.key === "ArrowLeft") go(-1);
+			if (e.key === "ArrowDown" || e.key === "ArrowRight") go(1);
+			else if (e.key === "ArrowUp" || e.key === "ArrowLeft") go(-1);
 			else if (e.key === "Home") go(-current);
 			else if (e.key === "End") go(photos.length - 1 - current);
 			else if (e.key === "Escape") {
@@ -656,14 +658,14 @@ const items = await Promise.all(
 			close();
 		});
 
-		// The whole left/right half of the stage acts as the prev/next button,
+		// The whole top/bottom half of the stage acts as the up/down button,
 		// so light up that button while the pointer is over its half.
 		const prevBtn = viewer.querySelector<HTMLElement>(".gallery-prev")!;
 		const nextBtn = viewer.querySelector<HTMLElement>(".gallery-next")!;
-		const sideOf = (x: number) => (x < window.innerWidth / 2 ? -1 : 1);
+		const sideOf = (y: number) => (y < window.innerHeight / 2 ? -1 : 1);
 		stage.addEventListener("pointermove", (e) => {
 			if (e.pointerType !== "mouse") return;
-			const side = sideOf(e.clientX);
+			const side = sideOf(e.clientY);
 			prevBtn.classList.toggle("is-hot", side < 0);
 			nextBtn.classList.toggle("is-hot", side > 0);
 		});
@@ -704,8 +706,8 @@ const items = await Promise.all(
 			if (!tracking) return;
 			tracking = false;
 			if (!moved) {
-				// A plain click/tap: the left half goes back, the right half forward.
-				if (e.type === "pointerup") go(sideOf(e.clientX));
+				// A plain click/tap: the top half goes back, the bottom half forward.
+				if (e.type === "pointerup") go(sideOf(e.clientY));
 				return;
 			}
 			const threshold = Math.min(90, window.innerWidth * 0.18);
