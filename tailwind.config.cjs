@@ -8,7 +8,7 @@ module.exports = {
 			colors: {
 				white: "#eaeae3",
 				black: "#282827",
-				'ink': "#3b2ee6", 
+				ink: "#3b2ee6",
 			},
 			backgroundImage: {
 				"hero-background": "url('/hero-background.jpg')",
@@ -19,8 +19,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [
-		require("tailwindcss-opentype"),
-		require("@tailwindcss/typography"),
-	],
+	plugins: [require("tailwindcss-opentype"), require("@tailwindcss/typography")],
 };

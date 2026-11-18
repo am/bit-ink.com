@@ -6,11 +6,11 @@ end_of_line = lf
 indent_size = 2
 indent_style = tab
 insert_final_newline = true
-preferred_line_length = 120
-trim_trailing_whitespace = false
+max_line_length = 100
+trim_trailing_whitespace = true
 
-[{.*,*.md,*.mdx*.json,*.toml,*.yml,}]
+[{.*,*.md,*.mdx,*.json,*.jsonc,*.toml,*.yml,*.yaml}]
 indent_style = space
 
 [{*.md,*.mdx}]
-soft_wrap = true
+trim_trailing_whitespace = false

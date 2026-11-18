@@ -9,7 +9,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "deploy": "astro build && wrangler deploy",
-    "preview:cf": "astro build && wrangler dev"
+    "preview:cf": "astro build && wrangler dev",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.6",
@@ -24,8 +27,10 @@
     "tailwindcss-opentype": "^1.2.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.12",
     "prettier": "^3.10.1",
     "prettier-plugin-astro": "^1.1.2",
+    "typescript": "^6.0.3",
     "wrangler": "^4.164.0"
   },
   "overrides": {
