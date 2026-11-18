@@ -1,5 +1,6 @@
 ---
 import FormattedDate from "@components/FormattedDate.astro";
+import { Image, getImage } from "astro:assets";
 import { type CollectionEntry, render } from "astro:content";
 import { getPosts } from "../../utils/posts";
 import Base from "../../layouts/base.astro";
@@ -21,6 +22,11 @@ const { post, posts } = Astro.props;
 const { description, draft, heroImage, pubDate, title, updatedDate } = post.data;
 const { Content } = await render(post);
 
+// Link previews get a 1200 px JPEG of the hero, which every social site can read.
+const socialImage = heroImage
+	? (await getImage({ src: heroImage, width: 1200, format: "jpeg" })).src
+	: undefined;
+
 // Oldest first. Copy before sorting: `posts` is shared by every page.
 const sortedPosts = [...posts].sort((a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf());
 const currentIndex = sortedPosts.findIndex((p) => p.id === post.id);
@@ -33,7 +39,7 @@ const newerPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentInd
 <Base
 	title={title}
 	description={description}
-	image={heroImage}
+	image={socialImage}
 	type="article"
 	publishedTime={pubDate}
 	modifiedTime={updatedDate}
@@ -52,7 +58,16 @@ const newerPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentInd
 	)}
 	<article class="container mx-auto max-w-3xl bg-white my-8 shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
 		<section class="relative p-4 pb-0">
-			{heroImage && <img width={740} height={360} src={heroImage} alt="" />}
+			{heroImage && (
+				<Image
+					src={heroImage}
+					width={736}
+					densities={[1, 2]}
+					alt=""
+					loading="eager"
+					fetchpriority="high"
+				/>
+			)}
 			<div class="absolute top-0 right-0 pt-4 pb-2 px-4 uppercase bg-white text-sm text-right">
 				{draft && <div class="font-bold text-ink">Draft</div>}
 				<div class="font-bold">
@@ -65,7 +80,7 @@ const newerPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentInd
 				)}
 			</div>
 		</section>
-		<section class="prose prose-lg max-w-none prose-headings:font-display p-16">
+		<section class="prose prose-lg max-w-none prose-headings:font-display px-4 pt-8 pb-12 md:p-16">
 			<h1 class="">{title}</h1>
 			<Content />
 		</section>
