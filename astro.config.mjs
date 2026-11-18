@@ -8,6 +8,8 @@ export default defineConfig({
 	site: "https://bit-ink.com",
 	// Keep HTML-aware whitespace handling (Astro 7 defaults to 'jsx')
 	compressHTML: true,
+	// Fetch a page when its link is hovered, so moving between posts feels instant.
+	prefetch: { prefetchAll: true, defaultStrategy: "hover" },
 	integrations: [mdx(), sitemap()],
 	vite: {
 		plugins: [tailwindcss()],
