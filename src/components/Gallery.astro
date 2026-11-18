@@ -2,7 +2,7 @@
 /**
  * Photo gallery: a stack of horizontal bars, each showing a band of a photo.
  * Clicking a bar opens a full-screen viewer with previous/next navigation
- * (buttons, arrow keys, swipe).
+ * (buttons, arrow keys, swipe; on narrow screens swipe only).
  *
  * Photos live in src/assets/photos/ so Astro can resize and convert them at
  * build time. Pass either the file name (e.g. "DSC00238.jpg") or an imported
@@ -416,11 +416,49 @@ const items = await Promise.all(
 		top: var(--gap);
 		right: var(--gap);
 	}
-	@media (hover: none) and (max-width: 767px) {
-		/* On phones, swipe does the work; keep the arrows out of the photo. */
+	/* Narrow screens: swipe does the work, so there are no arrows and no nav
+	   column. The photo takes the full width and the bars sit on its right
+	   edge as a position indicator only. */
+	@media (max-width: 767px) {
+		.gallery-viewer {
+			--right: calc(var(--gap) + var(--shift));
+		}
 		.gallery-prev,
 		.gallery-next {
 			display: none;
+		}
+		/* Fit longer titles across the photo. */
+		.gallery-meta {
+			font-size: 1.25rem;
+		}
+		.gallery-viewer,
+		.gallery-stage {
+			touch-action: pinch-zoom;
+		}
+		/* Same box as the photo (see .gallery-stage), bars centred down its
+		   right edge. */
+		.gallery-nav {
+			top: calc(var(--gap) + var(--vshift));
+			bottom: calc(var(--bottom) + var(--shadow));
+			right: var(--right);
+			transform: none;
+			justify-content: center;
+			pointer-events: none;
+		}
+		.gallery-dots {
+			width: 1.1rem;
+			gap: 0;
+		}
+		.gallery-dot {
+			height: 0.5rem;
+		}
+		.gallery-dot::after {
+			background: #eaeae3;
+			opacity: 0.45;
+			box-shadow: 0 0 3px rgb(0 0 0 / 0.35);
+		}
+		.gallery-dot[aria-current="true"]::after {
+			opacity: 1;
 		}
 	}
 	.gallery-viewer.is-fading .gallery-btn,
@@ -489,8 +527,10 @@ const items = await Promise.all(
 
 		// Large images are sized to the stage: the screen minus the gaps and nav
 		// column across, and minus the gaps, caption and shadow down (see CSS).
+		// Below 768px there is no nav column (see CSS), so the photo is wider.
+		const narrow = window.matchMedia("(max-width: 767px)");
 		const sizesFor = (p: Photo) =>
-			`min(calc(100vw - 5.1rem), calc((100vh - 5rem - 16px) * ${(p.width / p.height).toFixed(4)}))`;
+			`min(calc(100vw - ${narrow.matches ? 2 : 5.1}rem), calc((100vh - 5rem - 16px) * ${(p.width / p.height).toFixed(4)}))`;
 
 		function preload(i: number) {
 			const p = photos[wrap(i)];
@@ -701,6 +741,11 @@ const items = await Promise.all(
 				if (i !== current) go(i - current);
 			})
 		);
+		// On narrow screens the bars only show the position: keep them out of
+		// the tab order there.
+		const syncDots = () => dots.forEach((d) => (d.tabIndex = narrow.matches ? -1 : 0));
+		syncDots();
+		narrow.addEventListener("change", syncDots);
 		viewer.querySelector(".gallery-close")!.addEventListener("click", () => close());
 		viewer.querySelector(".gallery-prev")!.addEventListener("click", () => go(-1));
 		viewer.querySelector(".gallery-next")!.addEventListener("click", () => go(1));
@@ -741,39 +786,51 @@ const items = await Promise.all(
 		});
 
 		// Swipe: the photo follows your finger; let go past a threshold to move on.
+		// Left or up goes to the next photo, right or down to the previous one.
+		// Vertical swipes only on narrow screens, where nothing else uses them.
 		let startX = 0;
 		let startY = 0;
 		let dx = 0;
+		let axis: "x" | "y" = "x";
 		let tracking = false;
 		let moved = false;
 
-		stage.addEventListener("pointerdown", (e) => {
+		// On narrow screens swipes work anywhere in the viewer, not just on the
+		// photo; taps still only count on the photo.
+		let onStage = false;
+		viewer.addEventListener("pointerdown", (e) => {
 			if (busy || (e.pointerType === "mouse" && e.button !== 0)) return;
+			const target = e.target as Element;
+			if (target.closest("button")) return;
+			onStage = stage.contains(target);
+			if (!onStage && !narrow.matches) return;
 			tracking = true;
 			moved = false;
 			startX = e.clientX;
 			startY = e.clientY;
 			dx = 0;
 		});
-		stage.addEventListener("pointermove", (e) => {
+		viewer.addEventListener("pointermove", (e) => {
 			if (!tracking) return;
-			dx = e.clientX - startX;
-			const dy = e.clientY - startY;
-			if (!moved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+			const mx = e.clientX - startX;
+			const my = e.clientY - startY;
+			if (!moved) {
+				if (Math.abs(mx) > 8 && Math.abs(mx) > Math.abs(my)) axis = "x";
+				else if (narrow.matches && Math.abs(my) > 8 && Math.abs(my) > Math.abs(mx)) axis = "y";
+				else return;
 				moved = true;
-				stage.setPointerCapture(e.pointerId);
+				viewer.setPointerCapture(e.pointerId);
 			}
-			if (moved) {
-				img.style.transform = `translateX(${dx}px)`;
-				img.style.opacity = String(1 - Math.min(Math.abs(dx) / 600, 0.5));
-			}
+			dx = axis === "x" ? mx : my;
+			img.style.transform = `translate${axis.toUpperCase()}(${dx}px)`;
+			img.style.opacity = String(1 - Math.min(Math.abs(dx) / 600, 0.5));
 		});
 		const endSwipe = async (e: PointerEvent) => {
 			if (!tracking) return;
 			tracking = false;
 			if (!moved) {
 				// A plain click/tap: the top half goes back, the bottom half forward.
-				if (e.type === "pointerup") go(sideOf(e.clientY));
+				if (e.type === "pointerup" && onStage) go(sideOf(e.clientY));
 				return;
 			}
 			const threshold = Math.min(90, window.innerWidth * 0.18);
@@ -787,8 +844,14 @@ const items = await Promise.all(
 			busy = true;
 			const out = img.animate(
 				[
-					{ transform: `translateX(${dx}px)`, opacity: img.style.opacity },
-					{ transform: `translateX(${dx}px) translateY(${-step * 60}px)`, opacity: 0 },
+					{ transform: img.style.transform, opacity: img.style.opacity },
+					{
+						transform:
+							axis === "x"
+								? `translateX(${dx}px) translateY(${-step * 60}px)`
+								: `translateY(${dx - step * 60}px)`,
+						opacity: 0,
+					},
 				],
 				{ duration: 160, easing: "ease-out", fill: "forwards" }
 			);
@@ -808,8 +871,8 @@ const items = await Promise.all(
 				.finished.catch(() => {});
 			busy = false;
 		};
-		stage.addEventListener("pointerup", endSwipe);
-		stage.addEventListener("pointercancel", endSwipe);
+		viewer.addEventListener("pointerup", endSwipe);
+		viewer.addEventListener("pointercancel", endSwipe);
 
 		// Open the photo named in the URL hash, on load and when the hash changes.
 		const openFromHash = () => {
