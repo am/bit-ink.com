@@ -1,0 +1,31 @@
+---
+title: 'Shake gently'
+description: 'A blank page on the internet that anyone can write on, at the same time, and that remembers everything. A small experiment with shared text, colors and time.'
+pubDate: 'Nov 18 2026'
+heroImage: '/photos/shake-gently.jpg'
+draft: true
+---
+
+There is a small corner of this domain that I never talked about here: [shake-gently.bit-ink.com](https://shake-gently.bit-ink.com/). It's a single page, dark, a bit grainy, with one big text area in the middle. No sign up, no login, no instructions. You open it and you can just start typing. And whoever else happens to be there at that moment sees your letters showing up, one by one, while they are typing too.
+
+**[TODO: the spark. When did the idea show up, and what were you doing or thinking about? Was there a person, a conversation or a tool that made you want to build it?]**
+
+**[TODO: the name. Why "Shake gently"?]**
+
+When you arrive you don't pick a name, you get one. Something pale and a bit poetic, like *Moonstone*, *Ghost Orchid*, *Selenite* or, the one I got while writing this, *Bone Light*. Each name comes with its own color, and everything you type is painted with it. So after a while the page becomes this patchwork of blues, pinks and yellows, and you can tell who wrote what without anyone ever signing anything. I like that, it feels like handwriting.
+
+**[TODO: is there a story behind the names and the colors? Why these twelve?]**
+
+The part I find most interesting is the one hiding at the top of the page: a thin slider labelled *history*. Every time the page goes quiet for a few seconds, it takes a snapshot. Drag the slider to the left and you go back in time, watching the text grow and shrink, words appear and get erased, drawings being built line by line. Drag it all the way to the right and you are *live* again. Nothing is really lost, it is all there, layer over layer.
+
+And people did leave things there. Right now you'll find a few shy "Hello!" with emojis, a Mark Twain quote about throwing off the bowlines and sailing away from the safe harbor, someone asking *"What is this?"*, someone else answering *"#magic"*, a pair of robot legs made of brackets and pipes, and some big ASCII art lettering that must have taken a lot of patience. I have no idea who most of these people are, and that's kind of the point.
+
+**[TODO: what happened after you shared it? Who did you share it with, what did they do, any moment that surprised you?]**
+
+For the curious ones, there's not much magic under the hood, but it's a combination I really enjoyed putting together. The whole thing runs on a single Cloudflare Worker. The page itself is a [CodeMirror](https://codemirror.net/) editor, and the text is a [Yjs](https://yjs.dev/) document, a kind of data structure that lets many people edit the same text at the same time and always end up with the same result, without anyone having to decide who wins. Each browser connects through a WebSocket to a Durable Object, a tiny piece of server that lives in one place and holds the room together: it relays every keystroke to everyone else, and every few seconds it saves the document into its own little SQLite database. Each save is also kept as a snapshot, and that's what the history slider walks through.
+
+**[TODO: anything you learned while building it, something that was harder than expected, or something you'd do differently?]**
+
+**[TODO: closing thought. What does this little page mean to you now, and is there anything next for it?]**
+
+If you have a minute, go there and leave something. Gently.

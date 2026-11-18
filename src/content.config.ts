@@ -12,6 +12,8 @@ const blog = defineCollection({
 		pubDate: z.coerce.date(),
 		updatedDate: z.coerce.date().optional(),
 		heroImage: z.string().optional(),
+		// Drafts only appear in local dev and PR previews, never on bit-ink.com
+		draft: z.boolean().optional(),
 	}),
 });
 

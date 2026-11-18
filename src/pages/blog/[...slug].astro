@@ -1,10 +1,11 @@
 ---
 import FormattedDate from "@components/FormattedDate.astro";
-import { type CollectionEntry, getCollection, render } from "astro:content";
+import { type CollectionEntry, render } from "astro:content";
+import { getPosts } from "../../utils/posts";
 import Base from "../../layouts/base.astro";
 
 export async function getStaticPaths() {
-	const posts = await getCollection("blog");
+	const posts = await getPosts();
 
 	return posts.map((post) => ({
 		params: { slug: post.id },
@@ -18,7 +19,7 @@ type Props = {
 };
 
 const { post, posts } = Astro.props;
-const { heroImage, pubDate, title, updatedDate } = post.data;
+const { draft, heroImage, pubDate, title, updatedDate } = post.data;
 const { Content } = await render(post);
 
 // Sort posts by publication date
@@ -62,6 +63,7 @@ const previousPost =
 			<div
 				class="absolute top-0 right-0 pt-4 pb-2 px-4 uppercase bg-white text-sm text-right"
 			>
+				{draft && <div class="font-bold text-ink">Draft</div>}
 				<div class="font-bold">
 					<FormattedDate date={pubDate} />
 				</div>
