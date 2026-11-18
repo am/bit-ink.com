@@ -269,8 +269,9 @@ const items = await Promise.all(
 	/* One gap everywhere:
 	     across: [gap][photo][gap][nav column][gap]
 	     down:   [gap][photo + shadow][gap][title][gap]
-	   The photo, title and nav are centred as a group: the script sets --shift
-	   and --vshift to half the room the photo leaves free in each direction. */
+	   The nav column stays on the right edge. The photo and title are centred
+	   in the room left of it: the script sets --shift and --vshift to half the
+	   room the photo leaves free in each direction. */
 	.gallery-viewer {
 		--gap: 1rem;
 		--nav: 2.1rem;
@@ -322,7 +323,7 @@ const items = await Promise.all(
 	   position (like the gallery itself), down arrow. */
 	.gallery-nav {
 		position: absolute;
-		right: calc(var(--gap) + var(--shift));
+		right: var(--gap);
 		top: 50%;
 		transform: translateY(-50%);
 		display: flex;
