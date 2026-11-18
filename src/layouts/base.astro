@@ -4,7 +4,10 @@ import Navigation from "@components/Navigation.astro";
 import BaseHead from "@components/BaseHead.astro";
 import type { Props as HeadProps } from "@components/BaseHead.astro";
 import "@fontsource/abril-fatface";
-import "@fontsource/karla";
+import "@fontsource-variable/karla";
+// Preload the Latin files so text renders in the right font without a visible swap.
+import karlaFont from "@fontsource-variable/karla/files/karla-latin-wght-normal.woff2?url";
+import abrilFont from "@fontsource/abril-fatface/files/abril-fatface-latin-400-normal.woff2?url";
 
 type Props = Partial<HeadProps> & {
 	/** Classes for <body>. Defaults to the blog's fixed background. */
@@ -26,6 +29,9 @@ const pageTitle = title ? `${title} · ${SITE_TITLE}` : SITE_TITLE;
 <html lang="en">
 	<head>
 		<BaseHead title={pageTitle} description={description} {...head} />
+		<link rel="preload" href={karlaFont} as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href={abrilFont} as="font" type="font/woff2" crossorigin />
+		<slot name="head" />
 	</head>
 	<body class={bodyClass}>
 		<Navigation />
