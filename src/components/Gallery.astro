@@ -375,16 +375,13 @@ const items = await Promise.all(
 		transform: translateY(-50%);
 		background: #282827;
 		opacity: 0.25;
-		transition:
-			opacity 0.2s ease,
-			height 0.2s ease;
+		transition: opacity 0.2s ease;
 	}
 	.gallery-dot:hover::after {
 		opacity: 0.6;
 	}
 	.gallery-dot[aria-current="true"]::after {
 		opacity: 1;
-		height: 6px;
 	}
 	.gallery-btn {
 		position: absolute;
@@ -452,8 +449,9 @@ const items = await Promise.all(
 			justify-content: center;
 			pointer-events: none;
 		}
+		/* Fill the gap, from the photo's edge to the screen's. */
 		.gallery-dots {
-			width: calc(var(--gap) - 4px);
+			width: var(--right);
 			gap: 0;
 		}
 		.gallery-dot {
