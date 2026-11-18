@@ -1,20 +1,24 @@
 ---
 import Base from "../layouts/base.astro";
+
+const link = "underline text-ink";
 ---
 
 <Base title="Page not found" description="This page does not exist.">
 	<article class="container mx-auto max-w-3xl bg-white p-16 my-8 shadow-[0_16px_0px_rgba(0,0,0,0.4)]">
 		<h1 class="font-display text-4xl mb-8">Page not found</h1>
-		<p class="text-lg">
-			There is nothing at this address. Try the
-			<a class="underline text-ink" href="/blog/">
-				blog
-			</a>{" "}
-			or the
-			<a class="underline text-ink" href="/">
-				about page
-			</a>
-			.
-		</p>
+		<p class="text-lg mb-4">There is nothing at this address.</p>
+		<ul class="text-lg list-disc pl-6">
+			<li>
+				<a class={link} href="/blog/">
+					Read the blog
+				</a>
+			</li>
+			<li>
+				<a class={link} href="/">
+					About me
+				</a>
+			</li>
+		</ul>
 	</article>
 </Base>
