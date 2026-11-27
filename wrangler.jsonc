@@ -15,9 +15,10 @@
     { "pattern": "bit-ink.com", "custom_domain": true },
     { "pattern": "www.bit-ink.com", "custom_domain": true },
   ],
-  // Keep the workers.dev URL and preview URLs on. With custom domains in `routes`,
-  // Wrangler would otherwise turn both off on deploy, breaking PR preview links.
-  "workers_dev": true,
+  // Production is served only on the custom domains above, so the public workers.dev URL is off
+  // (avoids a duplicate copy of the site in search results). Preview URLs stay on for PR previews;
+  // Cloudflare sends `X-Robots-Tag: noindex` on workers.dev Preview URLs.
+  "workers_dev": false,
   "preview_urls": true,
   "observability": { "enabled": true },
   // Required by `wrangler preview`, which Workers Builds runs for non-production branches.
